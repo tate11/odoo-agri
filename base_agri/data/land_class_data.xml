@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+    
+        <record id="commerical" model="agri.landclass">
+            <field name="name">Commercial</field>
+        </record>
+        
+        <record id="cropland" model="agri.landclass">
+            <field name="name">Cropland</field>
+        </record>
+        
+        <record id="cropland_irrigated" model="agri.landclass">
+            <field name="name">Cropland (Irrigated)</field>
+            <field name="irrigated" eval="True"/>
+        </record>
+        
+        <record id="cropland_smallholding" model="agri.landclass">
+            <field name="name">Cropland (Smallholding)</field>
+        </record>
+        
+        <record id="cropland_subsistence" model="agri.landclass">
+            <field name="name">Cropland (Subsistence)</field>
+        </record>
+        
+        <record id="dam" model="agri.landclass">
+            <field name="name">Dam</field>
+        </record>
+        
+        <record id="erosion" model="agri.landclass">
+            <field name="name">Erosion</field>
+        </record>
+        
+        <record id="forest" model="agri.landclass">
+            <field name="name">Forest</field>
+        </record>
+        
+        <record id="grazing" model="agri.landclass">
+            <field name="name">Grazing</field>
+        </record>
+        
+        <record id="grazing_bush" model="agri.landclass">
+            <field name="name">Grazing (Bush)</field>
+        </record>
+        
+        <record id="grazing_fynbos" model="agri.landclass">
+            <field name="name">Grazing (Fynbos)</field>
+        </record>
+        
+        <record id="grazing_shrubland" model="agri.landclass">
+            <field name="name">Grazing (Shrubland)</field>
+        </record>
+        
+        <record id="greenhouses" model="agri.landclass">
+            <field name="name">Greenhouses</field>
+        </record>
+        
+        <record id="homestead" model="agri.landclass">
+            <field name="name">Homestead</field>
+        </record>
+        
+        <record id="horticulture" model="agri.landclass">
+            <field name="name">Horticulture</field>
+        </record>
+        
+        <record id="industrial" model="agri.landclass">
+            <field name="name">Industrial</field>
+        </record>
+        
+        <record id="landfill" model="agri.landclass">
+            <field name="name">Landfill</field>
+        </record>
+        
+        <record id="mining" model="agri.landclass">
+            <field name="name">Mining</field>
+        </record>
+        
+        <record id="non_vegetated" model="agri.landclass">
+            <field name="name">Non-vegetated</field>
+        </record>
+        
+        <record id="ocean" model="agri.landclass">
+            <field name="name">Ocean</field>
+        </record>
+        
+        <record id="orchard" model="agri.landclass">
+            <field name="name">Orchard</field>
+        </record>
+        
+        <record id="orchard_shadenet" model="agri.landclass">
+            <field name="name">Orchard (Shadenet)</field>
+        </record>
+        
+        <record id="pineapple" model="agri.landclass">
+            <field name="name">Pineapple</field>
+        </record>
+        
+        <record id="plantation" model="agri.landclass">
+            <field name="name">Plantation</field>
+        </record>
+        
+        <record id="plantation_smallholding" model="agri.landclass">
+            <field name="name">Plantation (Smallholding)</field>
+        </record>
+        
+        <record id="planted_pastures" model="agri.landclass">
+            <field name="name">Planted Pastures</field>
+        </record>
+        
+        <record id="planted_pastures_irrigated" model="agri.landclass">
+            <field name="name">Planted Pastures (Irrigated)</field>
+            <field name="irrigated" eval="True"/>
+        </record>
+        
+        <record id="recreational" model="agri.landclass">
+            <field name="name">Recreational</field>
+        </record>
+        
+        <record id="residential" model="agri.landclass">
+            <field name="name">Residential</field>
+        </record>
+        
+        <record id="residential_informal" model="agri.landclass">
+            <field name="name">Residential (Informal)</field>
+        </record>
+        
+        <record id="residential_smallholding" model="agri.landclass">
+            <field name="name">Residential (Smallholding)</field>
+        </record>
+        
+        <record id="river" model="agri.landclass">
+            <field name="name">River</field>
+        </record>
+        
+        <record id="road_rail" model="agri.landclass">
+            <field name="name">Road &amp; Rail</field>
+        </record>
+        
+        <record id="sewage_ponds" model="agri.landclass">
+            <field name="name">Sewage Ponds</field>
+        </record>
+        
+        <record id="structures_handling" model="agri.landclass">
+            <field name="name">Structures (Handling)</field>
+        </record>
+        
+        <record id="structures_processing" model="agri.landclass">
+            <field name="name">Structures (Processing)</field>
+        </record>
+        
+        <record id="structures_storage" model="agri.landclass">
+            <field name="name">Structures (Storage)</field>
+        </record>
+        
+        <record id="sugarcane" model="agri.landclass">
+            <field name="name">Sugarcane</field>
+        </record>
+        
+        <record id="sugarcane_irrigated" model="agri.landclass">
+            <field name="name">Sugarcane (Irrigated)</field>
+            <field name="irrigated" eval="True"/>
+        </record>
+        
+        <record id="sugarcane_small_scale" model="agri.landclass">
+            <field name="name">Sugarcane (Small-scale)</field>
+        </record>
+        
+        <record id="tea" model="agri.landclass">
+            <field name="name">Tea</field>
+        </record>
+        
+        <record id="tea_irrigated" model="agri.landclass">
+            <field name="name">Tea (Irrigated)</field>
+            <field name="irrigated" eval="True"/>
+        </record>
+        
+        <record id="utilities" model="agri.landclass">
+            <field name="name">Utilities</field>
+        </record>
+        
+        <record id="vegetables" model="agri.landclass">
+            <field name="name">Vegetables</field>
+        </record>
+        
+        <record id="village" model="agri.landclass">
+            <field name="name">Village</field>
+        </record>
+        
+        <record id="vineyard" model="agri.landclass">
+            <field name="name">Vineyard</field>
+        </record>
+        
+        <record id="wasteland" model="agri.landclass">
+            <field name="name">Wasteland</field>
+        </record>
+        
+        <record id="water" model="agri.landclass">
+            <field name="name">Water</field>
+        </record>
+        
+        <record id="water_seasonal" model="agri.landclass">
+            <field name="name">Water (Seasonal)</field>
+        </record>
+        
+        <record id="wetland" model="agri.landclass">
+            <field name="name">Wetland</field>
+        </record>
+        
+    </data>
+</odoo>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+    
+        <record id="mountains" model="agri.terrain">
+            <field name="name">Mountains</field>
+        </record>
+    
+        <record id="plains" model="agri.terrain">
+            <field name="name">Plains</field>
+        </record>
+        
+    </data>
+</odoo>

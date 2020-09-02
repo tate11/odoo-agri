@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+    
+        <record id="borehole" model="agri.watersource">
+            <field name="name">Borehole</field>
+        </record>
+    
+        <record id="dam" model="agri.watersource">
+            <field name="name">Dam</field>
+        </record>
+    
+        <record id="irrigation_scheme" model="agri.watersource">
+            <field name="name">Irrigation Scheme</field>
+        </record>
+    
+        <record id="river" model="agri.watersource">
+            <field name="name">River</field>
+        </record>
+        
+    </data>
+</odoo>

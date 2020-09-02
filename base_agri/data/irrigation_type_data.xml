@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+    
+        <record id="centre_pivot" model="agri.irrigationtype">
+            <field name="name">Centre-Pivot</field>
+        </record>
+    
+        <record id="drip" model="agri.irrigationtype">
+            <field name="name">Drip</field>
+        </record>
+    
+        <record id="flood" model="agri.irrigationtype">
+            <field name="name">Flood</field>
+        </record>
+    
+        <record id="micro" model="agri.irrigationtype">
+            <field name="name">Micro</field>
+        </record>
+    
+        <record id="sprinkler" model="agri.irrigationtype">
+            <field name="name">Sprinkler</field>
+        </record>
+    
+        <record id="sub_drainage" model="agri.irrigationtype">
+            <field name="name">Sub-drainage</field>
+        </record>
+        
+    </data>
+</odoo>
