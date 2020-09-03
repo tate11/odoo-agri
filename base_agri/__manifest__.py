@@ -20,6 +20,8 @@
         'data/soil_texture_data.xml',
         'data/terrain_data.xml',
         'data/water_source_data.xml',
+        'data/water_source_data.xml',
+        'data/res_partner_data.xml',
     ],
     "demo": [],
     "application": True,

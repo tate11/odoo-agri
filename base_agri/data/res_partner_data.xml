@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        
+        <function model="res.partner" name="create_missing_farmland"/>
+
+    </data>
+</odoo>
