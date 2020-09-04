@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 
+from . import agri_cropping_potential
+from . import agri_effective_depth
 from . import agri_farm
 from . import agri_farmland
 from . import agri_field
+from . import agri_irrigation_type
 from . import agri_land
 from . import agri_land_class
 from . import agri_land_cover

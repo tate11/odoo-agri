@@ -3,7 +3,7 @@
     <data noupdate="0">
     
         <record id="0_plus" model="agri.effectivedepth">
-            <field name="name">'0 - 30cm</field>
+            <field name="name">0 - 30cm</field>
         </record>
 
         <record id="30_plus" model="agri.effectivedepth">

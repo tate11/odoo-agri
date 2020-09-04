@@ -10,6 +10,7 @@ class AgriLand(models.Model):
     name = fields.Char('Name', required=True)
     short_name = fields.Char('Short Name', required=True)
     code = fields.Char('Code', required=True)
+    country_id = fields.Many2one('res.country', string='Country')
     area_ha = fields.Float('Hectares', tracking=True)
     boundary = fields.GeoPolygon('Boundary', srid=4326, gist_index=True)
     farm_id = fields.Many2one('agri.farm',
@@ -30,3 +31,7 @@ class AgriLand(models.Model):
         land = self.env['agri.land'].search(domain, limit=1)
         if land:
             raise ValidationError('Duplicate Land')
+
+    def name_get(self):
+        return [(land.id, "{} ({:.3f} ha)".format(land.name, land.area_ha))
+                for land in self]

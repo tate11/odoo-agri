@@ -7,6 +7,7 @@ class AgriFarm(models.Model):
     _description = 'Farms'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'name, create_date desc'
+    _check_company_auto = True
 
     active = fields.Boolean('Active', default=True, tracking=True)
     name = fields.Char('Name', required=True)
@@ -15,7 +16,17 @@ class AgriFarm(models.Model):
     farmland_id = fields.Many2one('agri.farmland',
                                   'Farmland',
                                   ondelete='cascade',
-                                  required=True)
+                                  required=True,
+                                  check_company=True)
+    partner_id = fields.Many2one('res.partner',
+                                 string='Partner',
+                                 ondelete='cascade',
+                                 required=True,
+                                 check_company=True)
+    company_id = fields.Many2one(related='partner_id.company_id',
+                                 index=True,
+                                 readonly=True,
+                                 store=True)
     field_ids = fields.One2many(comodel_name='agri.field',
                                 inverse_name='farm_id',
                                 string='Fields',
@@ -34,3 +45,12 @@ class AgriFarm(models.Model):
         farm = self.env['agri.farm'].search(domain, limit=1)
         if farm:
             raise ValidationError('Duplicate Farm name')
+
+    @api.onchange('partner_id')
+    def onchange_partner_id(self):
+        if self.partner_id:
+            self.farmland_id = self.partner_id.farmland_id
+
+    def name_get(self):
+        return [(farm.id, "{} ({:.3f} ha)".format(farm.name, farm.area_ha))
+                for farm in self]

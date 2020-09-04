@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="agri_farm_view_search">
+        <field name="name">agri.farm.search</field>
+        <field name="model">agri.farm</field>
+        <field name="arch" type="xml">
+           <search string="Farms">
+                <field name="name"/>
+                <field name="field_ids"/>
+                <field name="land_ids"/>
+                <separator/>
+                <filter string="Active" name="filter_active" domain="[('active', '=', True)]"/>
+                <filter string="Not located" name="filter_not_located" domain="[('boundary', '=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Partner" name="group_partner" context="{'group_by': 'partner_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="agri_farm_view_tree">
+        <field name="name">agri.farm.tree</field>
+        <field name="model">agri.farm</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <tree string="Farms">
+                <field name="name"/>
+                <field name="area_ha"/>
+                <field name="company_id"/>
+                <field name="partner_id"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="agri_farm_view_form">
+        <field name="name">agri.farm.form</field>
+        <field name="model">agri.farm</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <form string="Farms">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="farmland_id" invisible="1"/>
+                            <field name="partner_id"/>
+                            <field name="area_ha" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="create_date" readonly="1"/>
+                            <field name="company_id"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="agri_farm_action" model="ir.actions.act_window">
+        <field name="name">Farms</field>
+        <field name="res_model">agri.farm</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{'search_default_filter_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Farm
+            </p>
+        </field>
+
+    </record>
+
+    <menuitem name="Farms" id="menu_item_agri_farms"
+        parent="menu_agri_farms" 
+        sequence="2"
+        action="agri_farm_action"/>
+
+</odoo>

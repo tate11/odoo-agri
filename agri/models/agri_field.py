@@ -9,14 +9,14 @@ class AgriField(models.Model):
     _order = 'name, create_date desc'
 
     active = fields.Boolean('Active', default=True, tracking=True)
+    name = fields.Char('Name', required=True, tracking=True)
     area_ha = fields.Float('Hectares', tracking=True)
     boundary = fields.GeoPolygon('Boundary', srid=4326, gist_index=True)
+    established_date = fields.Date('Established Date', tracking=True)
     farm_id = fields.Many2one('agri.farm',
                               'Farm',
                               ondelete='cascade',
                               required=True)
-    name = fields.Char('Name', required=True, tracking=True)
-    established_date = fields.Date('Established Date', tracking=True)
 
     cropping_potential_id = fields.Many2one('agri.croppingpotential',
                                             'Cropping Potential',
@@ -52,3 +52,7 @@ class AgriField(models.Model):
     @api.onchange('irrigation_type_id')
     def onchange_irrigation_type(self):
         self.irrigated = True if self.irrigation_type_id else False
+
+    def name_get(self):
+        return [(field.id, "{} ({:.3f} ha)".format(field.name, field.area_ha))
+                for field in self]

@@ -10,13 +10,22 @@ class ResPartner(models.Model):
         inverse_name='partner_id',
         string='Farmlands',
     )
-    farm_ids = fields.Related('farmland_id.farm_ids', 'Farms')
+    farm_ids = fields.One2many(related='farmland_id.farm_ids', string='Farms')
+    farm_count = fields.Integer(
+        string='Farm Count',
+        compute='_compute_farm_count',
+        store=True,
+    )
+
+    @api.depends('farm_ids')
+    def _compute_farm_count(self):
+        for partner in self:
+            partner.farm_count = len(partner.farmland_id.farm_ids)
 
     def _create_farmland(self):
         for partner in self:
             farmland_id = self.env['agri.farmland'].create({
-                'partner_id':
-                partner.id,
+                'partner_id': partner.id,
             })
 
             partner.write({'farmland_id': farmland_id.id})

@@ -6,11 +6,8 @@ class AgriFarmland(models.Model):
     _name = 'agri.farmland'
     _description = 'Farmlands'
     _order = 'date DESC'
+    _check_company_auto = True
 
-    partner_id = fields.Many2one('res.partner',
-                                 string='Partner',
-                                 ondelete='cascade',
-                                 check_company=True)
     name = fields.Char('Name',
                        computed='_compute_name',
                        readonly=True,
@@ -18,13 +15,23 @@ class AgriFarmland(models.Model):
     date = fields.Date('Date',
                        default=fields.Date.context_today,
                        required=True)
+    partner_id = fields.Many2one('res.partner',
+                                 string='Partner',
+                                 ondelete='cascade')
+    company_id = fields.Many2one(related='partner_id.company_id',
+                                 index=True,
+                                 readonly=True,
+                                 store=True)
     parent_farmland_id = fields.Many2one('agri.farmland', 'Parent Farmland')
     child_farmland_ids = fields.Many2many('agri.farmland',
                                           'agri_farmland_rel',
                                           'farmland_id',
                                           'child_id',
                                           string='Child Farmlands')
-    farm_ids = fields.Many2one('agri.farm', 'Farms', copy=True)
+    farm_ids = fields.One2many(comodel_name='agri.farm',
+                               inverse_name='farmland_id',
+                               string='Farms',
+                               copy=True)
 
     @api.depends('date')
     def _compute_name(self):
