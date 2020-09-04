@@ -13,6 +13,9 @@ class AgriFarm(models.Model):
     name = fields.Char('Name', required=True)
     area_ha = fields.Float('Hectares')
     boundary = fields.GeoPolygon('Boundary', srid=4326, gist_index=True)
+    has_boundary = fields.Boolean('Has Boundary',
+                                  computed='_compute_has_boundary',
+                                  default=False)
     farmland_id = fields.Many2one('agri.farmland',
                                   'Farmland',
                                   ondelete='cascade',
@@ -35,6 +38,11 @@ class AgriFarm(models.Model):
                                inverse_name='farm_id',
                                string='Land',
                                copy=True)
+
+    @api.depends('boundary')
+    def _compute_has_boundary(self):
+        for farm in self:
+            farm.has_boundary = True if farm.boundary else False
 
     @api.constrains('name')
     def constrains_name(self):

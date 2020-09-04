@@ -12,6 +12,9 @@ class AgriField(models.Model):
     name = fields.Char('Name', required=True, tracking=True)
     area_ha = fields.Float('Hectares', tracking=True)
     boundary = fields.GeoPolygon('Boundary', srid=4326, gist_index=True)
+    has_boundary = fields.Boolean('Has Boundary',
+                                  computed='_compute_has_boundary',
+                                  default=False)
     established_date = fields.Date('Established Date', tracking=True)
     farm_id = fields.Many2one('agri.farm',
                               'Farm',
@@ -35,9 +38,15 @@ class AgriField(models.Model):
     soil_texture_id = fields.Many2one('agri.soiltexture',
                                       'Soil Texture',
                                       tracking=True)
+    terrain_id = fields.Many2one('agri.terrain', 'Terrain', tracking=True)
     water_source_id = fields.Many2one('agri.watersource',
                                       'Water Source',
                                       tracking=True)
+
+    @api.depends('boundary')
+    def _compute_has_boundary(self):
+        for field in self:
+            field.has_boundary = True if field.boundary else False
 
     @api.constrains('name')
     def constrains_name(self):
@@ -49,9 +58,11 @@ class AgriField(models.Model):
         if field:
             raise ValidationError('Duplicate Field name')
 
-    @api.onchange('irrigation_type_id')
-    def onchange_irrigation_type(self):
-        self.irrigated = True if self.irrigation_type_id else False
+    @api.onchange('irrigation_type_id', 'land_class_id')
+    def onchange_irrigated(self):
+        self.irrigated = True if (self.land_class_id
+                                  and self.land_class_id.irrigated
+                                  ) or self.irrigation_type_id else False
 
     def name_get(self):
         return [(field.id, "{} ({:.3f} ha)".format(field.name, field.area_ha))
