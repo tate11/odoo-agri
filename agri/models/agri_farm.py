@@ -39,7 +39,7 @@ class AgriFarm(models.Model):
                                string='Land',
                                copy=True)
 
-    @api.depends('boundary')
+    @api.onchange('boundary')
     def _compute_has_boundary(self):
         for farm in self:
             farm.has_boundary = True if farm.boundary else False

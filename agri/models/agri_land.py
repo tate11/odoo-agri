@@ -5,6 +5,7 @@ from odoo.exceptions import ValidationError
 class AgriLand(models.Model):
     _name = 'agri.land'
     _description = 'Lands'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'name, create_date desc'
 
     name = fields.Char('Name', required=True)
@@ -13,6 +14,9 @@ class AgriLand(models.Model):
     country_id = fields.Many2one('res.country', string='Country')
     area_ha = fields.Float('Hectares', tracking=True)
     boundary = fields.GeoPolygon('Boundary', srid=4326, gist_index=True)
+    has_boundary = fields.Boolean('Has Boundary',
+                                  computed='_compute_has_boundary',
+                                  default=False)
     farm_id = fields.Many2one('agri.farm',
                               'Farm',
                               ondelete='cascade',
@@ -22,10 +26,15 @@ class AgriLand(models.Model):
                                      string='Land Cover',
                                      copy=True)
 
+    @api.onchange('boundary')
+    def _compute_has_boundary(self):
+        for land in self:
+            land.has_boundary = True if land.boundary else False
+
     @api.constrains('code')
     def constrains_code(self):
-        domain = [('farm_id', '=', self.farm_id.id)('code', 'ilike',
-                                                    self.code)]
+        domain = [('farm_id', '=', self.farm_id.id),
+                  ('code', 'ilike', self.code)]
         if self.id:
             domain.append(('id', '!=', self.id))
         land = self.env['agri.land'].search(domain, limit=1)

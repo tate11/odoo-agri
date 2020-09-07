@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="agri_land_view_search">
+        <field name="name">agri.land.search</field>
+        <field name="model">agri.land</field>
+        <field name="arch" type="xml">
+           <search string="Lands">
+                <field name="name"/>
+                <field name="farm_id"/>
+                <separator/>
+                <field name="code"/>
+                <field name="short_name"/>
+                <field name="land_cover_ids"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Farm" name="group_farm" context="{'group_by': 'farm_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="agri_land_view_tree">
+        <field name="name">agri.land.tree</field>
+        <field name="model">agri.land</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <tree string="Lands">
+                <field name="name"/>
+                <field name="short_name"/>
+                <field name="code"/>
+                <field name="area_ha"/>
+                <field name="farm_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="agri_land_view_form">
+        <field name="name">agri.land.form</field>
+        <field name="model">agri.land</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <form string="Lands">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="short_name" />
+                            <field name="code" />
+                            <field name="farm_id" />
+                            <field name="country_id" />
+                        </group>
+                        <group>
+                            <field name="create_date" readonly="1"/>
+                            <field name="area_ha" attrs="{'readonly': [('has_boundary', '!=', False)]}"/>
+                            <field name="has_boundary" invisible="1"/>
+                        </group>
+                    </group>
+                    <field name="land_cover_ids" groups="agri.group_agri_manager">
+                        <tree editable="bottom" context="{'default_land_id': id}">
+                           <field name="land_class_id"/>
+                           <field name="area_ha"/>
+                        </tree>
+                    </field>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="agri_land_inline_view_form" model="ir.ui.view">
+        <field name="name">agri.land.nochatter.form</field>
+        <field name="model">agri.land</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="agri_land_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='farm_id']" position="replace"/>
+            <xpath expr="//div[hasclass('oe_chatter')]" position="replace"/>
+        </field>
+    </record>
+
+    <record id="agri_land_action" model="ir.actions.act_window">
+        <field name="name">Lands</field>
+        <field name="res_model">agri.land</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Land
+            </p>
+        </field>
+    </record>
+
+    <menuitem name="Lands" id="menu_item_agri_lands"
+        parent="menu_agri_farms" 
+        sequence="10"
+        action="agri_land_action"/>
+
+</odoo>

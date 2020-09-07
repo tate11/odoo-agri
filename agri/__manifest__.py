@@ -27,6 +27,7 @@
         'views/agri_menus.xml',
         'views/agri_farm_views.xml',
         'views/agri_field_views.xml',
+        'views/agri_land_views.xml',
         'views/res_config_settings_views.xml',
         'views/res_partner_views.xml',
     ],

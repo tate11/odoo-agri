@@ -51,7 +51,7 @@
                         <group>
                             <field name="farmland_id" invisible="1"/>
                             <field name="partner_id"/>
-                            <field name="area_ha" readonly="1" attrs="{'readonly': [('has_boundary', '!=', False)]}"/>
+                            <field name="area_ha" attrs="{'readonly': [('has_boundary', '!=', False)]}"/>
                             <field name="has_boundary" invisible="1"/>
                         </group>
                         <group>
@@ -60,6 +60,16 @@
                             <field name="active"/>
                         </group>
                     </group>
+                    <notebook>
+                        <page string="Lands" name="lands_tab">
+                            <field name="land_ids" nolabel="1" 
+                                context="{'default_farm_id': id, 'tree_view_ref': 'agri.agri_land_view_tree', 'form_view_ref': 'agri.agri_land_inline_view_form'}"/>
+                        </page>
+                        <page string="Fields" name="fields_tab">
+                            <field name="field_ids" nolabel="1" 
+                                context="{'default_farm_id': id, 'tree_view_ref': 'agri.agri_field_view_tree', 'form_view_ref': 'agri.agri_field_inline_view_form'}"/>
+                        </page>
+                    </notebook>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>

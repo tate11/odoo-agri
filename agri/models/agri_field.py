@@ -43,7 +43,7 @@ class AgriField(models.Model):
                                       'Water Source',
                                       tracking=True)
 
-    @api.depends('boundary')
+    @api.onchange('boundary')
     def _compute_has_boundary(self):
         for field in self:
             field.has_boundary = True if field.boundary else False
