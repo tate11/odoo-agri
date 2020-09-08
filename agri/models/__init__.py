@@ -13,3 +13,4 @@ from . import agri_soil_texture
 from . import agri_terrain
 from . import agri_water_source
 from . import res_partner
+from . import uom_category
