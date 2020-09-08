@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="uom_categ_area" model="uom.category">
+            <field name="name">Area</field>
+            <field name="measure_type">area</field>
+        </record>
+
+        <record id="uom_uom_ha" model="uom.uom">
+            <field name="category_id" ref="uom_categ_area"/>
+            <field name="name">ha</field>
+            <field name="factor" eval="1"/>
+            <field name="rounding" eval="0.001"/>
+        </record>
+
+        <record id="uom_uom_acre" model="uom.uom">
+            <field name="category_id" ref="uom_categ_area"/>
+            <field name="name">ac</field>
+            <field name="factor" eval="2471"/>
+            <field name="uom_type">smaller</field>
+        </record>
+
+        <record id="uom_uom_sq_mi" model="uom.uom">
+            <field name="category_id" ref="uom_categ_area"/>
+            <field name="name">sq mi</field>
+            <field name="factor_inv" eval="259"/>
+            <field name="uom_type">bigger</field>
+        </record>
+
+        <record id="uom_uom_sq_km" model="uom.uom">
+            <field name="category_id" ref="uom_categ_area"/>
+            <field name="name">sq km</field>
+            <field name="factor_inv" eval="100"/>
+            <field name="uom_type">bigger</field>
+        </record>
+
+        <record id="uom_uom_sq_m" model="uom.uom">
+            <field name="category_id" ref="uom_categ_area"/>
+            <field name="name">sq m</field>
+            <field name="factor" eval="10000"/>
+            <field name="uom_type">smaller</field>
+        </record>
+
+        <record id="uom_uom_sq_yd" model="uom.uom">
+            <field name="category_id" ref="uom_categ_area"/>
+            <field name="name">sq yd</field>
+            <field name="factor" eval="11960"/>
+            <field name="uom_type">smaller</field>
+        </record>
+
+        <record id="uom_uom_sq_ft" model="uom.uom">
+            <field name="category_id" ref="uom_categ_area"/>
+            <field name="name">sq ft</field>
+            <field name="factor" eval="107639"/>
+            <field name="uom_type">smaller</field>
+        </record>
+
+    </data>
+</odoo>
