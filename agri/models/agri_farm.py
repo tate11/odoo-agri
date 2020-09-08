@@ -4,7 +4,7 @@ from odoo.exceptions import ValidationError
 
 class AgriFarm(models.Model):
     _name = 'agri.farm'
-    _description = 'Farms'
+    _description = 'Farm'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'name, create_date desc'
     _check_company_auto = True

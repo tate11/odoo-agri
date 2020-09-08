@@ -4,7 +4,7 @@ from odoo.tools.misc import format_date
 
 class AgriFarmland(models.Model):
     _name = 'agri.farmland'
-    _description = 'Farmlands'
+    _description = 'Farmland'
     _order = 'date DESC'
     _check_company_auto = True
 
