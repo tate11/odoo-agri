@@ -57,7 +57,7 @@
                         <group>
                             <field name="partner_id"/>
                             <field name="company_id" invisible="1"/>
-                            <field name="cultivar_product_id" context="{'default_is_cultivar': True}"/>
+                            <field name="cultivar_product_id" context="{'default_type': 'product', 'default_is_cultivar': 1}"/>
                             <field name="delivered_warehouse_id"/>
                        </group>
                         <group>

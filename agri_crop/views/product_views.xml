@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_template_form_view" model="ir.ui.view">
+        <field name="name">product.template.common.form.inherit.agri.crop</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_title')]/div[@name='options']" position="inside">
+                <div>
+                    <field name="is_cultivar"/>
+                    <label for="is_cultivar"/>
+                </div>
+            </xpath>
+            <xpath expr="//page[@name='general_information']" position="after">
+                <page string="Cultivar" name="cultivar">
+                    <group>
+                        <group>
+                            <field name="leaves_per_plant"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_template_search_view" model="ir.ui.view">
+        <field name="name">product.template.search.inherit.agri.crop</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view"/>
+        <field name="arch" type="xml">
+            <filter name="filter_to_purchase" position="after">
+                <filter string="Is Cultivar" name="filter_is_cultivar" domain="[('is_cultivar', '=', True)]"/>
+            </filter>
+        </field>
+    </record>
+
+    <record id="agri_cultivar_action" model="ir.actions.act_window">
+        <field name="name">Cultivars</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{
+            'search_default_filter_is_cultivar': 1,
+            'default_type': 'product',
+            'default_is_cultivar': 1
+        }
+        </field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Cultivar
+            </p>
+        </field>
+
+    </record>
+
+    <menuitem id="agri_menu_cultivar_action" name="Cultivars"
+        parent="agri_crop_menu" 
+        sequence="2"
+        action="agri_cultivar_action"/>
+
+</odoo>

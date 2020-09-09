@@ -2,21 +2,20 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 {
-    "name": "Agri Record",
-    "summary": "Agriculture Activities & Production record keeping",
+    "name": "Agri Crop",
+    "summary": "Agriculture module to add Crops",
     "website": "https://github.com/agrista/odoo-agri",
     "category": "Operations/Inventory",
     "version": "0.1.0",
     "sequence": 1,
     "author": "Agrista (Pty) Ltd.",
     "license": "AGPL-3",
-    "description": "Agriculture Activities & Production record keeping",
-    "depends": ['base', 'stock', 'agri_crop'],
+    "description": "Agriculture module to add Crops",
+    "depends": ['base', 'product', 'agri'],
     "data": [
         'security/ir.model.access.csv',
-        'data/res_company_data.xml',
-        'views/agri_menus.xml',
-        'views/agri_production_record_views.xml',
+        'views/agri_crop_menus.xml',
+        'views/product_views.xml',
     ],
     "demo": [],
     "application": True,
