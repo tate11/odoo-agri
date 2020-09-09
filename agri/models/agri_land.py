@@ -12,7 +12,7 @@ class AgriLand(models.Model):
     short_name = fields.Char('Short Name', required=True)
     code = fields.Char('Code', required=True)
     country_id = fields.Many2one('res.country', string='Country')
-    area_ha = fields.Float('Hectares', tracking=True)
+    area_ha = fields.Float('Hectares', digits='Hectare', tracking=True)
     boundary = fields.GeoPolygon('Boundary', srid=4326, gist_index=True)
     has_boundary = fields.Boolean('Has Boundary',
                                   computed='_compute_has_boundary',

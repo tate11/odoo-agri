@@ -2,6 +2,11 @@
 <odoo>
     <data noupdate="1">
 
+        <record forcecreate="True" id="decimal_hectares" model="decimal.precision">
+            <field name="name">Hectare</field>
+            <field name="digits">3</field>
+        </record>
+
         <record forcecreate="True" id="decimal_tons_hectare" model="decimal.precision">
             <field name="name">Tons per Hectare</field>
             <field name="digits">4</field>

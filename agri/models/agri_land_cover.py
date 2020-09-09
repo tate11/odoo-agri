@@ -10,7 +10,7 @@ class AgriLandCover(models.Model):
                                     'Land Class',
                                     ondelete='cascade',
                                     required=True)
-    area_ha = fields.Float('Hectares', required=True)
+    area_ha = fields.Float('Hectares', digits='Hectare', required=True)
     land_id = fields.Many2one('agri.land',
                               'Land',
                               ondelete='cascade',

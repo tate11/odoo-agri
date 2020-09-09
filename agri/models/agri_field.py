@@ -10,7 +10,7 @@ class AgriField(models.Model):
 
     active = fields.Boolean('Active', default=True, tracking=True)
     name = fields.Char('Name', required=True, tracking=True)
-    area_ha = fields.Float('Hectares', tracking=True)
+    area_ha = fields.Float('Hectares', digits='Hectare', tracking=True)
     boundary = fields.GeoPolygon('Boundary', srid=4326, gist_index=True)
     has_boundary = fields.Boolean('Has Boundary',
                                   computed='_compute_has_boundary',
