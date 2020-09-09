@@ -15,7 +15,7 @@
     "data": [
         'security/agri_security.xml',
         'security/ir.model.access.csv',
-        'data/cropping_potential_data.xml',
+        'data/crop_potential_data.xml',
         'data/decimal_precision_data.xml',
         'data/effective_depth_data.xml',
         'data/irrigation_type_data.xml',

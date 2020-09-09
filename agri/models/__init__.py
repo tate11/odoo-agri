@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from . import agri_cropping_potential
+from . import agri_crop_potential
 from . import agri_effective_depth
 from . import agri_farm
 from . import agri_farmland

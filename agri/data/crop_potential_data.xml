@@ -2,23 +2,23 @@
 <odoo>
     <data noupdate="1">
     
-        <record id="very_high" model="agri.croppingpotential">
+        <record id="agri_potential_very_high" model="agri.crop.potential">
             <field name="name">Very High</field>
         </record>
         
-        <record id="high" model="agri.croppingpotential">
+        <record id="agri_potential_high" model="agri.crop.potential">
             <field name="name">High</field>
         </record>
         
-        <record id="medium" model="agri.croppingpotential">
+        <record id="agri_potential_medium" model="agri.crop.potential">
             <field name="name">Medium</field>
         </record>
         
-        <record id="low" model="agri.croppingpotential">
+        <record id="agri_potential_low" model="agri.crop.potential">
             <field name="name">Low</field>
         </record>
         
-        <record id="very_low" model="agri.croppingpotential">
+        <record id="agri_potential_very_low" model="agri.crop.potential">
             <field name="name">Very Low</field>
         </record>
                 

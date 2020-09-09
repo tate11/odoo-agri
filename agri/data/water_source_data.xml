@@ -2,19 +2,19 @@
 <odoo>
     <data noupdate="1">
     
-        <record id="borehole" model="agri.watersource">
+        <record id="agri_source_borehole" model="agri.water.source">
             <field name="name">Borehole</field>
         </record>
     
-        <record id="dam" model="agri.watersource">
+        <record id="agri_source_dam" model="agri.water.source">
             <field name="name">Dam</field>
         </record>
     
-        <record id="irrigation_scheme" model="agri.watersource">
+        <record id="agri_source_irrigation_scheme" model="agri.water.source">
             <field name="name">Irrigation Scheme</field>
         </record>
     
-        <record id="river" model="agri.watersource">
+        <record id="agri_source_river" model="agri.water.source">
             <field name="name">River</field>
         </record>
         

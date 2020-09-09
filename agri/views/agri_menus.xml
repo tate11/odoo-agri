@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <menuitem name="Agri" id="root_menu_agri" 
+    <menuitem id="agri_menu_root" name="Agri"
         sequence="60" 
         web_icon="agri,static/description/icon.png" 
-        groups="group_agri_user"/>
+        groups="agri_group_user"/>
     
-    <menuitem name="Farms" id="menu_agri_farms"
-        parent="root_menu_agri" 
+    <menuitem id="agri_farm_menu" name="Farms"
+        parent="agri_menu_root" 
         sequence="2" 
-        groups="group_agri_user"/>
+        groups="agri_group_user"/>
 
-
-    <menuitem name="Configuration" id="menu_agri_configuration"
-        parent="root_menu_agri"
+    <menuitem id="agri_configuration_menu" name="Configuration"
+        parent="agri_menu_root"
         sequence="100"
-        groups="group_agri_manager"/>
+        groups="agri_group_manager"/>
 
 </odoo>

@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -21,7 +21,7 @@ class AgriLand(models.Model):
                               'Farm',
                               ondelete='cascade',
                               required=True)
-    land_cover_ids = fields.One2many(comodel_name='agri.landcover',
+    land_cover_ids = fields.One2many(comodel_name='agri.land.cover',
                                      inverse_name='land_id',
                                      string='Land Cover',
                                      copy=True)
@@ -39,7 +39,7 @@ class AgriLand(models.Model):
             domain.append(('id', '!=', self.id))
         land = self.env['agri.land'].search(domain, limit=1)
         if land:
-            raise ValidationError('Duplicate Land')
+            raise ValidationError(_('Duplicate Land'))
 
     def name_get(self):
         return [(land.id, "{} ({:.3f} ha)".format(land.name, land.area_ha))

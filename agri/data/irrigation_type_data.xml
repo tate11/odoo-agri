@@ -2,27 +2,27 @@
 <odoo>
     <data noupdate="1">
     
-        <record id="centre_pivot" model="agri.irrigationtype">
+        <record id="agri_irrigation_centre_pivot" model="agri.irrigation.type">
             <field name="name">Centre-Pivot</field>
         </record>
     
-        <record id="drip" model="agri.irrigationtype">
+        <record id="agri_irrigation_drip" model="agri.irrigation.type">
             <field name="name">Drip</field>
         </record>
     
-        <record id="flood" model="agri.irrigationtype">
+        <record id="agri_irrigation_flood" model="agri.irrigation.type">
             <field name="name">Flood</field>
         </record>
     
-        <record id="micro" model="agri.irrigationtype">
+        <record id="agri_irrigation_micro" model="agri.irrigation.type">
             <field name="name">Micro</field>
         </record>
     
-        <record id="sprinkler" model="agri.irrigationtype">
+        <record id="agri_irrigation_sprinkler" model="agri.irrigation.type">
             <field name="name">Sprinkler</field>
         </record>
     
-        <record id="sub_drainage" model="agri.irrigationtype">
+        <record id="agri_irrigation_sub_drainage" model="agri.irrigation.type">
             <field name="name">Sub-drainage</field>
         </record>
         

@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -21,25 +21,25 @@ class AgriField(models.Model):
                               ondelete='cascade',
                               required=True)
 
-    cropping_potential_id = fields.Many2one('agri.croppingpotential',
-                                            'Cropping Potential',
-                                            tracking=True)
-    effective_depth_id = fields.Many2one('agri.effectivedepth',
+    crop_potential_id = fields.Many2one('agri.crop.potential',
+                                        'Crop Potential',
+                                        tracking=True)
+    effective_depth_id = fields.Many2one('agri.effective.depth',
                                          'Effective Depth',
                                          tracking=True)
     irrigated = fields.Boolean('Irrigated', default=False, tracking=True)
-    irrigation_type_id = fields.Many2one('agri.irrigationtype',
+    irrigation_type_id = fields.Many2one('agri.irrigation.type',
                                          'Irrigation Type',
                                          tracking=True)
-    land_class_id = fields.Many2one('agri.landclass',
+    land_class_id = fields.Many2one('agri.land.class',
                                     'Land Class',
                                     required=True,
                                     tracking=True)
-    soil_texture_id = fields.Many2one('agri.soiltexture',
+    soil_texture_id = fields.Many2one('agri.soil.texture',
                                       'Soil Texture',
                                       tracking=True)
     terrain_id = fields.Many2one('agri.terrain', 'Terrain', tracking=True)
-    water_source_id = fields.Many2one('agri.watersource',
+    water_source_id = fields.Many2one('agri.water.source',
                                       'Water Source',
                                       tracking=True)
 
@@ -56,7 +56,7 @@ class AgriField(models.Model):
             domain.append(('id', '!=', self.id))
         field = self.env['agri.field'].search(domain, limit=1)
         if field:
-            raise ValidationError('Duplicate Field name')
+            raise ValidationError(_('Duplicate Field name'))
 
     @api.onchange('irrigation_type_id', 'land_class_id')
     def onchange_irrigated(self):

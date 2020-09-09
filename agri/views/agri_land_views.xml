@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record model="ir.ui.view" id="agri_land_view_search">
-        <field name="name">agri.land.search</field>
+    <record id="agri_land_view_search" model="ir.ui.view">
+        <field name="name">agri.land.view.search</field>
         <field name="model">agri.land</field>
         <field name="arch" type="xml">
            <search string="Lands">
@@ -20,8 +20,8 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="agri_land_view_tree">
-        <field name="name">agri.land.tree</field>
+    <record id="agri_land_view_tree" model="ir.ui.view">
+        <field name="name">agri.land.view.tree</field>
         <field name="model">agri.land</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
@@ -35,8 +35,8 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="agri_land_view_form">
-        <field name="name">agri.land.form</field>
+    <record id="agri_land_view_form" model="ir.ui.view">
+        <field name="name">agri.land.view.form</field>
         <field name="model">agri.land</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
@@ -61,7 +61,7 @@
                             <field name="has_boundary" invisible="1"/>
                         </group>
                     </group>
-                    <field name="land_cover_ids" groups="agri.group_agri_manager">
+                    <field name="land_cover_ids" groups="agri.agri_group_manager">
                         <tree editable="bottom" context="{'default_land_id': id}">
                            <field name="land_class_id"/>
                            <field name="area_ha"/>
@@ -77,7 +77,7 @@
     </record>
 
     <record id="agri_land_inline_view_form" model="ir.ui.view">
-        <field name="name">agri.land.nochatter.form</field>
+        <field name="name">agri.land.view.form.inherit.inline</field>
         <field name="model">agri.land</field>
         <field name="mode">primary</field>
         <field name="inherit_id" ref="agri_land_view_form"/>
@@ -100,8 +100,8 @@
         </field>
     </record>
 
-    <menuitem name="Lands" id="menu_item_agri_lands"
-        parent="menu_agri_farms" 
+    <menuitem id="agri_land_menu_action" name="Lands"
+        parent="agri_farm_menu" 
         sequence="10"
         action="agri_land_action"/>
 

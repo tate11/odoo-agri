@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record model="ir.ui.view" id="agri_farm_view_search">
-        <field name="name">agri.farm.search</field>
+    <record id="agri_farm_view_search" model="ir.ui.view">
+        <field name="name">agri.farm.view.search</field>
         <field name="model">agri.farm</field>
         <field name="arch" type="xml">
            <search string="Farms">
@@ -19,8 +19,8 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="agri_farm_view_tree">
-        <field name="name">agri.farm.tree</field>
+    <record id="agri_farm_view_tree" model="ir.ui.view">
+        <field name="name">agri.farm.view.tree</field>
         <field name="model">agri.farm</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
@@ -34,8 +34,8 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="agri_farm_view_form">
-        <field name="name">agri.farm.form</field>
+    <record id="agri_farm_view_form" model="ir.ui.view">
+        <field name="name">agri.farm.view.form</field>
         <field name="model">agri.farm</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
@@ -93,8 +93,8 @@
 
     </record>
 
-    <menuitem name="Farms" id="menu_item_agri_farms"
-        parent="menu_agri_farms" 
+    <menuitem id="agri_menu_farm_action" name="Farms"
+        parent="agri_farm_menu" 
         sequence="2"
         action="agri_farm_action"/>
 

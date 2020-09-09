@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record model="ir.ui.view" id="agri_farm_view_search">
-        <field name="name">agri.production.record.search</field>
+    <record id="agri_production_record_view_search" model="ir.ui.view">
+        <field name="name">agri.production.record.view.search</field>
         <field name="model">agri.production.record</field>
         <field name="arch" type="xml">
            <search string="Production Records">
@@ -23,8 +23,8 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="agri_farm_view_tree">
-        <field name="name">agri.production.record.tree</field>
+    <record id="agri_production_record_view_tree" model="ir.ui.view">
+        <field name="name">agri.production.record.view.tree</field>
         <field name="model">agri.production.record</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
@@ -41,8 +41,8 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="agri_farm_view_form">
-        <field name="name">agri.production.record.form</field>
+    <record id="agri_production_record_view_form" model="ir.ui.view">
+        <field name="name">agri.production.record.view.form</field>
         <field name="model">agri.production.record</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
@@ -89,7 +89,7 @@
         </field>
     </record>
 
-    <record id="agri_production_action" model="ir.actions.act_window">
+    <record id="agri_production_record_action" model="ir.actions.act_window">
         <field name="name">Production Records</field>
         <field name="res_model">agri.production.record</field>
         <field name="view_mode">tree,form</field>
@@ -103,10 +103,10 @@
 
     </record>
 
-    <menuitem name="Production" id="menu_item_agri_production"
-        parent="menu_agri_records"  
-        groups="agri.group_agri_manager"
+    <menuitem id="agri_production_record_menu_action" name="Production"
+        parent="agri_record_menu"  
+        groups="agri.agri_group_manager"
         sequence="2"
-        action="agri_production_action"/>
+        action="agri_production_record_action"/>
 
 </odoo>

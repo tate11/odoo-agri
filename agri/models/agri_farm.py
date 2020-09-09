@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -52,7 +52,7 @@ class AgriFarm(models.Model):
             domain.append(('id', '!=', self.id))
         farm = self.env['agri.farm'].search(domain, limit=1)
         if farm:
-            raise ValidationError('Duplicate Farm name')
+            raise ValidationError(_('Duplicate Farm name'))
 
     @api.onchange('partner_id')
     def onchange_partner_id(self):

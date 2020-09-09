@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record model="ir.ui.view" id="agri_field_view_search">
-        <field name="name">agri.field.search</field>
+    <record id="agri_field_view_search" model="ir.ui.view">
+        <field name="name">agri.field.view.search</field>
         <field name="model">agri.field</field>
         <field name="arch" type="xml">
            <search string="Fields">
                 <field name="name"/>
                 <field name="farm_id"/>
                 <separator/>
-                <field name="cropping_potential_id"/>
+                <field name="crop_potential_id"/>
                 <field name="effective_depth_id"/>
                 <field name="irrigation_type_id"/>
                 <field name="land_class_id"/>
@@ -23,7 +23,7 @@
                 <group expand="0" string="Group By">
                     <filter string="Farm" name="group_farm" context="{'group_by': 'farm_id'}"/>
                     <filter string="Land Class" name="group_land_class" context="{'group_by': 'land_class_id'}"/>
-                    <filter string="Cropping Potential" name="group_cropping_potential" context="{'group_by': 'cropping_potential_id'}"/>
+                    <filter string="Cropping Potential" name="group_crop_potential" context="{'group_by': 'crop_potential_id'}"/>
                     <filter string="Effective Depth" name="group_effective_depth" context="{'group_by': 'effective_depth_id'}"/>
                     <filter string="Irrigation Type" name="group_irrigation_type" context="{'group_by': 'irrigation_type_id'}"/>
                     <filter string="Soil Texture" name="group_soil_texture" context="{'group_by': 'soil_texture_id'}"/>
@@ -34,8 +34,8 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="agri_field_view_tree">
-        <field name="name">agri.field.tree</field>
+    <record id="agri_field_view_tree" model="ir.ui.view">
+        <field name="name">agri.field.view.tree</field>
         <field name="model">agri.field</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
@@ -49,8 +49,8 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="agri_field_view_form">
-        <field name="name">agri.field.form</field>
+    <record id="agri_field_view_form" model="ir.ui.view">
+        <field name="name">agri.field.view.form</field>
         <field name="model">agri.field</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
@@ -77,7 +77,7 @@
                     <group>
                         <group>
                             <field name="land_class_id"/>
-                            <field name="cropping_potential_id"/>
+                            <field name="crop_potential_id"/>
                             <field name="effective_depth_id"/>
                             <field name="irrigation_type_id"/>
                             <field name="irrigated" invisible="1"/>
@@ -98,7 +98,7 @@
     </record>
 
     <record id="agri_field_inline_view_form" model="ir.ui.view">
-        <field name="name">agri.field.nochatter.form</field>
+        <field name="name">agri.field.view.form.inherit.inline</field>
         <field name="model">agri.field</field>
         <field name="mode">primary</field>
         <field name="inherit_id" ref="agri_field_view_form"/>
@@ -121,8 +121,8 @@
         </field>
     </record>
 
-    <menuitem name="Fields" id="menu_item_agri_fields"
-        parent="menu_agri_farms" 
+    <menuitem id="agri_field_menu_action" name="Fields"
+        parent="agri_farm_menu" 
         sequence="6"
         action="agri_field_action"/>
 
