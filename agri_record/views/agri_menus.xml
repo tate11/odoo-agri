@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem name="Records" id="menu_agri_records"
+        parent="agri.root_menu_agri" 
+        sequence="3" 
+        groups="agri.group_agri_user"/>
+
+</odoo>

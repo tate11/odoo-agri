@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_agri_production_record_all,access_agri_production_record_all,model_agri_production_record,base.group_user,1,0,0,0
+access_agri_production_record_user,access_agri_production_record_user,model_agri_production_record,agri.group_agri_user,1,0,0,0
+access_agri_production_record_manager,access_agri_production_record_manager,model_agri_production_record,agri.group_agri_manager,1,1,1,1
