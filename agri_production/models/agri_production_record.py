@@ -3,12 +3,12 @@ from odoo.exceptions import ValidationError
 from odoo.tools.float_utils import float_round, float_is_zero
 
 
-class AgriProductionRecord(models.Model):
+class ProductionRecord(models.Model):
     _name = 'agri.production.record'
     _description = 'Production Record'
     _order = 'name, create_date desc'
     _check_company_auto = True
-    
+
     name = fields.Char('Record Number',
                        default=lambda self: self.env['ir.sequence'].
                        next_by_code('agri.production.record'),
@@ -43,17 +43,19 @@ class AgriProductionRecord(models.Model):
     #                             ondelete='cascade',
     #                             required=True)
     planted_date = fields.Date('Planted Date')
-    planted_ha = fields.Float('Planted Hectares', digits='Hectare')
+    planted_area = fields.Float('Planted Hectares', digits='Hectare')
+    planted_uom_id = fields.Many2one('uom.uom',
+                                     'Planted Measure',
+                                     domain="[('measure_type', '=', 'area')]")
     delivered_date = fields.Date('Delivered Date')
+    delivered_weight = fields.Float('Delivered Weight', digits='Stock Weight')
     delivered_uom_id = fields.Many2one(
         'uom.uom',
         'Delivered Measure',
         domain="[('measure_type', '=', 'weight')]")
-    delivered_uom_qty = fields.Float('Delivered Quantity',
-                                     digits='Stock Weight')
-    delivered_t_ha = fields.Float('Delivered t/Ha',
+    yield = fields.Float('Yield',
                                   digits=(8, 6),
-                                  compute='_compute_delivered_t_ha',
+                                  compute='_compute_yield',
                                   readonly=False,
                                   store=True)
     delivered_warehouse_id = fields.Many2one('stock.warehouse',
@@ -66,19 +68,17 @@ class AgriProductionRecord(models.Model):
     # ]
 
     @api.onchange('planted_ha', 'delivered_uom_id', 'delivered_uom_qty')
-    def _compute_delivered_t_ha(self):
+    def _compute_yield(self):
         updated_field = self.env.context.get('updated_field')
-        if not updated_field or updated_field not in ['delivered_t_ha']:
-            ha_uom = self.env['uom.uom'].search([('name', '=', 'ha')],
-                                                   limit=1)
+        if not updated_field or updated_field not in ['yield']:
+            ha_uom = self.env['uom.uom'].search([('name', '=', 'ha')], limit=1)
             tons_uom = self.env['uom.uom'].search([('name', '=', 't')],
-                                                     limit=1)
+                                                  limit=1)
             precision = self.env['decimal.precision'].precision_get(
                 'Tons per Hectare')
             for record in self:
                 if record.delivered_uom_id and record.planted_ha and not float_is_zero(
-                        record.planted_ha,
-                        precision_rounding=ha_uom.rounding):
+                        record.planted_ha, precision_rounding=ha_uom.rounding):
                     delivered_tons = record.delivered_uom_id._compute_quantity(
                         record.delivered_uom_qty, tons_uom, round=False)
                     record.delivered_t_ha = delivered_tons / record.planted_ha
@@ -89,10 +89,9 @@ class AgriProductionRecord(models.Model):
         if not updated_field or updated_field not in [
                 'planted_ha', 'delivered_uom_id', 'delivered_uom_qty'
         ]:
-            ha_uom = self.env['uom.uom'].search([('name', '=', 'ha')],
-                                                   limit=1)
+            ha_uom = self.env['uom.uom'].search([('name', '=', 'ha')], limit=1)
             tons_uom = self.env['uom.uom'].search([('name', '=', 't')],
-                                                     limit=1)
+                                                  limit=1)
             for record in self:
                 if record.planted_ha and not record.delivered_uom_qty:
                     if not record.delivered_uom_id:
@@ -113,7 +112,8 @@ class AgriProductionRecord(models.Model):
     def _check_delivered(self):
         if (self.delivered_uom_id and not self.delivered_uom_qty) or (
                 not self.delivered_uom_id and self.delivered_uom_qty):
-            raise ValidationError(_('Delivery Measure and Quantity must be set.'))
+            raise ValidationError(
+                _('Delivery Measure and Quantity must be set.'))
 
     @api.onchange('field_id')
     def _onchange_field_id(self):
