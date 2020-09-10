@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+    
+        <record id="agri_class_commerical" model="agri.land.use">
+            <field name="name">Commercial</field>
+        </record>
+        
+        <record id="agri_class_cropland" model="agri.land.use">
+            <field name="name">Cropland</field>
+        </record>
+        
+        <record id="agri_class_cropland_irrigated" model="agri.land.use">
+            <field name="name">Cropland (Irrigated)</field>
+            <field name="irrigated" eval="True"/>
+        </record>
+        
+        <record id="agri_class_cropland_smallholding" model="agri.land.use">
+            <field name="name">Cropland (Smallholding)</field>
+        </record>
+        
+        <record id="agri_class_cropland_subsistence" model="agri.land.use">
+            <field name="name">Cropland (Subsistence)</field>
+        </record>
+        
+        <record id="agri_class_dam" model="agri.land.use">
+            <field name="name">Dam</field>
+        </record>
+        
+        <record id="agri_class_erosion" model="agri.land.use">
+            <field name="name">Erosion</field>
+        </record>
+        
+        <record id="agri_class_forest" model="agri.land.use">
+            <field name="name">Forest</field>
+        </record>
+        
+        <record id="agri_class_grazing" model="agri.land.use">
+            <field name="name">Grazing</field>
+        </record>
+        
+        <record id="agri_class_grazing_bush" model="agri.land.use">
+            <field name="name">Grazing (Bush)</field>
+        </record>
+        
+        <record id="agri_class_grazing_fynbos" model="agri.land.use">
+            <field name="name">Grazing (Fynbos)</field>
+        </record>
+        
+        <record id="agri_class_grazing_shrubland" model="agri.land.use">
+            <field name="name">Grazing (Shrubland)</field>
+        </record>
+        
+        <record id="agri_class_greenhouses" model="agri.land.use">
+            <field name="name">Greenhouses</field>
+        </record>
+        
+        <record id="agri_class_homestead" model="agri.land.use">
+            <field name="name">Homestead</field>
+        </record>
+        
+        <record id="agri_class_horticulture" model="agri.land.use">
+            <field name="name">Horticulture</field>
+        </record>
+        
+        <record id="agri_class_industrial" model="agri.land.use">
+            <field name="name">Industrial</field>
+        </record>
+        
+        <record id="agri_class_landfill" model="agri.land.use">
+            <field name="name">Landfill</field>
+        </record>
+        
+        <record id="agri_class_mining" model="agri.land.use">
+            <field name="name">Mining</field>
+        </record>
+        
+        <record id="agri_class_non_vegetated" model="agri.land.use">
+            <field name="name">Non-vegetated</field>
+        </record>
+        
+        <record id="agri_class_ocean" model="agri.land.use">
+            <field name="name">Ocean</field>
+        </record>
+        
+        <record id="agri_class_orchard" model="agri.land.use">
+            <field name="name">Orchard</field>
+        </record>
+        
+        <record id="agri_class_orchard_shadenet" model="agri.land.use">
+            <field name="name">Orchard (Shadenet)</field>
+        </record>
+        
+        <record id="agri_class_pineapple" model="agri.land.use">
+            <field name="name">Pineapple</field>
+        </record>
+        
+        <record id="agri_class_plantation" model="agri.land.use">
+            <field name="name">Plantation</field>
+        </record>
+        
+        <record id="agri_class_plantation_smallholding" model="agri.land.use">
+            <field name="name">Plantation (Smallholding)</field>
+        </record>
+        
+        <record id="agri_class_planted_pastures" model="agri.land.use">
+            <field name="name">Planted Pastures</field>
+        </record>
+        
+        <record id="agri_class_planted_pastures_irrigated" model="agri.land.use">
+            <field name="name">Planted Pastures (Irrigated)</field>
+            <field name="irrigated" eval="True"/>
+        </record>
+        
+        <record id="agri_class_recreational" model="agri.land.use">
+            <field name="name">Recreational</field>
+        </record>
+        
+        <record id="agri_class_residential" model="agri.land.use">
+            <field name="name">Residential</field>
+        </record>
+        
+        <record id="agri_class_residential_informal" model="agri.land.use">
+            <field name="name">Residential (Informal)</field>
+        </record>
+        
+        <record id="agri_class_residential_smallholding" model="agri.land.use">
+            <field name="name">Residential (Smallholding)</field>
+        </record>
+        
+        <record id="agri_class_river" model="agri.land.use">
+            <field name="name">River</field>
+        </record>
+        
+        <record id="agri_class_road_rail" model="agri.land.use">
+            <field name="name">Road &amp; Rail</field>
+        </record>
+        
+        <record id="agri_class_sewage_ponds" model="agri.land.use">
+            <field name="name">Sewage Ponds</field>
+        </record>
+        
+        <record id="agri_class_structures_handling" model="agri.land.use">
+            <field name="name">Structures (Handling)</field>
+        </record>
+        
+        <record id="agri_class_structures_processing" model="agri.land.use">
+            <field name="name">Structures (Processing)</field>
+        </record>
+        
+        <record id="agri_class_structures_storage" model="agri.land.use">
+            <field name="name">Structures (Storage)</field>
+        </record>
+        
+        <record id="agri_class_sugarcane" model="agri.land.use">
+            <field name="name">Sugarcane</field>
+        </record>
+        
+        <record id="agri_class_sugarcane_irrigated" model="agri.land.use">
+            <field name="name">Sugarcane (Irrigated)</field>
+            <field name="irrigated" eval="True"/>
+        </record>
+        
+        <record id="agri_class_sugarcane_small_scale" model="agri.land.use">
+            <field name="name">Sugarcane (Small-scale)</field>
+        </record>
+        
+        <record id="agri_class_tea" model="agri.land.use">
+            <field name="name">Tea</field>
+        </record>
+        
+        <record id="agri_class_tea_irrigated" model="agri.land.use">
+            <field name="name">Tea (Irrigated)</field>
+            <field name="irrigated" eval="True"/>
+        </record>
+        
+        <record id="agri_class_utilities" model="agri.land.use">
+            <field name="name">Utilities</field>
+        </record>
+        
+        <record id="agri_class_vegetables" model="agri.land.use">
+            <field name="name">Vegetables</field>
+        </record>
+        
+        <record id="agri_class_village" model="agri.land.use">
+            <field name="name">Village</field>
+        </record>
+        
+        <record id="agri_class_vineyard" model="agri.land.use">
+            <field name="name">Vineyard</field>
+        </record>
+        
+        <record id="agri_class_wasteland" model="agri.land.use">
+            <field name="name">Wasteland</field>
+        </record>
+        
+        <record id="agri_class_water" model="agri.land.use">
+            <field name="name">Water</field>
+        </record>
+        
+        <record id="agri_class_water_seasonal" model="agri.land.use">
+            <field name="name">Water (Seasonal)</field>
+        </record>
+        
+        <record id="agri_class_wetland" model="agri.land.use">
+            <field name="name">Wetland</field>
+        </record>
+        
+    </data>
+</odoo>

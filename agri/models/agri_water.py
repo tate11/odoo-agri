@@ -1,9 +1,9 @@
 from odoo import api, fields, models
 
 
-class Terrain(models.Model):
-    _name = 'agri.terrain'
-    _description = 'Terrain'
+class WaterSource(models.Model):
+    _name = 'agri.water.source'
+    _description = 'Water Source'
     _order = 'name asc'
 
     name = fields.Char('Name', required=True)

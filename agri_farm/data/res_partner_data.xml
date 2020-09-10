@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <function model="res.partner" name="create_missing_farm_versions"/>
+
+    </data>
+</odoo>

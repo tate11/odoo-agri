@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-        <record id="agri_settings_action" model="ir.actions.act_window">
-            <field name="name">Settings</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.config.settings</field>
-            <field name="view_mode">form</field>
-            <field name="target">inline</field>
-            <field name="context">{'module' : 'agri'}</field>
-        </record>
+    <record id="agri_settings_action" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module' : 'agri'}</field>
+    </record>
 
-        <menuitem id="agri_settings_menu_action" name="Settings"
-            parent="agri_configuration_menu" 
-            sequence="0" 
-            action="agri_settings_action" 
-            groups="base.group_system"/>
+    <menuitem id="agri_settings_menu_action" name="Settings"
+        parent="agri_configuration_menu" 
+        sequence="0" 
+        action="agri_settings_action" 
+        groups="base.group_system"/>
 
 </odoo>
