@@ -20,7 +20,7 @@ class BudgetCategory(models.Model):
          ('animal-feed', 'Animal Feed'), ('husbandry', 'Hubsandry'),
          ('indirect', 'Indirect')],
         string='Category Type',
-        default='consu',
+        default='pre-harvest',
         required=True,
         help=
         'Budget category types determine how the income/expenses are allocated.\n'
