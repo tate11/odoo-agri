@@ -1,0 +1,52 @@
+id,name
+agri_land_use_1,Water
+agri_land_use_2,Water (Seasonal)
+agri_land_use_3,Wetland
+agri_land_use_4,Forest
+agri_land_use_5,Erosion
+agri_land_use_6,Bare
+agri_land_use_7,River
+agri_land_use_8,Ocean
+agri_land_use_9,Wasteland
+agri_land_use_10,Grazing
+agri_land_use_11,Grazing (Shrubland)
+agri_land_use_12,Grazing (Bush)
+agri_land_use_13,Grazing (Fynbos)
+agri_land_use_14,Planted Pasture
+agri_land_use_15,Planted Pasture (Irrigated)
+agri_land_use_16,Conservation
+agri_land_use_20,Crop
+agri_land_use_21,Crop (Irrigated)
+agri_land_use_22,Crop (Smallholding)
+agri_land_use_23,Crop (Subsistence)
+agri_land_use_24,Vegetable
+agri_land_use_25,Horticulture
+agri_land_use_26,Greenhouse
+agri_land_use_30,Orchard
+agri_land_use_31,Orchard (Shadenet)
+agri_land_use_32,Vineyard
+agri_land_use_40,Sugarcane
+agri_land_use_41,Sugarcane (Irrigated)
+agri_land_use_42,Sugarcane (Small-scale)
+agri_land_use_43,Pineapple
+agri_land_use_44,Tea
+agri_land_use_45,Tea (Irrigated)
+agri_land_use_50,Timber
+agri_land_use_51,Timber (Smallholding)
+agri_land_use_60,Homestead
+agri_land_use_61,Structure (Processing)
+agri_land_use_62,Structure (Storage)
+agri_land_use_63,Structure (Handling)
+agri_land_use_64,Utility
+agri_land_use_65,Dam
+agri_land_use_70,Mining
+agri_land_use_71,Commercial
+agri_land_use_72,Industrial
+agri_land_use_73,Road & Rail
+agri_land_use_74,Landfill
+agri_land_use_75,Sewage Pond
+agri_land_use_80,Residential
+agri_land_use_81,Residential (Informal)
+agri_land_use_82,Village
+agri_land_use_83,Residential (Smallholding)
+agri_land_use_84,Recreational

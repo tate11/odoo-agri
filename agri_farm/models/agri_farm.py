@@ -220,3 +220,19 @@ class FarmVersion(models.Model):
         farm_version = super(FarmVersion, self).copy(default=default)
         self.write({'child_farm_version_ids': [(4, [farm_version.id])]})
         return farm_version
+
+
+class FarmLandUse(models.Model):
+    _name = 'agri.farm.land.use'
+    _description = 'Farm Land Use'
+    _order = 'area_ha desc'
+
+    land_use_id = fields.Many2one('agri.land.use',
+                                  'Land Use',
+                                  ondelete='cascade',
+                                  required=True)
+    area_ha = fields.Float('Hectares', digits='Hectare', required=True)
+    farm_id = fields.Many2one('agri.farm',
+                              'Parcel',
+                              ondelete='cascade',
+                              required=True)

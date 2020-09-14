@@ -1,0 +1,52 @@
+land_cover_id,land_cover,land_use_land_class,land_use_id
+1,Water,1,Water
+2,Water (Seasonal),2,Water (Seasonal)
+3,Wetland,3,Wetland
+4,Forest,4,Forest
+5,Erosion,5,Erosion
+6,Bare,6,Bare
+7,River,7,River
+8,Ocean,8,Ocean
+9,Wasteland,9,Wasteland
+10,Grazing,10,Grazing
+11,Grazing (Shrubland),11,Grazing (Shrubland)
+12,Grazing (Bush),12,Grazing (Bush)
+13,Grazing (Fynbos),13,Grazing (Fynbos)
+14,Planted Pastures,14,Planted Pasture
+15,Planted Pastures (Irrigated),15,Planted Pasture (Irrigated)
+,,16,Conservation
+20,Cropland,20,Crop
+21,Cropland (Irrigated),21,Crop (Irrigated)
+22,Cropland (Smallholding),22,Crop (Smallholding)
+23,Cropland (Subsistence),23,Crop (Subsistence)
+24,Vegetables,24,Vegetable
+25,Horticulture,25,Horticulture
+26,Greenhouses,26,Greenhouse
+30,Orchard,30,Orchard
+31,Orchard (Shadenet),31,Orchard (Shadenet)
+32,Vineyard,32,Vineyard
+40,Sugarcane,40,Sugarcane
+41,Sugarcane (Irrigated),41,Sugarcane (Irrigated)
+42,Sugarcane (Small-scale),42,Sugarcane (Small-scale)
+43,Pineapple,43,Pineapple
+44,Tea,44,Tea
+45,Tea (Irrigated),45,Tea (Irrigated)
+50,Woodlot,50,Timber
+51,Woodlot (Smallholding),51,Timber (Smallholding)
+60,Homestead,60,Homestead
+61,Structures (Processing),61,Structure (Processing)
+62,Structures (Storage),62,Structure (Storage)
+63,Structures (Handling),63,Structure (Handling)
+64,Utilities,64,Utility
+65,Dam,65,Dam
+70,Mining,70,Mining
+71,Commercial,71,Commercial
+72,Industrial,72,Industrial
+73,Road & Rail,73,Road & Rail
+74,Landfill,74,Landfill
+75,Sewage Ponds,75,Sewage Pond
+80,Residential,80,Residential
+81,Residential (Informal),81,Residential (Informal)
+82,Village,82,Village
+83,Residential (Smallholding),83,Residential (Smallholding)
+84,Recreational,84,Recreational
