@@ -24,6 +24,8 @@
     "data": [
         'security/agri_security.xml',
         'security/ir.model.access.csv',
+        'data/uom_data.xml',
+        'data/agri.budget.category.csv',
         'data/agri_crop_data.xml',
         'data/agri_irrigation_data.xml',
         'data/agri.land.use.csv',
@@ -31,7 +33,6 @@
         'data/agri_terrain_data.xml',
         'data/agri_water_data.xml',
         'data/decimal_precision_data.xml',
-        'data/uom_data.xml',
         'views/agri_views.xml',
         'views/res_config_settings_views.xml',
     ],

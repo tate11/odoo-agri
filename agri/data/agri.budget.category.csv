@@ -1,0 +1,87 @@
+id,name,uom_id,type,purchase_ok,sale_ok
+INC-LSS-SLAMB,Lamb,heads,livestock-sales,TRUE,TRUE
+INC-LSS-SWEAN,Weaner Lamb,heads,livestock-sales,TRUE,TRUE
+INC-LSS-SEWE,Ewe,heads,livestock-sales,TRUE,TRUE
+INC-LSS-SWTH,Wether,heads,livestock-sales,TRUE,TRUE
+INC-LSS-SRAM,Ram,heads,livestock-sales,TRUE,TRUE
+INC-LSS-CCALV,Calf,heads,livestock-sales,TRUE,TRUE
+INC-LSS-CWEN,Weaner Calf,heads,livestock-sales,TRUE,TRUE
+INC-LSS-CCOW,Cow,heads,livestock-sales,TRUE,TRUE
+INC-LSS-CHEI,Heifer,heads,livestock-sales,TRUE,TRUE
+INC-LSS-CST18,Steer,heads,livestock-sales,TRUE,TRUE
+INC-LSS-CST36,Ox,heads,livestock-sales,TRUE,TRUE
+INC-LSS-CBULL,Bull,heads,livestock-sales,TRUE,TRUE
+INC-LSS-GKID,Kid,heads,livestock-sales,TRUE,TRUE
+INC-LSS-GWEAN,Weaner Kid,heads,livestock-sales,TRUE,TRUE
+INC-LSS-GEWE,Ewe,heads,livestock-sales,TRUE,TRUE
+INC-LSS-GCAST,Castrate,heads,livestock-sales,TRUE,TRUE
+INC-LSS-GRAM,Ram,heads,livestock-sales,TRUE,TRUE
+INC-LSS-RKIT,Kit,heads,livestock-sales,TRUE,TRUE
+INC-LSS-RWEN,Weaner Kit,heads,livestock-sales,TRUE,TRUE
+INC-LSS-RDOE,Doe,heads,livestock-sales,TRUE,TRUE
+INC-LSS-RLAP,Lapin,heads,livestock-sales,TRUE,TRUE
+INC-LSS-RBUC,Buck,heads,livestock-sales,TRUE,TRUE
+INC-LSP-MILK,Milk,Liters,livestock-products,,TRUE
+INC-LSP-WOOL,Wool,kg,livestock-products,,TRUE
+INC-LSP-LFUR,Fur,kg,livestock-products,,TRUE
+INC-CPS-CROP,Crop,t,crop-sales,,TRUE
+INC-FRS-FRUT,Fruit,t,fruit-sales,,TRUE
+EXP-EST-DRAN,Drainage,sum,establishment,,
+EXP-EST-IRRG,Irrigation,sum,establishment,,
+EXP-EST-LPRP,Land preparation,sum,establishment,,
+EXP-EST-TRLL,Trellising,sum,establishment,,
+EXP-HVP-PLTM,Plant Material,each,establishment,,
+EXP-HVP-CONS,Consultants,sum,pre-harvest,,
+EXP-HVP-SEED,Seed,kg,pre-harvest,,
+EXP-HVP-ELEC,Electricity,sum,pre-harvest,,
+EXP-HVP-FERT,Fertiliser,t,pre-harvest,,
+EXP-HVP-FUEL,Fuel,Liters,pre-harvest,,
+EXP-HVP-FUNG,Fungicide,sum,pre-harvest,,
+EXP-HVP-GENL,General,sum,pre-harvest,,
+EXP-HVP-LIME,Lime,t,pre-harvest,,
+EXP-HVP-HERB,Herbicide,Liters,pre-harvest,,
+EXP-HVP-PEST,Pesticide,Liters,pre-harvest,,
+EXP-HVP-PGRG,Plant growth regulators,sum,pre-harvest,,
+EXP-HVP-POLL,Pollination,ha,pre-harvest,,
+EXP-HVP-SPYA,Aerial spraying,ha,pre-harvest,,
+EXP-HVP-PRCI,Production Credit Interest,sum,pre-harvest,,
+EXP-HVP-INSH,Hail insurance,t,pre-harvest,,
+EXP-HVP-INSM,Yield insurance,t,pre-harvest,,
+EXP-HVP-HEDG,Hedging cost,t,pre-harvest,,
+EXP-HVP-REPP,Repairs & maintenance,sum,pre-harvest,,
+EXP-HVP-SLAB,Seasonal labour,ha,pre-harvest,,
+EXP-HVT-FUEL,Fuel,Liters,harvest,,
+EXP-HVT-LABC,Harvest labour,ha,harvest,,
+EXP-HVT-HVTT,Harvest transport,sum,harvest,,
+EXP-HVT-HVTC,Harvesting cost,sum,harvest,,
+EXP-HVT-REPP,Repairs & maintenance,sum,harvest,,
+EXP-HVT-STOR,Storage,Days,harvest,,
+EXP-HVT-PAKM,Packaging material,each,harvest,,
+EXP-HVT-DYCL,Drying & cleaning,t,harvest,,
+EXP-HVT-PAKC,Packing cost,each,harvest,,
+EXP-IDR-DEPR,Depreciation,sum,indirect,,
+EXP-IDR-FUEL,Fuel,Liters,indirect,,
+EXP-IDR-LUBR,Lubrication,Liters,indirect,,
+EXP-IDR-REPP,Repairs & maintenance,sum,indirect,,
+EXP-IDR-ELEC,Electricity,sum,indirect,,
+EXP-IDR-INTR,Interest on loans,sum,indirect,,
+EXP-IDR-WATR,Water,sum,indirect,,
+EXP-IDR-LABP,Permanent labour,sum,indirect,,
+EXP-IDR-SCHED,Scheduling,sum,indirect,,
+EXP-IDR-LICS,License,sum,indirect,,
+EXP-IDR-INSA,Insurance assets,sum,indirect,,
+EXP-IDR-OTHER,Other overheads,sum,indirect,,
+EXP-AMF-CROP,Crop,kg,animal-feed,,
+EXP-AMF-LICK,Lick,t,animal-feed,,
+EXP-HBD-VACC,Drenching & vaccination,heads,husbandry,,
+EXP-HBD-DIPP,Dipping & jetting,heads,husbandry,,
+EXP-HBD-VETY,Veterinary,heads,husbandry,,
+EXP-HBD-SHER,Shearing,heads,husbandry,,
+EXP-HBD-CRCH,Crutching,heads,husbandry,,
+EXP-MRK-LSSF,Livestock sales marketing fees,t,marketing,,
+EXP-MRK-LSPF,Livestock products marketing fees,t,marketing,,
+EXP-MRK-HOTF,Horticulture marketing fees,t,marketing,,
+EXP-MRK-CRPF,Crop marketing fees,t,marketing,,
+EXP-MRK-LSTP,Livestock transport,heads,marketing,,
+EXP-MRK-HOTT,Fruit transport,t,marketing,,
+EXP-MRK-CRPT,Crop transport,t,marketing,,

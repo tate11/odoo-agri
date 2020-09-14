@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from . import agri_budget
 from . import agri_crop
 from . import agri_irrigation
 from . import agri_land
