@@ -69,7 +69,7 @@
                     </group>
                     <group>
                         <group>
-                            <field name="season_id"/>
+                            <field name="season_id" context="{'default_is_season': 1}"/>
                             <field name="planted_date" attrs="{'required': [('planted_ha', '!=', 0.0)]}"/>
                             <field name="planted_ha" 
                                 context="{'updated_field': 'planted_ha'}" 
@@ -109,15 +109,15 @@
 
     <!-- menu items -->
 
-    <menuitem id="agri_production_record_menu" name="Records"
+    <menuitem id="agri_production_menu" name="Production"
         parent="agri.agri_menu_root" 
         sequence="10" 
         groups="agri.agri_group_user"/>
 
-    <menuitem id="agri_production_record_action_menu" name="Production"
-        parent="agri_production_record_menu"  
+    <menuitem id="agri_production_record_action_menu" name="Production Records"
+        parent="agri_production_menu"  
         groups="agri.agri_group_manager"
-        sequence="2"
+        sequence="10"
         action="agri_production_record_action"/>
 
 </odoo>

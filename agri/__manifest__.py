@@ -20,7 +20,7 @@
     "AGPL-3",
     "description":
     "Agriculture base module",
-    "depends": ['base', 'date_range', 'uom'],
+    "depends": ['base', 'uom'],
     "data": [
         'security/agri_security.xml',
         'security/ir.model.access.csv',
