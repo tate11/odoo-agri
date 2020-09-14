@@ -192,10 +192,9 @@ class FarmVersion(models.Model):
     partner_id = fields.Many2one('res.partner',
                                  string='Partner',
                                  ondelete='cascade')
-    company_id = fields.Many2one(related='partner_id.company_id',
-                                 index=True,
-                                 readonly=True,
-                                 store=True)
+    company_id = fields.Many2one('res.company',
+                                 required=True,
+                                 default=lambda self: self.env.company)
     parent_farm_version_id = fields.Many2one('agri.farm.version',
                                              'Parent Version')
     child_farm_version_ids = fields.Many2many('agri.farm.version',
