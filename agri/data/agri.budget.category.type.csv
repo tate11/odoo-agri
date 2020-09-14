@@ -1,0 +1,13 @@
+id, name
+'INC-CPS','Crop Sales'
+'INC-FRS','Fruit Sales'
+'EST','Establishment'
+'HVT','Harvest'
+'HVP','Preharvest'
+'INC-LSS','Livestock Sales'
+'INC-LSP','Product Sales'
+'EXP-AMF','Animal Feed'
+'HBD','Husbandry'
+'IDR','Indirect Costs'
+'MRK','Marketing'
+'RPM','Replacements'

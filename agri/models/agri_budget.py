@@ -28,3 +28,27 @@ class BudgetCategory(models.Model):
         'agricultural production system.')
     sale_ok = fields.Boolean('Can be Sold', default=True)
     purchase_ok = fields.Boolean('Can be Purchased', default=True)
+
+
+class BudgetTemplate(models.Model):
+    _name = 'agri.budget.template'
+    _description = 'Budget Template'
+    _order = 'name asc'
+
+    name = fields.Char('Name', required=True)
+
+
+class BudgetTemplateLine(models.Model):
+    _name = 'agri.budget.template.line'
+    _description = 'Budget Template'
+
+    agri_budget_template_id = fields.Many2one(
+        'agri.budget.template',
+        'Template',
+        required=True,
+    )
+    agri_budget_category_id = fields.Many2one(
+        'agri.budget.category',
+        'Category',
+        required=True,
+    )

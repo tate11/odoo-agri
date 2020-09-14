@@ -26,6 +26,8 @@
         'security/ir.model.access.csv',
         'data/uom_data.xml',
         'data/agri.budget.category.csv',
+        'data/agri.budget.template.csv',
+        'data/agri.budget.template.line.csv',
         'data/agri_crop_data.xml',
         'data/agri_irrigation_data.xml',
         'data/agri.land.use.csv',
