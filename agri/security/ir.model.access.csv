@@ -1,4 +1,7 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_agri_budget_category_all,access_agri_budget_category_all,model_agri_budget_category,base.group_user,1,0,0,0
+access_agri_budget_category_user,access_agri_budget_category_user,model_agri_budget_category,agri.agri_group_user,1,1,1,1
+access_agri_budget_category_manager,access_agri_budget_category_manager,model_agri_budget_category,agri.agri_group_manager,1,1,1,1
 access_agri_crop_potential_all,access_agri_crop_potential_all,model_agri_crop_potential,base.group_user,1,0,0,0
 access_agri_crop_potential_user,access_agri_crop_potential_user,model_agri_crop_potential,agri.agri_group_user,1,0,0,0
 access_agri_crop_potential_manager,access_agri_crop_potential_manager,model_agri_crop_potential,agri.agri_group_manager,1,1,1,1
