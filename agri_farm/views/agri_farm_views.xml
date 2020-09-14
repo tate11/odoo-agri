@@ -53,12 +53,13 @@
                         <group>
                             <field name="farm_version_id" invisible="1"/>
                             <field name="partner_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
                             <field name="area_ha" attrs="{'readonly': [('has_boundary', '!=', False)]}"/>
                             <field name="has_boundary" invisible="1"/>
                         </group>
                         <group>
-                            <field name="create_date" readonly="1"/>
-                            <field name="company_id"/>
+                            <field name="area_ha" attrs="{'readonly': [('has_boundary', '!=', False)]}"/>
+                            <field name="has_boundary" invisible="1"/>
                             <field name="active"/>
                         </group>
                     </group>

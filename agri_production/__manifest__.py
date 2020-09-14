@@ -15,7 +15,7 @@
     "data": [
         'security/ir.model.access.csv',
         'data/res_company_data.xml',
-        'views/agri_production_record_views.xml',
+        'views/agri_production_views.xml',
         'views/date_range_views.xml',
         'views/product_views.xml',
     ],
