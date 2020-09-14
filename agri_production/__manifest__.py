@@ -11,11 +11,12 @@
     "author": "Agrista (Pty) Ltd.",
     "license": "AGPL-3",
     "description": "Agriculture module for Production management",
-    "depends": ['base', 'stock', 'agri_farm'],
+    "depends": ['base', 'date_range', 'stock', 'agri_farm'],
     "data": [
         'security/ir.model.access.csv',
         'data/res_company_data.xml',
         'views/agri_production_record_views.xml',
+        'views/date_range_views.xml',
         'views/product_views.xml',
     ],
     "demo": [],

@@ -59,14 +59,9 @@
 
     <!-- menu items -->
 
-    <menuitem id="agri_crop_menu" name="Crops"
-        parent="agri.agri_menu_root" 
-        sequence="5" 
-        groups="agri.agri_group_user"/>
-
-    <menuitem id="agri_crop_cultivar_action_menu" name="Cultivars"
-        parent="agri_crop_menu" 
-        sequence="2"
+    <menuitem id="agri_cultivar_action_menu" name="Cultivars"
+        parent="agri_production_menu" 
+        sequence="5"
         action="agri_cultivar_action"/>
 
 </odoo>
