@@ -17,10 +17,9 @@ class Farm(models.Model):
                                  ondelete='cascade',
                                  required=True,
                                  check_company=True)
-    company_id = fields.Many2one(related='partner_id.company_id',
-                                 index=True,
-                                 readonly=True,
-                                 store=True)
+    company_id = fields.Many2one('res.company',
+                                 required=True,
+                                 default=lambda self: self.env.company)
     area_ha = fields.Float('Hectares', digits='Hectare')
     boundary = fields.GeoPolygon('Boundary', srid=4326, gist_index=True)
     has_boundary = fields.Boolean('Has Boundary',
