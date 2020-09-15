@@ -10,7 +10,7 @@ class BudgetCategory(models.Model):
     uom_id = fields.Many2one('uom.uom',
                              'Unit of Measure',
                              required=True,
-                             help="Unit of measure used for allocating costs.")
+                             help='Unit of measure used for allocating costs.')
     type = fields.Selection(
         [('crop-sales', 'Crop Sales'), ('fruit-sales', 'Fruit Sales'),
          ('livestock-sales', 'Livestock Sales'),
@@ -28,6 +28,32 @@ class BudgetCategory(models.Model):
         'agricultural production system.')
     sale_ok = fields.Boolean('Can be Sold', default=True)
     purchase_ok = fields.Boolean('Can be Purchased', default=True)
+
+
+class BudgetCategoryAccount(models.Model):
+    _name = 'agri.budget.category.account'
+    _description = 'Budget Category Account'
+
+    budget_category_id = fields.Many2one('agri.budget.category',
+                                         string='Budget Category',
+                                         ondelete='cascade',
+                                         index=True,
+                                         required=True)
+    account_id = fields.Many2one('account.account',
+                                 string='Account',
+                                 required=True,
+                                 index=True,
+                                 ondelete='cascade',
+                                 domain=[('deprecated', '=', False)])
+    company_id = fields.Many2one('res.company',
+                                 string='Company',
+                                 default=lambda self: self.env.company)
+
+    _sql_constraints = [
+        ('budget_category_Account_uniq',
+         'unique(budget_category_id, account_id, company_id)',
+         'The Budget Category Account record must be unique per company!'),
+    ]
 
 
 class BudgetTemplate(models.Model):
