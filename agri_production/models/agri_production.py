@@ -25,8 +25,17 @@ class ProductionPlanLine(models.Model):
                                   string='Currency',
                                   readonly=True)
     amount = fields.Monetary(string='Price', required=True)
+    total = fields.Monetary(string='Total',
+                            compute='_compute_total',
+                            store=True)
     unit_uom_id = fields.Many2one(related='production_plan_id.unit_uom_id',
                                   readonly=True)
+
+    @api.depends('quantity', 'amount', 'production_plan_id.total_ha')
+    def _compute_total(self):
+        for line in self:
+            line.total = line.amount * line.production_plan_id.total_ha * (
+                line.quantity or 1.0)
 
     def name_get(self):
         return [(line.id, "{} ({})".format(line.budget_category_id.name,
@@ -61,6 +70,9 @@ class ProductionPlan(models.Model):
         'farm_field_id',
         domain="[('farm_id.partner_id', '=', partner_id)]",
         string='Fields')
+    total_ha = fields.Float('Total Hectares',
+                            compute='_compute_total_ha',
+                            store=True)
     plan_line_ids = fields.One2many(comodel_name='agri.production.plan.line',
                                     inverse_name='production_plan_id',
                                     string='Production Plan Lines',
@@ -74,6 +86,13 @@ class ProductionPlan(models.Model):
                                   'Unit',
                                   domain="[('measure_type', '=', 'area')]",
                                   required=True)
+
+    @api.depends('farm_field_ids.area_ha')
+    def _compute_total_ha(self):
+        for plan in self:
+            fields_with_area = plan.farm_field_ids.filtered(
+                lambda field: field.area_ha)
+            plan.total_ha = sum(fields_with_area.mapped('area_ha'))
 
     @api.onchange('company_id')
     def _onchange_company_id(self):
