@@ -41,7 +41,7 @@ HVP-GENL,General,agri_uom_sum,pre-harvest,,TRUE
 HVP-LIME,Lime,uom.product_uom_ton,pre-harvest,,TRUE
 HVP-HERB,Herbicide,uom.product_uom_litre,pre-harvest,,TRUE
 HVP-PEST,Pesticide,uom.product_uom_litre,pre-harvest,,TRUE
-HVP-PGRG,Plant growth regulators,agri_uom_sum,pre-harvest,,TRUE
+HVP-PGRG,Growth regulators,agri_uom_sum,pre-harvest,,TRUE
 HVP-POLL,Pollination,agri_uom_ha,pre-harvest,,TRUE
 HVP-SPYA,Aerial spraying,agri_uom_ha,pre-harvest,,TRUE
 HVP-PRCI,Production Credit Interest,agri_uom_sum,pre-harvest,,TRUE
