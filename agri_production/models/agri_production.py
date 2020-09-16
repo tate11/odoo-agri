@@ -3,103 +3,6 @@ from odoo.exceptions import ValidationError
 from odoo.tools.float_utils import float_round, float_is_zero
 
 
-class ProductionPlanLine(models.Model):
-    _name = 'agri.production.plan.line'
-    _description = 'Production Plan Line'
-    _order = 'date asc'
-
-    budget_category_id = fields.Many2one('agri.budget.category',
-                                         string='Category',
-                                         ondelete='cascade',
-                                         required=True)
-    production_plan_id = fields.Many2one('agri.production.plan',
-                                         string='Production Plan',
-                                         ondelete='cascade',
-                                         required=True)
-    date = fields.Date('Date', required=True)
-    quantity_uom_id = fields.Many2one(related='budget_category_id.uom_id',
-                                      string='Unit',
-                                      readonly=True)
-    quantity = fields.Float('Quantity', digits='Stock Weight')
-    currency_id = fields.Many2one(related='production_plan_id.currency_id',
-                                  string='Currency',
-                                  readonly=True)
-    amount = fields.Monetary(string='Price', required=True)
-    total = fields.Monetary(string='Total',
-                            compute='_compute_total',
-                            store=True)
-    unit_uom_id = fields.Many2one(related='production_plan_id.unit_uom_id',
-                                  readonly=True)
-
-    @api.depends('quantity', 'amount', 'production_plan_id.total_ha')
-    def _compute_total(self):
-        for line in self:
-            line.total = line.amount * line.production_plan_id.total_ha * (
-                line.quantity or 1.0)
-
-    def name_get(self):
-        return [(line.id, "{} ({})".format(line.budget_category_id.name,
-                                           line.budget_category_id.type))
-                for line in self]
-
-
-class ProductionPlan(models.Model):
-    _name = 'agri.production.plan'
-    _description = 'Production Plan'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
-    _order = 'name, create_date desc'
-    _check_company_auto = True
-
-    name = fields.Char('Name', required=True)
-    partner_id = fields.Many2one('res.partner',
-                                 string='Partner',
-                                 ondelete='cascade',
-                                 check_company=True,
-                                 required=True)
-    company_id = fields.Many2one('res.company',
-                                 required=True,
-                                 default=lambda self: self.env.company)
-    currency_id = fields.Many2one(
-        'res.currency',
-        default=lambda self: self.env.company.currency_id,
-        required=True)
-    farm_field_ids = fields.Many2many(
-        'agri.farm.field',
-        'agri_production_plan_farm_field_rel',
-        'production_plan_id',
-        'farm_field_id',
-        domain="[('farm_id.partner_id', '=', partner_id)]",
-        string='Fields')
-    total_ha = fields.Float('Total Hectares',
-                            compute='_compute_total_ha',
-                            store=True)
-    plan_line_ids = fields.One2many(comodel_name='agri.production.plan.line',
-                                    inverse_name='production_plan_id',
-                                    string='Production Plan Lines',
-                                    copy=True)
-    season_id = fields.Many2one('date.range',
-                                string='Season',
-                                domain="[('type_id.is_season', '=', True)]",
-                                ondelete='cascade',
-                                required=True)
-    unit_uom_id = fields.Many2one('uom.uom',
-                                  'Unit',
-                                  domain="[('measure_type', '=', 'area')]",
-                                  required=True)
-
-    @api.depends('farm_field_ids.area_ha')
-    def _compute_total_ha(self):
-        for plan in self:
-            fields_with_area = plan.farm_field_ids.filtered(
-                lambda field: field.area_ha)
-            plan.total_ha = sum(fields_with_area.mapped('area_ha'))
-
-    @api.onchange('company_id')
-    def _onchange_company_id(self):
-        if self.company_id:
-            self.currency_id = self.company_id.currency_id
-
-
 class ProductionRecord(models.Model):
     _name = 'agri.production.record'
     _description = 'Production Record'
@@ -228,3 +131,93 @@ class ProductionRecord(models.Model):
     def _onchange_partner_id(self):
         if self.partner_id and self.farm_field_id and self.farm_field_id.farm_id.partner_id.id != self.partner_id.id:
             self.farm_field_id = None
+
+
+class ProductionSchedule(models.Model):
+    _name = 'agri.production.schedule'
+    _description = 'Production Schedule'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _order = 'name, create_date desc'
+    _check_company_auto = True
+
+    name = fields.Char('Name', required=True)
+    partner_id = fields.Many2one('res.partner',
+                                 string='Partner',
+                                 ondelete='cascade',
+                                 check_company=True,
+                                 required=True)
+    company_id = fields.Many2one('res.company',
+                                 required=True,
+                                 default=lambda self: self.env.company)
+    farm_field_ids = fields.Many2many(
+        'agri.farm.field',
+        'agri_production_schedule_farm_field_rel',
+        'production_schedule_id',
+        'farm_field_id',
+        domain="[('farm_id.partner_id', '=', partner_id)]",
+        string='Fields')
+    total_ha = fields.Float('Total Hectares',
+                            compute='_compute_total_ha',
+                            store=True)
+    plan_line_ids = fields.One2many(
+        comodel_name='agri.production.schedule.line',
+        inverse_name='production_schedule_id',
+        string='Production Schedule Lines',
+        copy=True)
+    season_id = fields.Many2one('date.range',
+                                string='Season',
+                                domain="[('type_id.is_season', '=', True)]",
+                                ondelete='cascade',
+                                required=True)
+    unit_uom_id = fields.Many2one('uom.uom',
+                                  'Unit',
+                                  domain="[('measure_type', '=', 'area')]",
+                                  required=True)
+
+    @api.depends('farm_field_ids.area_ha')
+    def _compute_total_ha(self):
+        for plan in self:
+            fields_with_area = plan.farm_field_ids.filtered(
+                lambda field: field.area_ha)
+            plan.total_ha = sum(fields_with_area.mapped('area_ha'))
+
+
+class ProductionScheduleLine(models.Model):
+    _name = 'agri.production.schedule.line'
+    _description = 'Production Schedule Line'
+    _order = 'date asc'
+
+    budget_category_id = fields.Many2one('agri.budget.category',
+                                         string='Category',
+                                         ondelete='cascade',
+                                         required=True)
+    production_schedule_id = fields.Many2one('agri.production.schedule',
+                                             string='Production Schedule',
+                                             ondelete='cascade',
+                                             required=True)
+    date = fields.Date('Date', required=True)
+    quantity_uom_id = fields.Many2one(related='budget_category_id.uom_id',
+                                      string='Quantity Units',
+                                      readonly=True)
+    quantity = fields.Float('Quantity', digits='Stock Weight')
+    currency_id = fields.Many2one(
+        'res.currency',
+        default=lambda self: self.env.company.currency_id,
+        required=True)
+    amount = fields.Monetary(string='Price', required=True)
+    total = fields.Monetary(string='Total',
+                            compute='_compute_total',
+                            store=True)
+    unit_uom_id = fields.Many2one(related='production_schedule_id.unit_uom_id',
+                                  readonly=True)
+
+    @api.depends('quantity', 'amount', 'production_schedule_id.total_ha')
+    def _compute_total(self):
+        for line in self:
+            line.total = line.amount * line.production_schedule_id.total_ha * (
+                line.quantity or 1.0)
+
+    def name_get(self):
+        return [(line.id, "{} ({})".format(line.budget_category_id.name,
+                                           line.budget_category_id.type))
+                for line in self]

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- agri.production.plan.line views -->
+    <!-- agri.production.schedule.line views -->
 
-    <record id="agri_production_plan_line_view_tree" model="ir.ui.view">
-        <field name="name">agri.production.plan.line.view.tree</field>
-        <field name="model">agri.production.plan.line</field>
+    <record id="agri_production_schedule_line_view_tree" model="ir.ui.view">
+        <field name="name">agri.production.schedule.line.view.tree</field>
+        <field name="model">agri.production.schedule.line</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
-            <tree string="Production Plan Lines">
+            <tree string="Production Schedule Lines">
                 <field name="budget_category_id"/>
                 <field name="date"/>
                 <field name="quantity"/>
@@ -19,12 +19,12 @@
         </field>
     </record>
 
-    <record id="agri_production_plan_line_view_form" model="ir.ui.view">
-        <field name="name">agri.production.plan.line.view.form</field>
-        <field name="model">agri.production.plan.line</field>
+    <record id="agri_production_schedule_line_view_form" model="ir.ui.view">
+        <field name="name">agri.production.schedule.line.view.form</field>
+        <field name="model">agri.production.schedule.line</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
-            <form string="Production Plan Lines">
+            <form string="Production Schedule Lines">
                 <sheet>
                     <group>
                         <group>
@@ -51,13 +51,13 @@
         </field>
     </record>
 
-    <!-- agri.production.plan views -->
+    <!-- agri.production.schedule views -->
 
-    <record id="agri_production_plan_view_search" model="ir.ui.view">
-        <field name="name">agri.production.plan.view.search</field>
-        <field name="model">agri.production.plan</field>
+    <record id="agri_production_schedule_view_search" model="ir.ui.view">
+        <field name="name">agri.production.schedule.view.search</field>
+        <field name="model">agri.production.schedule</field>
         <field name="arch" type="xml">
-           <search string="Production Plans">
+           <search string="Production Schedules">
                 <field name="name"/>
                 <field name="partner_id"/>
                 <field name="season_id"/>
@@ -71,12 +71,12 @@
         </field>
     </record>
 
-    <record id="agri_production_plan_view_tree" model="ir.ui.view">
-        <field name="name">agri.production.plan.view.tree</field>
-        <field name="model">agri.production.plan</field>
+    <record id="agri_production_schedule_view_tree" model="ir.ui.view">
+        <field name="name">agri.production.schedule.view.tree</field>
+        <field name="model">agri.production.schedule</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
-            <tree string="Production Plans">
+            <tree string="Production Schedules">
                 <field name="name"/>
                 <field name="partner_id"/>
                 <field name="season_id"/>
@@ -84,12 +84,12 @@
         </field>
     </record>
 
-    <record id="agri_production_plan_view_form" model="ir.ui.view">
-        <field name="name">agri.production.plan.view.form</field>
-        <field name="model">agri.production.plan</field>
+    <record id="agri_production_schedule_view_form" model="ir.ui.view">
+        <field name="name">agri.production.schedule.view.form</field>
+        <field name="model">agri.production.schedule</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
-            <form string="Production Plans">
+            <form string="Production Schedules">
                 <sheet>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
@@ -101,17 +101,16 @@
                         <group>
                             <field name="partner_id"/>
                             <field name="company_id"/>
-                            <field name="season_id" context="{'default_is_season': 1}"/>
                         </group>
                         <group>
-                            <field name="currency_id"/>
+                            <field name="season_id" context="{'default_is_season': 1}"/>
                             <field name="unit_uom_id"/>
                         </group>
                     </group>
                     <notebook>
                         <page string="Costs" name="costs_tab">
                             <field name="plan_line_ids" nolabel="1" 
-                                context="{'default_production_plan_id': id, 'default_currency_id': currency_id}"/>
+                                context="{'default_production_schedule_id': id}"/>
                         </page>
                         <page string="Fields" name="fields_tab">
                             <field name="farm_field_ids" nolabel="1" context="{'default_partner_id': partner_id}"/>
@@ -219,15 +218,15 @@
 
     <!-- actions -->
 
-    <record id="agri_production_plan_action" model="ir.actions.act_window">
-        <field name="name">Production Plans</field>
-        <field name="res_model">agri.production.plan</field>
+    <record id="agri_production_schedule_action" model="ir.actions.act_window">
+        <field name="name">Production Schedules</field>
+        <field name="res_model">agri.production.schedule</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[]</field>
         <field name="context">{}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Create a Production Plan
+                Create a Production Schedule
             </p>
         </field>
     </record>
@@ -252,10 +251,10 @@
         sequence="10" 
         groups="agri.agri_group_user"/>
 
-    <menuitem id="agri_production_plan_action_menu" name="Production Plans"
+    <menuitem id="agri_production_schedule_action_menu" name="Production Schedules"
         parent="agri_production_menu"  
         sequence="9"
-        action="agri_production_plan_action"/>
+        action="agri_production_schedule_action"/>
 
     <menuitem id="agri_production_record_action_menu" name="Production Records"
         parent="agri_production_menu"  
