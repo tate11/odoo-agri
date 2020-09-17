@@ -12,9 +12,10 @@
                 <field name="budget_category_id"/>
                 <field name="date"/>
                 <field name="quantity"/>
-                <field name="quantity_uom_id"/>
+                <field name="quantity_uom_id" string="Units"/>
                 <field name="currency_id" invisible="1"/>
                 <field name="amount"/>
+                <field name="total"/>
             </tree>
         </field>
     </record>
