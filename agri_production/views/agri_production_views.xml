@@ -15,6 +15,7 @@
                 <field name="quantity_uom_id" string="Units"/>
                 <field name="currency_id" invisible="1"/>
                 <field name="amount"/>
+                <field name="is_purchase"/>
                 <field name="total"/>
             </tree>
         </field>
@@ -33,6 +34,9 @@
                             <field name="date"/>
                        </group>
                         <group>
+                            <field name="sale_ok" invisible="1"/>
+                            <field name="purchase_ok" invisible="1"/>
+                            <field name="is_purchase" attrs="{'invisible': ['|', ('purchase_ok', '=', False), ('sale_ok', '=', False)]}"/>
                             <label for="quantity"/>
                             <div>
                                 <field name="quantity" class="oe_inline"/><![CDATA[&nbsp;]]>

@@ -140,7 +140,7 @@ class ProductionSchedule(models.Model):
     _order = 'name, create_date desc'
     _check_company_auto = True
 
-    name = fields.Char('Name', required=True)
+    name = fields.Char('Name', required=True, tracking=True)
     partner_id = fields.Many2one('res.partner',
                                  string='Partner',
                                  ondelete='cascade',
@@ -158,21 +158,23 @@ class ProductionSchedule(models.Model):
         string='Fields')
     total_ha = fields.Float('Total Hectares',
                             compute='_compute_total_ha',
-                            store=True)
-    line_ids = fields.One2many(
-        comodel_name='agri.production.schedule.line',
-        inverse_name='production_schedule_id',
-        string='Production Schedule Lines',
-        copy=True)
+                            store=True,
+                            tracking=True)
+    line_ids = fields.One2many(comodel_name='agri.production.schedule.line',
+                               inverse_name='production_schedule_id',
+                               string='Production Schedule Lines',
+                               copy=True)
     season_id = fields.Many2one('date.range',
                                 string='Season',
                                 domain="[('type_id.is_season', '=', True)]",
                                 ondelete='cascade',
-                                required=True)
+                                required=True,
+                                tracking=True)
     unit_uom_id = fields.Many2one('uom.uom',
                                   'Unit',
                                   domain="[('measure_type', '=', 'area')]",
-                                  required=True)
+                                  required=True,
+                                  tracking=True)
 
     @api.depends('farm_field_ids.area_ha')
     def _compute_total_ha(self):
@@ -191,6 +193,9 @@ class ProductionScheduleLine(models.Model):
                                          string='Category',
                                          ondelete='cascade',
                                          required=True)
+    sale_ok = fields.Boolean(related='budget_category_id.sale_ok', store=False)
+    purchase_ok = fields.Boolean(related='budget_category_id.purchase_ok',
+                                 store=False)
     production_schedule_id = fields.Many2one('agri.production.schedule',
                                              string='Production Schedule',
                                              ondelete='cascade',
@@ -208,9 +213,18 @@ class ProductionScheduleLine(models.Model):
     total = fields.Monetary(string='Total',
                             compute='_compute_total',
                             store=True)
+    is_purchase = fields.Boolean('Is Purchase', default='_compute_is_purchase')
     unit_uom_id = fields.Many2one(related='production_schedule_id.unit_uom_id',
                                   readonly=True)
 
+    @api.onchange('budget_category_id')
+    def _compute_is_purchase(self):
+        for line in self:
+            line.is_purchase = (line.budget_category_id.purchase_ok
+                                and not line.budget_category_id.sale_ok
+                                ) if line.budget_category_id else False
+
+    @api.onchange('quantity', 'amount')
     @api.depends('quantity', 'amount', 'production_schedule_id.total_ha')
     def _compute_total(self):
         for line in self:
