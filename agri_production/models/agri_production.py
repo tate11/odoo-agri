@@ -13,6 +13,11 @@ class ProductionRecord(models.Model):
                        default=lambda self: self.env['ir.sequence'].
                        next_by_code('agri.production.record'),
                        required=True)
+    source = fields.Selection([('average', 'Average'), ('import', 'Import'),
+                               ('schedule', 'Production Schedule')],
+                              string='Source',
+                              default='import',
+                              required=True)
     partner_id = fields.Many2one('res.partner',
                                  string='Partner',
                                  ondelete='cascade',
@@ -21,6 +26,11 @@ class ProductionRecord(models.Model):
     company_id = fields.Many2one('res.company',
                                  required=True,
                                  default=lambda self: self.env.company)
+    production_schedule_id = fields.Many2one(
+        comodel_name="agri.production.schedule",
+        string="Production Schedule",
+        ondelete='cascade',
+        check_company=True)
     farm_field_id = fields.Many2one(
         'agri.farm.field',
         'Field',
@@ -131,6 +141,23 @@ class ProductionRecord(models.Model):
     def _onchange_partner_id(self):
         if self.partner_id and self.farm_field_id and self.farm_field_id.farm_id.partner_id.id != self.partner_id.id:
             self.farm_field_id = None
+
+    @api.onchange('production_schedule_id')
+    def _onchange_production_schedule_id(self):
+        self.source = 'schedule' if self.production_schedule_id else 'import'
+
+    @api.onchange('source')
+    def _onchange_source(self):
+        if self.source != 'schedule':
+            self.production_schedule_id = None
+
+    @api.constrains('source', 'production_schedule_id')
+    def _check_source(self):
+        if self.source == 'schedule' and not self.production_schedule_id:
+            raise ValidationError(_('Production Schedule must be set.'))
+        elif self.source != 'schedule' and self.production_schedule_id:
+            raise ValidationError(
+                _('Source must be set to Production Schedule.'))
 
 
 class ProductionSchedule(models.Model):

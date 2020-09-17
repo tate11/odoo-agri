@@ -188,8 +188,18 @@
                         <group>
                             <field name="partner_id"/>
                             <field name="company_id" groups="base.group_multi_company"/>
+                       </group>
+                        <group>
                             <field name="cultivar_product_id" context="{'default_type': 'product', 'default_is_cultivar': 1}"/>
                             <field name="delivered_warehouse_id"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="source"/>
+                            <field name="production_schedule_id"  
+                                context="{'default_partner_id': partner_id}"
+                                attrs="{'invisible': [('source', '!=', 'schedule')], 'required': [('source', '=', 'schedule')]}"/>
                        </group>
                         <group>
                             <field name="farm_field_id" context="{'default_partner_id': partner_id}"/>
