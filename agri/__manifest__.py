@@ -20,11 +20,12 @@
     "AGPL-3",
     "description":
     "Agriculture base module",
-    "depends": ['base', 'uom'],
+    "depends": ['base', 'uom', 'product'],
     "data": [
         'security/agri_security.xml',
         'security/ir.model.access.csv',
         'data/uom_data.xml',
+        'data/product_data.xml',
         'data/agri.budget.category.csv',
         'data/agri.budget.template.csv',
         'data/agri.budget.template.line.csv',

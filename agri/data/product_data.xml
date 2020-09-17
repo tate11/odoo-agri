@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="product_category_livestock" model="product.category">
+            <field name="name">Livestock</field>
+        </record>
+        <record id="product_category_livestock_sheep" model="product.category">
+            <field name="parent_id" ref="product_category_livestock" />
+            <field name="name">Sheep</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">True</field>
+        </record>
+        <record id="product_category_livestock_sheep_lamb" model="product.category">
+            <field name="parent_id" ref="product_category_livestock_sheep" />
+            <field name="name">Lamb</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">True</field>
+        </record>
+        <record id="product_category_livestock_sheep_weaner_lamb" model="product.category">
+            <field name="parent_id" ref="product_category_livestock_sheep" />
+            <field name="name">Weaner Lamb</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">True</field>
+        </record>
+        <record id="product_category_livestock_sheep_ewe" model="product.category">
+            <field name="parent_id" ref="product_category_livestock_sheep" />
+            <field name="name">Ewe</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">True</field>
+        </record>
+        <record id="product_category_livestock_sheep_wether" model="product.category">
+            <field name="parent_id" ref="product_category_livestock_sheep" />
+            <field name="name">Wether</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">True</field>
+        </record>
+        <record id="product_category_livestock_sheep_ram" model="product.category">
+            <field name="parent_id" ref="product_category_livestock_sheep" />
+            <field name="name">Ram</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">True</field>
+        </record>
+
+    </data>
+</odoo>

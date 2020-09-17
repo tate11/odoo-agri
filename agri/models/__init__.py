@@ -7,4 +7,5 @@ from . import agri_land
 from . import agri_soil
 from . import agri_terrain
 from . import agri_water
+from . import product
 from . import uom_category
