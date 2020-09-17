@@ -159,7 +159,7 @@ class ProductionSchedule(models.Model):
     total_ha = fields.Float('Total Hectares',
                             compute='_compute_total_ha',
                             store=True)
-    plan_line_ids = fields.One2many(
+    line_ids = fields.One2many(
         comodel_name='agri.production.schedule.line',
         inverse_name='production_schedule_id',
         string='Production Schedule Lines',

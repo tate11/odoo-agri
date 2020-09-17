@@ -109,7 +109,7 @@
                     </group>
                     <notebook>
                         <page string="Costs" name="costs_tab">
-                            <field name="plan_line_ids" nolabel="1" 
+                            <field name="line_ids" nolabel="1" 
                                 context="{'default_production_schedule_id': id}"/>
                         </page>
                         <page string="Fields" name="fields_tab">
