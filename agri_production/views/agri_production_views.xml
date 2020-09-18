@@ -9,7 +9,7 @@
         <field name="priority">10</field>
         <field name="arch" type="xml">
             <tree string="Production Schedule Lines">
-                <field name="budget_category_id"/>
+                <field name="product_category_id"/>
                 <field name="date"/>
                 <field name="quantity"/>
                 <field name="quantity_uom_id" string="Units"/>
@@ -30,7 +30,7 @@
                 <sheet>
                     <group>
                         <group>
-                            <field name="budget_category_id"/>
+                            <field name="product_category_id"/>
                             <field name="date"/>
                        </group>
                         <group>

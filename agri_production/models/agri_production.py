@@ -216,19 +216,21 @@ class ProductionScheduleLine(models.Model):
     _description = 'Production Schedule Line'
     _order = 'date asc'
 
-    budget_category_id = fields.Many2one('agri.budget.category',
-                                         string='Category',
-                                         ondelete='cascade',
-                                         required=True)
-    sale_ok = fields.Boolean(related='budget_category_id.sale_ok', store=False)
-    purchase_ok = fields.Boolean(related='budget_category_id.purchase_ok',
+    product_category_id = fields.Many2one('product.category',
+                                          string='Category',
+                                          domain="[('is_agri', '=', True)]",
+                                          ondelete='cascade',
+                                          required=True)
+    sale_ok = fields.Boolean(related='product_category_id.sale_ok',
+                             store=False)
+    purchase_ok = fields.Boolean(related='product_category_id.purchase_ok',
                                  store=False)
     production_schedule_id = fields.Many2one('agri.production.schedule',
                                              string='Production Schedule',
                                              ondelete='cascade',
                                              required=True)
     date = fields.Date('Date', required=True)
-    quantity_uom_id = fields.Many2one(related='budget_category_id.uom_id',
+    quantity_uom_id = fields.Many2one(related='product_category_id.uom_id',
                                       string='Quantity Units',
                                       readonly=True)
     quantity = fields.Float('Quantity', digits='Stock Weight')
@@ -244,12 +246,12 @@ class ProductionScheduleLine(models.Model):
     unit_uom_id = fields.Many2one(related='production_schedule_id.unit_uom_id',
                                   readonly=True)
 
-    @api.onchange('budget_category_id')
+    @api.onchange('product_category_id')
     def _compute_is_purchase(self):
         for line in self:
-            line.is_purchase = (line.budget_category_id.purchase_ok
-                                and not line.budget_category_id.sale_ok
-                                ) if line.budget_category_id else False
+            line.is_purchase = (line.product_category_id.purchase_ok
+                                and not line.product_category_id.sale_ok
+                                ) if line.product_category_id else False
 
     @api.onchange('quantity', 'amount')
     @api.depends('quantity', 'amount', 'production_schedule_id.total_ha')
@@ -259,6 +261,6 @@ class ProductionScheduleLine(models.Model):
                 line.quantity or 1.0)
 
     def name_get(self):
-        return [(line.id, "{} ({})".format(line.budget_category_id.name,
-                                           line.budget_category_id.type))
+        return [(line.id, "{} ({})".format(line.product_category_id.name,
+                                           line.product_category_id.type))
                 for line in self]

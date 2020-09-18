@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- product.category views -->
+
+        <record id="product_category_search_view" model="ir.ui.view">
+            <field name="name">product.category.search.inherit.agri</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_search_view"/>
+            <field name="arch" type="xml">
+                <field name="parent_id" position="after">
+                    <separator/>
+                    <filter string="Is Agri" name="filter_is_agri" domain="[('is_agri', '=', True)]"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="product_category_form_view" model="ir.ui.view">
+            <field name="name">product.category.form.inherit.agri</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_form_view"/>
+            <field name="arch" type="xml">
+                <group name="first" position="after">
+                    <group string="Agri" groups="agri.agri_group_manager">
+                        <field name="is_agri"/>
+                        <field name="uom_id" attrs="{'required': [('is_agri', '=', True)]}"/>
+                        <field name="sale_ok"/>
+                        <field name="purchase_ok"/>
+                    </group>
+                </group>
+            </field>
+        </record>
+
+        <!-- actions -->
+
+        <record id="agri_product_category_action" model="ir.actions.act_window">
+            <field name="name">Product Categories</field>
+            <field name="res_model">product.category</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{
+                'search_default_filter_is_agri': 1,
+                'default_is_agri': 1
+            }
+            </field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a Product Category
+                </p>
+            </field>
+        </record>
+
+        <!-- menu items -->
+
+        <menuitem id="agri_product_category_action_menu" name="Product Categories"
+            parent="agri_configuration_menu" 
+            sequence="10"
+            action="agri_product_category_action"
+            groups="agri.agri_group_manager"/>
+
+    </data>
+</odoo>
