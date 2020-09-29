@@ -261,6 +261,5 @@ class ProductionScheduleLine(models.Model):
                 line.quantity or 1.0)
 
     def name_get(self):
-        return [(line.id, "{} ({})".format(line.product_category_id.name,
-                                           line.product_category_id.type))
+        return [(line.id, "{}".format(line.product_category_id.name,))
                 for line in self]
