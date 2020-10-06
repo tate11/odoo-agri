@@ -81,16 +81,15 @@ class ProductionRecord(models.Model):
     def _compute_delivered_t_ha(self):
         updated_field = self.env.context.get('updated_field')
         if not updated_field or updated_field not in ['delivered_t_ha']:
-            ha_uom = self.env['uom.uom'].search([('name', '=', 'ha')], limit=1)
-            tons_uom = self.env['uom.uom'].search([('name', '=', 't')],
-                                                  limit=1)
+            ha_uom = self.env.ref('agri.agri_uom_ha')
+            ton_uom = self.env.ref('uom.product_uom_ton')
             precision = self.env['decimal.precision'].precision_get(
                 'Tons per Hectare')
             for record in self:
                 if record.delivered_uom_id and record.planted_ha and not float_is_zero(
                         record.planted_ha, precision_rounding=ha_uom.rounding):
                     delivered_tons = record.delivered_uom_id._compute_quantity(
-                        record.delivered_uom_qty, tons_uom, round=False)
+                        record.delivered_uom_qty, ton_uom, round=False)
                     record.delivered_t_ha = delivered_tons / record.planted_ha
 
     @api.onchange('delivered_t_ha')
@@ -99,20 +98,19 @@ class ProductionRecord(models.Model):
         if not updated_field or updated_field not in [
                 'planted_ha', 'delivered_uom_id', 'delivered_uom_qty'
         ]:
-            ha_uom = self.env['uom.uom'].search([('name', '=', 'ha')], limit=1)
-            tons_uom = self.env['uom.uom'].search([('name', '=', 't')],
-                                                  limit=1)
+            ha_uom = self.env.ref('agri.agri_uom_ha')
+            ton_uom = self.env.ref('uom.product_uom_ton')
             for record in self:
                 if record.planted_ha and not record.delivered_uom_qty:
                     if not record.delivered_uom_id:
-                        record.delivered_uom_id = tons_uom
-                    record.delivered_uom_qty = tons_uom._compute_quantity(
+                        record.delivered_uom_id = ton_uom
+                    record.delivered_uom_qty = ton_uom._compute_quantity(
                         record.delivered_t_ha * record.planted_ha,
                         record.delivered_uom_id,
                         round=False)
                 elif record.delivered_uom_id and record.delivered_uom_qty:
                     delivered_tons = record.delivered_uom_id._compute_quantity(
-                        record.delivered_uom_qty, tons_uom, round=False)
+                        record.delivered_uom_qty, ton_uom, round=False)
                     record.planted_ha = float_round(
                         delivered_tons / record.delivered_t_ha,
                         precision_rounding=ha_uom.rounding,
@@ -187,6 +185,10 @@ class ProductionSchedule(models.Model):
                             compute='_compute_total_ha',
                             store=True,
                             tracking=True)
+    total_yield = fields.Float('Total Yield',
+                               compute='_compute_total_yield',
+                               store=True,
+                               tracking=True)
     line_ids = fields.One2many(comodel_name='agri.production.schedule.line',
                                inverse_name='production_schedule_id',
                                string='Production Schedule Lines',
@@ -209,6 +211,16 @@ class ProductionSchedule(models.Model):
             fields_with_area = plan.farm_field_ids.filtered(
                 lambda field: field.area_ha)
             plan.total_ha = sum(fields_with_area.mapped('area_ha'))
+
+    @api.depends('total_ha', 'line_ids')
+    def _compute_total_yield(self):
+        ton_uom = self.env.ref('uom.product_uom_ton')
+        for plan in self:
+            total_yield = 0.0
+            for line in plan.line_ids:
+                if not line.is_purchase and line.product_category_id.uom_id.id == ton_uom.id:
+                    total_yield += line.quantity
+            plan.total_yield = plan.total_ha * total_yield
 
 
 class ProductionScheduleLine(models.Model):
@@ -261,5 +273,5 @@ class ProductionScheduleLine(models.Model):
                 line.quantity or 1.0)
 
     def name_get(self):
-        return [(line.id, "{}".format(line.product_category_id.name,))
+        return [(line.id, "{}".format(line.product_category_id.name, ))
                 for line in self]
