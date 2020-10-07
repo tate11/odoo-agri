@@ -109,7 +109,8 @@
                         </group>
                         <group>
                             <field name="season_id" context="{'default_is_season': 1}"/>
-                            <field name="unit_uom_id"/>
+                            <field name="area_uom_id"/>
+                            <field name="yield_uom_id"/>
                         </group>
                     </group>
                     <notebook>
