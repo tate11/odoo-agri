@@ -185,14 +185,14 @@ class ProductionSchedule(models.Model):
                             compute='_compute_total_ha',
                             store=True,
                             tracking=True)
-    total_yield = fields.Float('Total Yield',
-                               compute='_compute_yield',
+    total_mass = fields.Float('Total Mass',
+                              compute='_compute_mass',
+                              store=True,
+                              tracking=True)
+    total_yield = fields.Float('Yield',
+                               compute='_compute_mass',
                                store=True,
                                tracking=True)
-    yield_per_unit = fields.Float('Yield per Unit',
-                                  compute='_compute_yield',
-                                  store=True,
-                                  tracking=True)
     line_ids = fields.One2many(comodel_name='agri.production.schedule.line',
                                inverse_name='production_schedule_id',
                                string='Production Schedule Lines',
@@ -206,14 +206,14 @@ class ProductionSchedule(models.Model):
     area_uom_id = fields.Many2one(
         'uom.uom',
         'Area Unit',
-        domain="[('measure_type', '=', 'area')]",
+        domain="[('name', 'in', ['ac', 'ha'])]",
         default=lambda self: self.env.ref('agri.agri_uom_ha'),
         required=True,
         tracking=True)
-    yield_uom_id = fields.Many2one(
+    mass_uom_id = fields.Many2one(
         'uom.uom',
-        'Yield Unit',
-        domain="['|', ('measure_type', '=', 'weight'), ('name', '=', 'heads')]",
+        'Mass Unit',
+        domain="[('name', 'in', ['t', 'kg', 'heads'])]",
         default=lambda self: self.env.ref('uom.product_uom_ton'),
         required=True,
         tracking=True)
@@ -225,16 +225,17 @@ class ProductionSchedule(models.Model):
                 lambda field: field.area_ha)
             plan.total_ha = sum(fields_with_area.mapped('area_ha'))
 
-    @api.depends('total_ha', 'line_ids', 'area_uom_id', 'yield_uom_id')
-    def _compute_yield(self):
+    @api.depends('total_ha', 'line_ids', 'area_uom_id', 'mass_uom_id')
+    def _compute_mass(self):
         for plan in self:
             quantity = 0.0
             for line in plan.line_ids:
-                if not line.is_purchase and line.product_category_id.uom_id.id == plan.yield_uom_id.id:
+                if not line.is_purchase and line.product_category_id.uom_id.id == plan.mass_uom_id.id:
                     quantity += line.quantity
-            plan.total_yield = plan.total_ha * quantity
-            plan.yield_per_unit = plan.total_yield / plan.total_ha if not float_is_zero(
-                plan.total_ha, precision_rounding=plan.area_uom_id.rounding) else 0.0
+            plan.total_mass = plan.total_ha * quantity
+            plan.total_yield = plan.total_mass / plan.total_ha if not float_is_zero(
+                plan.total_ha,
+                precision_rounding=plan.area_uom_id.rounding) else 0.0
 
 
 class ProductionScheduleLine(models.Model):

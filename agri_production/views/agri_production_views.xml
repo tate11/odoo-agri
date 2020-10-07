@@ -40,14 +40,14 @@
                             <label for="quantity"/>
                             <div>
                                 <field name="quantity" class="oe_inline"/><![CDATA[&nbsp;]]>
-                                <field name="quantity_uom_id" class="oe_inline"/>
+                                <field name="quantity_uom_id" class="oe_inline" options="{'no_open': 1}"/>
                             </div>
                             <field name="currency_id" invisible="1"/>
                             <label for="amount"/>
                             <div>
-                                <field name="amount" class="oe_inline"/>
+                                <field name="amount" class="oe_inline" options="{'no_open': 1}"/>
                                 /
-                                <field name="quantity_uom_id" class="oe_inline"/>
+                                <field name="quantity_uom_id" class="oe_inline" options="{'no_open': 1}"/>
                             </div>
                         </group>
                     </group>
@@ -110,7 +110,7 @@
                         <group>
                             <field name="season_id" context="{'default_is_season': 1}"/>
                             <field name="area_uom_id"/>
-                            <field name="yield_uom_id"/>
+                            <field name="mass_uom_id"/>
                         </group>
                     </group>
                     <notebook>
