@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data noupdate="1">
+    <data noupdate="0">
 
         <record id="product_category_livestock" model="product.category">
             <field name="name">Livestock</field>
@@ -10,7 +10,7 @@
             <field name="parent_id" ref="product_category_livestock" />
             <field name="name">Sheep</field>
         </record>
-        
+
         <record id="product_category_livestock_sheep_lamb" model="product.category">
             <field name="parent_id" ref="product_category_livestock_sheep" />
             <field name="name">Lamb</field>
@@ -60,7 +60,7 @@
             <field name="parent_id" ref="product_category_livestock" />
             <field name="name">Cattle</field>
         </record>
-        
+
         <record id="product_category_livestock_cattle_calf" model="product.category">
             <field name="parent_id" ref="product_category_livestock_cattle" />
             <field name="name">Calf</field>
@@ -128,7 +128,7 @@
             <field name="parent_id" ref="product_category_livestock" />
             <field name="name">Goats</field>
         </record>
-        
+
         <record id="product_category_livestock_goats_kid" model="product.category">
             <field name="parent_id" ref="product_category_livestock_goats" />
             <field name="name">Kid</field>
@@ -178,7 +178,7 @@
             <field name="parent_id" ref="product_category_livestock" />
             <field name="name">Rabbits</field>
         </record>
-        
+
         <record id="product_category_livestock_rabbits_kit" model="product.category">
             <field name="parent_id" ref="product_category_livestock_rabbits" />
             <field name="name">Kit</field>
@@ -259,22 +259,49 @@
             <field name="name">Crop Sales</field>
         </record>
 
-        <record id="product_category_crop_sales_crop" model="product.category">
+        <record id="product_category_crop_sales_cotton" model="product.category">
             <field name="parent_id" ref="product_category_crop_sales" />
-            <field name="name">Crop</field>
+            <field name="name">Cotton</field>
             <field name="is_agri">True</field>
             <field name="uom_id" ref="uom.product_uom_ton" />
             <field name="sale_ok">True</field>
             <field name="purchase_ok">False</field>
         </record>
 
-        <record id="product_category_fruit_sales" model="product.category">
-            <field name="name">Fruit Sales</field>
+        <record id="product_category_permanent_crop_sales" model="product.category">
+            <field name="name">Permanent Crop Sales</field>
         </record>
 
-        <record id="product_category_fruit_sales_fruit" model="product.category">
-            <field name="parent_id" ref="product_category_fruit_sales" />
-            <field name="name">Fruit</field>
+        <record id="product_category_permanent_crop_sales_blueberry" model="product.category">
+            <field name="parent_id" ref="product_category_permanent_crop_sales" />
+            <field name="name">Blueberry</field>
+            <field name="is_agri">True</field>
+            <field name="uom_id" ref="uom.product_uom_kgm" />
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">False</field>
+        </record>
+
+        <record id="product_category_permanent_crop_sales_macadamia_nut" model="product.category">
+            <field name="parent_id" ref="product_category_permanent_crop_sales" />
+            <field name="name">Macadamia Nut</field>
+            <field name="is_agri">True</field>
+            <field name="uom_id" ref="uom.product_uom_kgm" />
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">False</field>
+        </record>
+
+        <record id="product_category_permanent_crop_sales_pomegranate" model="product.category">
+            <field name="parent_id" ref="product_category_permanent_crop_sales" />
+            <field name="name">Pomegranate</field>
+            <field name="is_agri">True</field>
+            <field name="uom_id" ref="uom.product_uom_kgm" />
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">False</field>
+        </record>
+
+        <record id="product_category_permanent_crop_sales_sugarcane" model="product.category">
+            <field name="parent_id" ref="product_category_permanent_crop_sales" />
+            <field name="name">Sugarcane</field>
             <field name="is_agri">True</field>
             <field name="uom_id" ref="uom.product_uom_ton" />
             <field name="sale_ok">True</field>
@@ -584,6 +611,24 @@
         <record id="product_category_harvest_packing_cost" model="product.category">
             <field name="parent_id" ref="product_category_harvest" />
             <field name="name">Packing cost</field>
+            <field name="is_agri">True</field>
+            <field name="uom_id" ref="agri_uom_each" />
+            <field name="sale_ok">False</field>
+            <field name="purchase_ok">True</field>
+        </record>
+
+        <record id="product_category_harvest_grading_cost" model="product.category">
+            <field name="parent_id" ref="product_category_harvest" />
+            <field name="name">Grading cost</field>
+            <field name="is_agri">True</field>
+            <field name="uom_id" ref="agri_uom_each" />
+            <field name="sale_ok">False</field>
+            <field name="purchase_ok">True</field>
+        </record>
+
+        <record id="product_category_harvest_levies" model="product.category">
+            <field name="parent_id" ref="product_category_harvest" />
+            <field name="name">Levies</field>
             <field name="is_agri">True</field>
             <field name="uom_id" ref="agri_uom_each" />
             <field name="sale_ok">False</field>
