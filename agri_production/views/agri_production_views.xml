@@ -8,15 +8,17 @@
         <field name="model">agri.production.schedule.line</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
-            <tree string="Production Schedule Lines">
-                <field name="product_category_id"/>
-                <field name="date"/>
-                <field name="quantity"/>
-                <field name="quantity_uom_id" string="Units"/>
-                <field name="currency_id" invisible="1"/>
-                <field name="amount"/>
-                <field name="is_purchase"/>
-                <field name="total"/>
+            <tree string="Production Schedule Lines" editable="bottom">
+                <field name="product_category_id" />
+                <field name="date" />
+                <field name="quantity" />
+                <field name="quantity_uom_id" string="Units" />
+                <field name="currency_id" invisible="1" />
+                <field name="amount" />
+                <field name="sale_ok" invisible="1" />
+                <field name="purchase_ok" invisible="1"  />
+                <field name="is_purchase" attrs="{'readonly': ['|', ('purchase_ok', '=', False), ('sale_ok', '=', False)]}" />
+                <field name="total" />
             </tree>
         </field>
     </record>
@@ -30,24 +32,24 @@
                 <sheet>
                     <group>
                         <group>
-                            <field name="product_category_id"/>
-                            <field name="date"/>
+                            <field name="product_category_id" />
+                            <field name="date" />
                        </group>
                         <group>
-                            <field name="sale_ok" invisible="1"/>
-                            <field name="purchase_ok" invisible="1"/>
-                            <field name="is_purchase" attrs="{'invisible': ['|', ('purchase_ok', '=', False), ('sale_ok', '=', False)]}"/>
-                            <label for="quantity"/>
+                            <field name="sale_ok" invisible="1" />
+                            <field name="purchase_ok" invisible="1" />
+                            <field name="is_purchase" attrs="{'invisible': ['|', ('purchase_ok', '=', False), ('sale_ok', '=', False)]}" />
+                            <label for="quantity" />
                             <div>
-                                <field name="quantity" class="oe_inline"/><![CDATA[&nbsp;]]>
-                                <field name="quantity_uom_id" class="oe_inline" options="{'no_open': 1}"/>
+                                <field name="quantity" class="oe_inline" /><![CDATA[&nbsp;]]>
+                                <field name="quantity_uom_id" class="oe_inline" options="{'no_open': 1}" />
                             </div>
-                            <field name="currency_id" invisible="1"/>
-                            <label for="amount"/>
+                            <field name="currency_id" invisible="1" />
+                            <label for="amount" />
                             <div>
-                                <field name="amount" class="oe_inline" options="{'no_open': 1}"/>
+                                <field name="amount" class="oe_inline" options="{'no_open': 1}" />
                                 /
-                                <field name="quantity_uom_id" class="oe_inline" options="{'no_open': 1}"/>
+                                <field name="quantity_uom_id" class="oe_inline" options="{'no_open': 1}" />
                             </div>
                         </group>
                     </group>
@@ -63,14 +65,14 @@
         <field name="model">agri.production.schedule</field>
         <field name="arch" type="xml">
            <search string="Production Schedules">
-                <field name="name"/>
-                <field name="partner_id"/>
-                <field name="season_id"/>
-                <field name="farm_field_ids"/>
+                <field name="name" />
+                <field name="partner_id" />
+                <field name="season_id" />
+                <field name="farm_field_ids" />
                 <separator/>
                 <group expand="0" string="Group By">
-                    <filter string="Partner" name="group_partner" context="{'group_by': 'partner_id'}"/>
-                    <filter string="Season" name="group_season" context="{'group_by': 'season_id'}"/>
+                    <filter string="Partner" name="group_partner" context="{'group_by': 'partner_id'}" />
+                    <filter string="Season" name="group_season" context="{'group_by': 'season_id'}" />
                 </group>
             </search>
         </field>
@@ -82,9 +84,9 @@
         <field name="priority">10</field>
         <field name="arch" type="xml">
             <tree string="Production Schedules">
-                <field name="name"/>
-                <field name="partner_id"/>
-                <field name="season_id"/>
+                <field name="name" />
+                <field name="partner_id" />
+                <field name="season_id" />
             </tree>
         </field>
     </record>
@@ -97,35 +99,35 @@
             <form string="Production Schedules">
                 <sheet>
                     <div class="oe_title">
-                        <label for="name" class="oe_edit_only"/>
+                        <label for="name" class="oe_edit_only" />
                         <h1>
-                            <field name="name"/>
+                            <field name="name" />
                         </h1>
                     </div>
                     <group>
                         <group>
-                            <field name="partner_id"/>
-                            <field name="company_id"/>
+                            <field name="partner_id" />
+                            <field name="company_id" />
                         </group>
                         <group>
-                            <field name="season_id" context="{'default_is_season': 1}"/>
-                            <field name="area_uom_id"/>
-                            <field name="mass_uom_id"/>
+                            <field name="season_id" context="{'default_is_season': 1}" />
+                            <field name="area_uom_id" />
+                            <field name="mass_uom_id" />
                         </group>
                     </group>
                     <notebook>
                         <page string="Costs" name="costs_tab">
                             <field name="line_ids" nolabel="1" 
-                                context="{'default_production_schedule_id': id}"/>
+                                context="{'default_production_schedule_id': id}" />
                         </page>
                         <page string="Fields" name="fields_tab">
-                            <field name="farm_field_ids" nolabel="1" context="{'default_partner_id': partner_id}"/>
+                            <field name="farm_field_ids" nolabel="1" context="{'default_partner_id': partner_id}" />
                         </page>
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers"/>
-                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="message_follower_ids" widget="mail_followers" />
+                    <field name="message_ids" widget="mail_thread" />
                 </div>
             </form>
         </field>
@@ -138,18 +140,18 @@
         <field name="model">agri.production.record</field>
         <field name="arch" type="xml">
            <search string="Production Records">
-                <field name="name"/>
-                <field name="partner_id"/>
-                <field name="farm_field_id"/>
-                <field name="cultivar_product_id"/>
-                <field name="delivered_warehouse_id"/>
+                <field name="name" />
+                <field name="partner_id" />
+                <field name="farm_field_id" />
+                <field name="cultivar_product_id" />
+                <field name="delivered_warehouse_id" />
                 <separator/>
-                <filter string="Planted" name="filter_planted" domain="[('planted_date', '!=', False)]"/>
-                <filter string="Delivered" name="filter_delivered" domain="[('delivered_uom_qty', '!=', False)]"/>
+                <filter string="Planted" name="filter_planted" domain="[('planted_date', '!=', False)]" />
+                <filter string="Delivered" name="filter_delivered" domain="[('delivered_uom_qty', '!=', False)]" />
                 <group expand="0" string="Group By">
-                    <filter string="Partner" name="group_partner" context="{'group_by': 'partner_id'}"/>
-                    <filter string="Cultivar" name="group_cultivar_product" context="{'group_by': 'cultivar_product_id'}"/>
-                    <filter string="Delivery Point" name="group_delivered_warehouse" context="{'group_by': 'delivered_warehouse_id'}"/>
+                    <filter string="Partner" name="group_partner" context="{'group_by': 'partner_id'}" />
+                    <filter string="Cultivar" name="group_cultivar_product" context="{'group_by': 'cultivar_product_id'}" />
+                    <filter string="Delivery Point" name="group_delivered_warehouse" context="{'group_by': 'delivered_warehouse_id'}" />
                 </group>
             </search>
         </field>
@@ -161,14 +163,14 @@
         <field name="priority">10</field>
         <field name="arch" type="xml">
             <tree string="Production Records">
-                <field name="name"/>
-                <field name="partner_id"/>
-                <field name="farm_field_id"/>
-                <field name="planted_date"/>
-                <field name="delivered_uom_qty"/>
-                <field name="delivered_uom_id"/>
-                <field name="delivered_t_ha"/>
-                <field name="delivered_warehouse_id"/>
+                <field name="name" />
+                <field name="partner_id" />
+                <field name="farm_field_id" />
+                <field name="planted_date" />
+                <field name="delivered_uom_qty" />
+                <field name="delivered_uom_id" />
+                <field name="delivered_t_ha" />
+                <field name="delivered_warehouse_id" />
             </tree>
         </field>
     </record>
@@ -182,49 +184,49 @@
                 <sheet>
                     <div class="oe_title">
                         <h1>
-                            <field name="name" readonly="1"/>
+                            <field name="name" readonly="1" />
                         </h1>
                     </div>
                     <group>
                         <group>
-                            <field name="partner_id"/>
-                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="partner_id" />
+                            <field name="company_id" groups="base.group_multi_company" />
                        </group>
                         <group>
-                            <field name="cultivar_product_id" context="{'default_type': 'product', 'default_is_cultivar': 1}"/>
-                            <field name="delivered_warehouse_id"/>
+                            <field name="cultivar_product_id" context="{'default_type': 'product', 'default_is_cultivar': 1}" />
+                            <field name="delivered_warehouse_id" />
                         </group>
                     </group>
                     <group>
                         <group>
-                            <field name="source"/>
+                            <field name="source" />
                             <field name="production_schedule_id"  
                                 context="{'default_partner_id': partner_id}"
-                                attrs="{'invisible': [('source', '!=', 'schedule')], 'required': [('source', '=', 'schedule')]}"/>
+                                attrs="{'invisible': [('source', '!=', 'schedule')], 'required': [('source', '=', 'schedule')]}" />
                        </group>
                         <group>
-                            <field name="farm_field_id" context="{'default_partner_id': partner_id}"/>
-                            <field name="irrigation_type_id" readonly="1"/>
+                            <field name="farm_field_id" context="{'default_partner_id': partner_id}" />
+                            <field name="irrigation_type_id" readonly="1" />
                         </group>
                     </group>
                     <group>
                         <group>
-                            <field name="season_id" context="{'default_is_season': 1}"/>
-                            <field name="planted_date" attrs="{'required': [('planted_ha', '!=', 0.0)]}"/>
+                            <field name="season_id" context="{'default_is_season': 1}" />
+                            <field name="planted_date" attrs="{'required': [('planted_ha', '!=', 0.0)]}" />
                             <field name="planted_ha" 
                                 context="{'updated_field': 'planted_ha'}" 
-                                attrs="{'required': [('planted_date', '!=', False)]}"/>
+                                attrs="{'required': [('planted_date', '!=', False)]}" />
                         </group>
                         <group>
-                            <field name="delivered_date"/>
+                            <field name="delivered_date" />
                             <field name="delivered_uom_id" 
                                 context="{'updated_field': 'delivered_uom_id'}" 
-                                attrs="{'required': [('delivered_uom_qty', '!=', 0.0)]}"/>
+                                attrs="{'required': [('delivered_uom_qty', '!=', 0.0)]}" />
                             <field name="delivered_uom_qty" 
                                 context="{'updated_field': 'delivered_uom_qty'}" 
-                                attrs="{'required': [('delivered_uom_id', '!=', False)]}"/>
+                                attrs="{'required': [('delivered_uom_id', '!=', False)]}" />
                             <field name="delivered_t_ha" 
-                                context="{'updated_field': 'delivered_t_ha'}"/>
+                                context="{'updated_field': 'delivered_t_ha'}" />
                         </group>
                     </group>
                 </sheet>
@@ -265,17 +267,17 @@
     <menuitem id="agri_production_menu" name="Production"
         parent="agri.agri_menu_root" 
         sequence="10" 
-        groups="agri.agri_group_user"/>
+        groups="agri.agri_group_user" />
 
     <menuitem id="agri_production_schedule_action_menu" name="Production Schedules"
         parent="agri_production_menu"  
         sequence="9"
-        action="agri_production_schedule_action"/>
+        action="agri_production_schedule_action" />
 
     <menuitem id="agri_production_record_action_menu" name="Production Records"
         parent="agri_production_menu"  
         groups="agri.agri_group_manager"
         sequence="10"
-        action="agri_production_record_action"/>
+        action="agri_production_record_action" />
 
 </odoo>
