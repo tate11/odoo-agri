@@ -7,7 +7,7 @@
         <field name="name">date.range.view.search</field>
         <field name="model">date.range</field>
         <field name="arch" type="xml">
-            <search string="Seasions">
+            <search string="Seasons">
                 <field name="name"/>
                 <separator/>
                 <filter string="Season" name="filter_is_season" domain="[('type_id.is_season', '=', True)]"/>
@@ -81,7 +81,7 @@
     <!-- menu items -->
 
     <menuitem id="agri_season_action_menu" name="Seasons"
-        parent="agri_production_menu" 
+        parent="agri_production_menu"
         sequence="7"
         action="agri_season_action"/>
 
