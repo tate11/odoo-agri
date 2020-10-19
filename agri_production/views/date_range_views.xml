@@ -7,9 +7,10 @@
         <field name="name">date.range.view.search</field>
         <field name="model">date.range</field>
         <field name="arch" type="xml">
-            <search string="Seasions">
+            <search string="Seasons">
                 <field name="name"/>
                 <separator/>
+                <filter string="Calendar Period" name="filter_is_calendar_period" domain="[('type_id.is_calendar_period', '=', True)]"/>
                 <filter string="Season" name="filter_is_season" domain="[('type_id.is_season', '=', True)]"/>
             </search>
         </field>
