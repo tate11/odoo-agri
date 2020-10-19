@@ -82,7 +82,7 @@
     <!-- menu items -->
 
     <menuitem id="agri_season_action_menu" name="Seasons"
-        parent="agri_production_menu" 
+        parent="agri_production_menu"
         sequence="7"
         action="agri_season_action"/>
 
