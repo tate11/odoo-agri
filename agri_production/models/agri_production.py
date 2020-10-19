@@ -86,8 +86,9 @@ class ProductionRecord(models.Model):
             precision = self.env['decimal.precision'].precision_get(
                 'Tons per Hectare')
             for record in self:
-                if record.delivered_uom_id and record.planted_ha and not float_is_zero(
-                        record.planted_ha, precision_rounding=ha_uom.rounding):
+                if (record.delivered_uom_id and record.planted_ha and
+                        not float_is_zero(record.planted_ha,
+                                          precision_rounding=ha_uom.rounding)):
                     delivered_tons = record.delivered_uom_id._compute_quantity(
                         record.delivered_uom_qty, ton_uom, round=False)
                     record.delivered_t_ha = delivered_tons / record.planted_ha
@@ -137,7 +138,9 @@ class ProductionRecord(models.Model):
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
-        if self.partner_id and self.farm_field_id and self.farm_field_id.farm_id.partner_id.id != self.partner_id.id:
+        if (self.partner_id and self.farm_field_id
+                and self.farm_field_id.farm_id.partner_id.id !=
+                self.partner_id.id):
             self.farm_field_id = None
 
     @api.onchange('production_schedule_id')
@@ -203,6 +206,11 @@ class ProductionSchedule(models.Model):
                                 ondelete='cascade',
                                 required=True,
                                 tracking=True)
+    period_id = fields.Many2one('date.range.type',
+                                string='Period',
+                                domain="[('is_calendar_period', '=', True)]",
+                                ondelete='cascade',
+                                required=True)
     area_uom_id = fields.Many2one(
         'uom.uom',
         'Area Unit',
@@ -218,6 +226,11 @@ class ProductionSchedule(models.Model):
         required=True,
         tracking=True)
 
+    @api.onchange('season_id', 'period_id')
+    def _onchange_season_period(self):
+        for plan in self:
+            plan.line_ids._compute_calendar_period_ids()
+
     @api.depends('farm_field_ids.area_ha')
     def _compute_total_ha(self):
         for plan in self:
@@ -230,18 +243,21 @@ class ProductionSchedule(models.Model):
         for plan in self:
             quantity = 0.0
             for line in plan.line_ids:
-                if not line.is_purchase and line.product_category_id.uom_id.id == plan.mass_uom_id.id:
+                if (not line.is_purchase and line.product_category_id.uom_id.id
+                        == plan.mass_uom_id.id):
                     quantity += line.quantity
             plan.total_mass = plan.total_ha * quantity
-            plan.total_yield = plan.total_mass / plan.total_ha if not float_is_zero(
-                plan.total_ha,
-                precision_rounding=plan.area_uom_id.rounding) else 0.0
+            plan.total_yield = (
+                plan.total_mass / plan.total_ha if
+                not float_is_zero(plan.total_ha,
+                                  precision_rounding=plan.area_uom_id.rounding)
+                else 0.0)
 
 
 class ProductionScheduleLine(models.Model):
     _name = 'agri.production.schedule.line'
     _description = 'Production Schedule Line'
-    _order = 'date asc'
+    _order = 'date_range_id asc'
 
     product_category_id = fields.Many2one('product.category',
                                           string='Category',
@@ -256,7 +272,18 @@ class ProductionScheduleLine(models.Model):
                                              string='Production Schedule',
                                              ondelete='cascade',
                                              required=True)
-    date = fields.Date('Date', required=True)
+    season_id = fields.Many2one(related='production_schedule_id.season_id',
+                                readonly=True)
+    period_id = fields.Many2one(related='production_schedule_id.period_id',
+                                string="Schedule Period",
+                                readonly=True)
+    calendar_period_ids = fields.One2many(
+        'date.range', compute='_compute_calendar_period_ids')
+    date_range_id = fields.Many2one(
+        'date.range',
+        domain="[('id', 'in', calendar_period_ids)]",
+        string="Period",
+        required=True)
     quantity_uom_id = fields.Many2one(related='product_category_id.uom_id',
                                       string='Quantity Units',
                                       readonly=True)
@@ -272,6 +299,18 @@ class ProductionScheduleLine(models.Model):
     is_purchase = fields.Boolean('Is Purchase', default='_compute_is_purchase')
     area_uom_id = fields.Many2one(related='production_schedule_id.area_uom_id',
                                   readonly=True)
+
+    @api.depends('season_id', 'period_id')
+    @api.onchange('product_category_id', 'season_id', 'period_id')
+    def _compute_calendar_period_ids(self):
+        for line in self:
+            domain = []
+            if line.season_id:
+                domain += [('id', 'in', line.season_id.calendar_period_ids.ids)
+                           ]
+            if line.period_id:
+                domain += [('type_id', '=', line.period_id.id)]
+            line.calendar_period_ids = self.env['date.range'].search(domain)
 
     @api.onchange('product_category_id')
     def _compute_is_purchase(self):
