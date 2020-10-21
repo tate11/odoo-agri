@@ -8,10 +8,10 @@
         <field name="model">date.range</field>
         <field name="arch" type="xml">
             <search string="Seasons">
-                <field name="name"/>
-                <separator/>
-                <filter string="Calendar Period" name="filter_is_calendar_period" domain="[('type_id.is_calendar_period', '=', True)]"/>
-                <filter string="Season" name="filter_is_season" domain="[('type_id.is_season', '=', True)]"/>
+                <field name="name" />
+                <separator />
+                <filter string="Calendar Period" name="filter_is_calendar_period" domain="[('type_id.is_calendar_period', '=', True)]" />
+                <filter string="Season" name="filter_is_season" domain="[('type_id.is_season', '=', True)]" />
             </search>
         </field>
     </record>
@@ -19,10 +19,10 @@
     <record id="view_date_range_tree" model="ir.ui.view">
         <field name="name">date.range.tree.inherit.agri.production</field>
         <field name="model">date.range</field>
-        <field name="inherit_id" ref="date_range.view_date_range_tree"/>
+        <field name="inherit_id" ref="date_range.view_date_range_tree" />
         <field name="arch" type="xml">
             <field name="type_id" position="replace">
-                <field name="type_id" context="{'default_is_season': context.get('default_is_season')}"/>
+                <field name="type_id" context="{'default_is_season': context.get('default_is_season')}" />
             </field>
         </field>
     </record>
@@ -30,10 +30,10 @@
     <record id="view_date_range_form_view" model="ir.ui.view">
         <field name="name">date.range.form.inherit.agri.production</field>
         <field name="model">date.range</field>
-        <field name="inherit_id" ref="date_range.view_date_range_form_view"/>
+        <field name="inherit_id" ref="date_range.view_date_range_form_view" />
         <field name="arch" type="xml">
             <field name="type_id" position="replace">
-                <field name="type_id" context="{'default_is_season': context.get('default_is_season')}"/>
+                <field name="type_id" context="{'default_is_season': context.get('default_is_season')}" />
             </field>
         </field>
     </record>
@@ -41,10 +41,10 @@
     <record id="view_date_range_type_tree" model="ir.ui.view">
         <field name="name">date.range.type.tree.inherit.agri.production</field>
         <field name="model">date.range.type</field>
-        <field name="inherit_id" ref="date_range.view_date_range_type_tree"/>
+        <field name="inherit_id" ref="date_range.view_date_range_type_tree" />
         <field name="arch" type="xml">
             <field name="allow_overlap" position="after">
-                <field name="is_season"/>
+                <field name="is_season" />
             </field>
         </field>
     </record>
@@ -52,10 +52,10 @@
     <record id="view_date_range_type_form_view" model="ir.ui.view">
         <field name="name">date.range.type.form.inherit.agri.production</field>
         <field name="model">date.range.type</field>
-        <field name="inherit_id" ref="date_range.view_date_range_type_form_view"/>
+        <field name="inherit_id" ref="date_range.view_date_range_type_form_view" />
         <field name="arch" type="xml">
             <field name="allow_overlap" position="after">
-                <field name="is_season"/>
+                <field name="is_season" />
             </field>
         </field>
     </record>
@@ -78,12 +78,5 @@
             </p>
         </field>
     </record>
-
-    <!-- menu items -->
-
-    <menuitem id="agri_season_action_menu" name="Seasons"
-        parent="agri_production_menu"
-        sequence="7"
-        action="agri_season_action"/>
 
 </odoo>

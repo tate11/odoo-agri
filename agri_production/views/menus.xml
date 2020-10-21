@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="agri_production_menu" name="Production" parent="agri.agri_menu_root" sequence="10" groups="agri.agri_group_user" />
+
+    <menuitem id="agri_production_schedule_action_menu" name="Production Schedules" parent="agri_production_menu" sequence="9" action="agri_production_schedule_action" />
+
+    <menuitem id="agri_production_record_action_menu" name="Production Records" parent="agri_production_menu" groups="agri.agri_group_manager" sequence="10" action="agri_production_record_action" />
+
+    <menuitem id="agri_season_action_menu" name="Seasons" parent="agri_production_menu" sequence="7" action="agri_season_action" />
+
+    <menuitem id="agri_cultivar_action_menu" name="Cultivars" parent="agri_production_menu" sequence="5" action="agri_cultivar_action" />
+
+</odoo>

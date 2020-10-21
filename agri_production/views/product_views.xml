@@ -57,11 +57,4 @@
         </field>
     </record>
 
-    <!-- menu items -->
-
-    <menuitem id="agri_cultivar_action_menu" name="Cultivars"
-        parent="agri_production_menu" 
-        sequence="5"
-        action="agri_cultivar_action"/>
-
 </odoo>
