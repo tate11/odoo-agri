@@ -34,7 +34,7 @@ class DateRange(models.Model):
                 if not date_range:
                     date_range = DateRange.create({
                         'name':
-                        month_start.strftime('%b %Y'),
+                        month_start.strftime('%Y-%m'),
                         'company_id':
                         self.company_id.id,
                         'date_start':
@@ -68,7 +68,7 @@ class DateRange(models.Model):
                 if not date_range:
                     date_range = DateRange.create({
                         'name':
-                        week_start.strftime('CW %U'),
+                        week_start.strftime('%Y-W%W'),
                         'company_id':
                         self.company_id.id,
                         'date_start':
