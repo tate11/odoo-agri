@@ -15,7 +15,7 @@
     "sequence":
     1,
     "author":
-    "Agrista (Pty) Ltd.",
+    "Agrista GmbH",
     "license":
     "AGPL-3",
     "description":
@@ -26,8 +26,8 @@
         'security/ir.model.access.csv',
         'data/uom_data.xml',
         'data/product_data.xml',
-        'data/agri.budget.template.csv',
-        'data/agri.budget.template.line.csv',
+        # 'data/agri.budget.template.csv',
+        # 'data/agri.budget.template.line.csv',
         'data/agri_crop_data.xml',
         'data/agri_irrigation_data.xml',
         'data/agri.land.use.csv',
