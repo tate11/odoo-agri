@@ -68,7 +68,7 @@
                     <group>
                         <group>
                             <field name="source" />
-                            <field name="production_schedule_id" context="{'default_partner_id': partner_id}" attrs="{'invisible': [('source', '!=', 'schedule')], 'required': [('source', '=', 'schedule')]}" />
+                            <field name="production_plan_id" context="{'default_partner_id': partner_id}" attrs="{'invisible': [('source', '!=', 'plan')], 'required': [('source', '=', 'plan')]}" />
                         </group>
                         <group>
                             <field name="farm_field_id" context="{'default_partner_id': partner_id}" />

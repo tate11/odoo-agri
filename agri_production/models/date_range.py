@@ -68,7 +68,7 @@ class DateRange(models.Model):
                 if not date_range:
                     date_range = DateRange.create({
                         'name':
-                        week_start.strftime('%Y-W%W'),
+                        week_start.strftime('%Y-CW%W'),
                         'company_id':
                         self.company_id.id,
                         'date_start':

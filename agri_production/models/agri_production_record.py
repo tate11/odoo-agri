@@ -26,11 +26,10 @@ class ProductionRecord(models.Model):
     company_id = fields.Many2one('res.company',
                                  required=True,
                                  default=lambda self: self.env.company)
-    production_schedule_id = fields.Many2one(
-        comodel_name="agri.production.schedule",
-        string="Production Schedule",
-        ondelete='cascade',
-        check_company=True)
+    production_plan_id = fields.Many2one(comodel_name="agri.production.plan",
+                                         string="Production Plan",
+                                         ondelete='cascade',
+                                         check_company=True)
     farm_field_id = fields.Many2one(
         'agri.farm.field',
         'Field',
@@ -143,19 +142,18 @@ class ProductionRecord(models.Model):
                 self.partner_id.id):
             self.farm_field_id = None
 
-    @api.onchange('production_schedule_id')
-    def _onchange_production_schedule_id(self):
-        self.source = 'plan' if self.production_schedule_id else 'import'
+    @api.onchange('production_plan_id')
+    def _onchange_production_plan_id(self):
+        self.source = 'plan' if self.production_plan_id else 'import'
 
     @api.onchange('source')
     def _onchange_source(self):
         if self.source != 'plan':
-            self.production_schedule_id = None
+            self.production_plan_id = None
 
-    @api.constrains('source', 'production_schedule_id')
+    @api.constrains('source', 'production_plan_id')
     def _check_source(self):
-        if self.source == 'plan' and not self.production_schedule_id:
-            raise ValidationError(_('Production Schedule must be set.'))
-        elif self.source != 'plan' and self.production_schedule_id:
-            raise ValidationError(
-                _('Source must be set to Production Schedule.'))
+        if self.source == 'plan' and not self.production_plan_id:
+            raise ValidationError(_('Production Plan must be set.'))
+        elif self.source != 'plan' and self.production_plan_id:
+            raise ValidationError(_('Source must be set to Production Plan.'))

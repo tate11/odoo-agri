@@ -15,7 +15,7 @@
     "sequence":
     1,
     "author":
-    "Agrista (Pty) Ltd.",
+    "Agrista GmbH",
     "license":
     "AGPL-3",
     "description":
@@ -24,8 +24,8 @@
     "data": [
         'security/ir.model.access.csv',
         'data/res_company_data.xml',
+        'views/agri_production_plan_views.xml',
         'views/agri_production_record_views.xml',
-        'views/agri_production_schedule_views.xml',
         'views/date_range_views.xml',
         'views/product_views.xml',
         'views/menus.xml',
