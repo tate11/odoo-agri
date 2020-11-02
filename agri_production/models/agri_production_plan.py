@@ -62,11 +62,13 @@ class ProductionPlan(models.Model):
                                copy=True)
     season_id = fields.Many2one('date.range',
                                 string='Season',
+                                ondelete='restrict',
                                 domain="[('type_id.is_season', '=', True)]",
                                 required=True,
                                 tracking=True)
     period_id = fields.Many2one('date.range.type',
                                 string='Period',
+                                ondelete='restrict',
                                 domain="[('is_calendar_period', '=', True)]",
                                 required=True)
     consumption_uom_id = fields.Many2one(
@@ -124,14 +126,15 @@ class ProductionPlanLine(models.Model):
     season_id = fields.Many2one(related='production_plan_id.season_id',
                                 readonly=True)
     period_id = fields.Many2one(related='production_plan_id.period_id',
-                                string="Plan Period",
+                                string='Plan Period',
                                 readonly=True)
     calendar_period_ids = fields.One2many(
         'date.range', compute='_compute_calendar_period_ids')
     date_range_id = fields.Many2one(
         'date.range',
+        string='Period',
+        ondelete='restrict',
         domain="[('id', 'in', calendar_period_ids)]",
-        string="Period",
         required=True)
     product_category_id = fields.Many2one('product.category',
                                           string='Category',
@@ -166,7 +169,7 @@ class ProductionPlanLine(models.Model):
         ],
         string="Application Type",
         required=True,
-        default="variable",
+        default="per_land_unit",
     )
     application_uom_id = fields.Many2one(related='product_category_id.uom_id',
                                          string='Application UoM')
