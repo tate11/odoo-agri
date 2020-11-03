@@ -181,6 +181,13 @@ class ProductionPlanLine(models.Model):
                             compute='_compute_total',
                             store=True)
 
+    @api.onchange('product_id')
+    def _compute_product_price_uom(self):
+        for line in self:
+            if line.product_id:
+                line.price = line.product_id.lst_price or line.price
+                line.product_uom_id = line.product_id.uom_id or line.product_uom
+
     @api.depends('season_id', 'period_id')
     @api.onchange('product_category_id', 'season_id', 'period_id')
     def _compute_calendar_period_ids(self):

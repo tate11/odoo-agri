@@ -90,7 +90,8 @@
             <form string="Production Plans">
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button name="%(agri_production_plan_line_action)d" type="action" context="{'default_production_plan_id': id}" class="oe_stat_button oe_inline" icon="fa-coins">
+                        <button name="%(agri_production_plan_line_action)d" type="action" context="{'default_production_plan_id': id}" 
+                                class="oe_stat_button oe_inline" icon="fa-coins">
                             <field name="total_yield" widget="statinfo" string="Income" />
                         </button>
                     </div>
