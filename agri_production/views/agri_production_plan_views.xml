@@ -111,17 +111,23 @@
                     <notebook>
                         <page string="General Information" name="settings_tab">
                             <group>
-                                <field name="period_id" options="{'no_create': 1}" />
-                                <field name="land_area_uom_id" />
-                                <field name="consumption_uom_id" />
-                                <field name="production_uom_id" />
-                                <field name="total_production" />
+                                <field name="period_id" options="{'no_create': 1, 'no_open': 1}" />
+                                <field name="land_area_uom_id" options="{'no_open': 1}" />
+                                <field name="consumption_uom_id" options="{'no_open': 1}" />
+                                <field name="production_uom_id" options="{'no_open': 1}" />
+                                <label for="total_production" />
+                                <div>
+                                    <field name="total_production" class="oe_inline" />
+                                    <![CDATA[&nbsp;]]>
+                                    <field name="production_uom_id" readonly="1" class="oe_inline" options="{'no_open': 1}" />
+                                </div>
                                 <label for="total_yield" />
                                 <div>
-                                    <field name="total_yield" class="oe_inline" options="{'no_open': 1}" />
-                                    <field name="production_uom_id" class="oe_inline" options="{'no_open': 1}" />
+                                    <field name="total_yield" class="oe_inline" />
+                                    <![CDATA[&nbsp;]]>
+                                    <field name="production_uom_id" readonly="1" class="oe_inline" options="{'no_open': 1}" />
                                     /
-                                    <field name="land_area_uom_id" class="oe_inline" options="{'no_open': 1}" />
+                                    <field name="land_area_uom_id" readonly="1" class="oe_inline" options="{'no_open': 1}" />
                                 </div>
                                 <label for="gross_yield" />
                             </group>
