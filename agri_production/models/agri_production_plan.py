@@ -256,8 +256,7 @@ class ProductionPlanLine(models.Model):
                                 ) if line.product_category_id else False
 
     @api.onchange('price', 'quantity', 'application_type', 'application_rate',
-                  'application_rate_type'
-                  'catch_weight_percent')
+                  'application_rate_type', 'catch_weight_percent')
     @api.depends('price', 'quantity', 'application_rate',
                  'catch_weight_percent', 'production_plan_id.total_land_area',
                  'production_plan_id.total_production',
@@ -268,19 +267,18 @@ class ProductionPlanLine(models.Model):
         gross_production_value = self.production_plan_id.gross_production_value
         total_costs = self.production_plan_id.total_costs
         for line in self:
-            price = 0
+            total_land_area = line.production_plan_id.total_land_area
+            total_production = line.production_plan_id.total_production
+            gross_production_value = line.production_plan_id.gross_production_value
+            total_costs = line.production_plan_id.total_costs
             # Adjust priced based on catach weight percent
-            if line.is_catch_weight is True:
-                price = line.price * line.catch_weight_percent / 100
-            else:
-                price = line.price
+            price = (line.price * line.catch_weight_percent /
+                     100.0 if line.is_catch_weight else line.price)
             quantity = line.quantity or 1.0
             # Adjust application rate value if it is a percentage
-            application_rate = 1
-            if line.application_rate_type == 'percentage':
-                application_rate = line.application_rate / 100
-            else:
-                application_rate = line.application_rate
+            application_rate = (line.application_rate /
+                                100.0 if line.application_rate_type
+                                == 'percentage' else line.application_rate)
             value = price * quantity * application_rate
             if line.application_type == 'sum':
                 amount_total = value
