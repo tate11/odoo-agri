@@ -14,7 +14,8 @@
                         <group name="group_col1">
                             <field name="production_plan_id" />
                             <field name="product_category_id" />
-                            <field name="product_id" />
+                            <field name="product_id" 
+                                   context="{'default_categ_id': product_category_id, 'default_lst_price': price, 'default_type': 'product', 'default_uom_id': product_uom_id}" />
                             <field name="currency_id" invisible="1" />
                             <label for="price" />
                             <div>
@@ -90,7 +91,8 @@
             <form string="Production Plans">
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button name="%(agri_production_plan_line_action)d" type="action" context="{'default_production_plan_id': id}" 
+                        <button name="%(agri_production_plan_line_action)d" type="action" 
+                                context="{'default_production_plan_id': id}" 
                                 class="oe_stat_button oe_inline" icon="fa-coins">
                             <field name="total_yield" widget="statinfo" string="Income" />
                         </button>
