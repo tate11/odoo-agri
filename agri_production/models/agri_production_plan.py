@@ -19,6 +19,10 @@ class ProductionPlan(models.Model):
     company_id = fields.Many2one('res.company',
                                  required=True,
                                  default=lambda self: self.env.company)
+    currency_id = fields.Many2one(
+        'res.currency',
+        default=lambda self: self.env.company.currency_id,
+        required=True)
     farm_field_ids = fields.Many2many(
         'agri.farm.field',
         'agri_production_plan_farm_field_rel',
@@ -49,9 +53,9 @@ class ProductionPlan(models.Model):
                                     compute='_compute_production',
                                     store=True,
                                     tracking=True)
-    total_production_value = fields.Float('Total Production Value',
-                                          compute='_compute_production',
-                                          store=True)
+    total_production_value = fields.Monetary('Total Production Value',
+                                             compute='_compute_production',
+                                             store=True)
     total_yield = fields.Float('Yield',
                                compute='_compute_production',
                                store=True,
@@ -97,11 +101,14 @@ class ProductionPlan(models.Model):
     def _compute_production(self):
         for plan in self:
             quantity = 0.0
+            value = 0.0
             for line in plan.line_ids:
                 if (not line.is_purchase and line.product_category_id.uom_id.id
                         == plan.production_uom_id.id):
                     quantity += line.no_of_times * line.application_rate
+                    value += line.total
             plan.total_production = plan.total_land_area * quantity
+            plan.total_production_value = plan.total_land_area * value
             plan.total_yield = (
                 plan.total_production /
                 plan.total_land_area if not float_is_zero(
@@ -146,11 +153,9 @@ class ProductionPlanLine(models.Model):
                                  required=True)
 
     is_purchase = fields.Boolean('Is Purchase', default='_compute_is_purchase')
-    price = fields.Float(string='Price', required=True)
-    currency_id = fields.Many2one(
-        'res.currency',
-        default=lambda self: self.env.company.currency_id,
-        required=True)
+    price = fields.Monetary(string='Price', required=True)
+    currency_id = fields.Many2one(related='production_plan_id.currency_id',
+                                  readonly=True)
     product_uom_id = fields.Many2one('uom.uom',
                                      string='Purchase UoM',
                                      required=True)
