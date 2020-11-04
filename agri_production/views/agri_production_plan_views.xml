@@ -14,32 +14,48 @@
                         <group name="group_col1">
                             <field name="production_plan_id" />
                             <field name="product_category_id" />
-                            <field name="product_id" 
-                                   context="{'default_categ_id': product_category_id, 'default_lst_price': price, 'default_type': 'product', 'default_uom_id': product_uom_id}" />
+                            <field name="product_id" context="{'default_categ_id': product_category_id, 'default_lst_price': price, 'default_type': 'product', 'default_uom_id': product_uom_id}" />
                             <field name="currency_id" invisible="1" />
                             <label for="price" />
                             <div>
-                                <field name="price" class="oe_inline" options="{'no_open': 1}" />
+                                <field name="price" class="oe_inline" options="{'no_open': True}" />
                                 /
-                                <field name="product_uom_id" class="oe_inline" options="{'no_open': 1}" />
+                                <field name="product_uom_id" class="oe_inline" options="{'no_open': True}" />
                             </div>
                             <field name="calendar_period_ids" invisible="1" />
-                            <field name="date_range_id" />
-                            <field name="payment_term_id" />
+                            <field name="date_range_id" options="{'no_open': True}" />
+                            <field name="payment_term_id" options="{'no_open': True}" />
                         </group>
                         <group name="group_col2">
                             <field name="sale_ok" invisible="1" />
                             <field name="purchase_ok" invisible="1" />
                             <field name="is_purchase" attrs="{'invisible': ['|', ('purchase_ok', '=', False), ('sale_ok', '=', False)]}" />
                             <field name="application_type" widget="radio" />
-                            <label for="application_rate" attrs="{'invisible': [('application_type', '=', 'sum')]}" />
-                            <div attrs="{'invisible': [('application_type', '=', 'sum')]}">
-                                <field name="application_rate" class="oe_inline" />
-                                /
-                                <field name="application_uom_id" class="oe_inline" options="{'no_open': 1}" />
+                            <label for="quantity" />
+                            <div>
+                                <field name="quantity" class="oe_inline" />
+                                <![CDATA[&nbsp;]]>
+                                <field name="product_uom_id" class="oe_inline" options="{'no_open': True}" />
+                                <span attrs="{'invisible': ['|', ('application_type', '!=', 'per_production_unit'), ('application_type', '!=', 'per_consumption_unit')]}" class="oe_inline">
+                                    /
+                                    <field name="consumption_uom_id" attrs="{'invisible': [('application_type', '!=', 'per_consumption_unit')]}" />
+                                    <field name="production_uom_id" attrs="{'invisible': [('application_type', '!=', 'per_production_unit')]}" />
+                                </span>
                             </div>
-                            <field name="no_of_times" class="oe_inline" />
-                            <field name="total" />
+                            <label for="application_rate" attrs="{'invisible': [('is_catch_weight', '=', True)]}" />
+                            <div attrs="{'invisible': [('is_catch_weight', '=', True)]}">
+                                <field name="application_rate" class="oe_inline" />
+                                <![CDATA[&nbsp;]]>
+                                <field name="application_rate_type" class="oe_inline" options="{'no_open': True}" />
+                            </div>
+                            <field name="is_catch_weight" invisible="1" />
+                            <label for="catch_weight_percent" attrs="{'invisible': [('is_catch_weight', '=', False)]}" class="oe_inline" />
+                            <div attrs="{'invisible': [('is_catch_weight', '=', False)]}" class="oe_inline">
+                                <field name="catch_weight_percent" class="oe_inline" />
+                                <![CDATA[&nbsp;]]>
+                                <span class="oe_inline">%</span>
+                            </div>
+                            <field name="amount_total" />
                         </group>
                     </group>
                 </sheet>
@@ -57,30 +73,46 @@
                 <field name="product_id" />
                 <field name="calendar_period_ids" invisible="1" />
                 <field name="date_range_id" />
-                <field name="no_of_times" />
+                <field name="quantity" />
                 <field name="application_uom_id" string="Units" />
+                <field name="application_rate" />
+                <field name="application_rate_type" string="Type" />
                 <field name="currency_id" invisible="1" />
                 <field name="price" />
                 <field name="sale_ok" invisible="1" />
                 <field name="purchase_ok" invisible="1" />
-                <field name="total" />
+                <field name="amount_total" />
                 <field name="is_purchase" attrs="{'readonly': ['|', ('purchase_ok', '=', False), ('sale_ok', '=', False)]}" />
             </tree>
         </field>
     </record>
 
-    <record id="agri_production_plan_line_action" model="ir.actions.act_window">
-        <field name="name">Costs</field>
+    <record id="agri_production_plan_line_action_revenue" model="ir.actions.act_window">
+        <field name="name">Revenue</field>
         <field name="res_model">agri.production.plan.line</field>
         <field name="view_mode">tree,form</field>
-        <field name="domain">[]</field>
+        <field name="domain">[('sale_ok', '=', True)]</field>
         <field name="context">{'group_by': 'product_category_id'}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Add cost items to the production plan
+                Add production plan revenues
             </p>
         </field>
     </record>
+
+    <record id="agri_production_plan_line_action_costs" model="ir.actions.act_window">
+        <field name="name">Costs</field>
+        <field name="res_model">agri.production.plan.line</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('purchase_ok', '=', True)]</field>
+        <field name="context">{'group_by': 'product_category_id'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add production plan costs
+            </p>
+        </field>
+    </record>
+
     <!-- agri.production.plan views -->
 
     <record id="agri_production_plan_view_form" model="ir.ui.view">
@@ -91,10 +123,11 @@
             <form string="Production Plans">
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button name="%(agri_production_plan_line_action)d" type="action" 
-                                context="{'default_production_plan_id': id}" 
-                                class="oe_stat_button oe_inline" icon="fa-coins">
-                            <field name="total_yield" widget="statinfo" string="Income" />
+                        <button name="%(agri_production_plan_line_action_revenue)d" type="action" context="{'default_production_plan_id': id}" class="oe_stat_button oe_inline" icon="fa-coins">
+                            <field name="gross_production_value" widget="statinfo" string="Revenue" />
+                        </button>
+                        <button name="%(agri_production_plan_line_action_costs)d" type="action" context="{'default_production_plan_id': id}" class="oe_stat_button oe_inline" icon="fa-shopping-cart">
+                            <field name="total_costs" widget="statinfo" string="Costs" />
                         </button>
                     </div>
                     <div class="oe_title">
@@ -108,13 +141,14 @@
                             <field name="partner_id" />
                             <field name="season_id" context="{'default_is_season': 1}" />
                             <field name="company_id" />
+                            <field name="enterprise_type" />
                         </group>
                     </group>
                     <notebook>
                         <page string="General Information" name="settings_tab">
                             <group>
                                 <field name="period_id" options="{'no_create': 1, 'no_open': 1}" />
-                                <field name="land_area_uom_id" options="{'no_open': 1}" />
+                                <field name="land_uom_id" options="{'no_open': 1}" />
                                 <field name="consumption_uom_id" options="{'no_open': 1}" />
                                 <field name="production_uom_id" options="{'no_open': 1}" />
                                 <label for="total_production" />
@@ -123,15 +157,15 @@
                                     <![CDATA[&nbsp;]]>
                                     <field name="production_uom_id" readonly="1" class="oe_inline" options="{'no_open': 1}" />
                                 </div>
-                                <label for="total_yield" />
+                                <label for="production_yield" />
                                 <div>
-                                    <field name="total_yield" class="oe_inline" />
+                                    <field name="production_yield" class="oe_inline" />
                                     <![CDATA[&nbsp;]]>
                                     <field name="production_uom_id" readonly="1" class="oe_inline" options="{'no_open': 1}" />
                                     /
-                                    <field name="land_area_uom_id" readonly="1" class="oe_inline" options="{'no_open': 1}" />
+                                    <field name="land_uom_id" readonly="1" class="oe_inline" options="{'no_open': 1}" />
                                 </div>
-                                <label for="gross_yield" />
+                                <label for="gross_production_value" />
                             </group>
                         </page>
                         <page string="Fields" name="fields_tab">

@@ -23,6 +23,12 @@ class ProductionPlan(models.Model):
         'res.currency',
         default=lambda self: self.env.company.currency_id,
         required=True)
+    enterprise_type = fields.Selection([('crop', 'Crop'),
+                                        ('permanent_crop', 'Permanent Crop'),
+                                        ('livestock', 'Livestock')],
+                                       string="Type",
+                                       required=True,
+                                       default="crop")
     farm_field_ids = fields.Many2many(
         'agri.farm.field',
         'agri_production_plan_farm_field_rel',
@@ -30,7 +36,7 @@ class ProductionPlan(models.Model):
         'farm_field_id',
         domain="[('farm_id.partner_id', '=', partner_id)]",
         string='Fields')
-    land_area_uom_id = fields.Many2one(
+    land_uom_id = fields.Many2one(
         'uom.uom',
         'Land Area Unit',
         domain="[('name', 'in', ['ac', 'ha'])]",
@@ -53,13 +59,16 @@ class ProductionPlan(models.Model):
                                     compute='_compute_production',
                                     store=True,
                                     tracking=True)
-    total_production_value = fields.Monetary('Total Production Value',
-                                             compute='_compute_production',
-                                             store=True)
-    total_yield = fields.Float('Yield',
+    gross_production_value = fields.Float('Gross Production Value',
+                                          compute='_compute_production',
+                                          store=True)
+    production_yield = fields.Float('Yield',
+                                    compute='_compute_production',
+                                    store=True,
+                                    tracking=True)
+    total_costs = fields.Float('Total costs',
                                compute='_compute_production',
-                               store=True,
-                               tracking=True)
+                               store=True)
     line_ids = fields.One2many(comodel_name='agri.production.plan.line',
                                inverse_name='production_plan_id',
                                string='Production Plan Lines',
@@ -96,13 +105,15 @@ class ProductionPlan(models.Model):
                 lambda field: field.area_ha)
             plan.total_land_area = sum(fields_with_area.mapped('area_ha'))
 
-    @api.depends('total_land_area', 'line_ids', 'land_area_uom_id',
-                 'production_uom_id')
+    @api.depends('total_land_area', 'line_ids', 'land_uom_id',
+                 'consumption_uom_id', 'production_uom_id')
     def _compute_production(self):
         for plan in self:
             quantity = 0.0
             value = 0.0
+            total_costs = 0.0
             for line in plan.line_ids:
+                # TODO: Check if units are standardised
                 if (not line.is_purchase and line.product_category_id.uom_id.id
                         == plan.production_uom_id.id):
                     quantity += line.no_of_times * line.application_rate
@@ -121,6 +132,11 @@ class ProductionPlanLine(models.Model):
     _name = 'agri.production.plan.line'
     _description = 'Production Plan Line'
     _order = 'date_range_id asc'
+
+    # TODO: Return product default CW%
+    @api.model
+    def _get_default_catch_weight_percent(self):
+        return 12.5
 
     sale_ok = fields.Boolean(related='product_category_id.sale_ok',
                              store=False)
@@ -162,29 +178,58 @@ class ProductionPlanLine(models.Model):
     payment_term_id = fields.Many2one("account.payment.term",
                                       string="Payment Terms",
                                       required=True)
-    land_area_uom_id = fields.Many2one(
-        related='production_plan_id.land_area_uom_id', readonly=True)
+    land_uom_id = fields.Many2one(related='production_plan_id.land_uom_id',
+                                  readonly=True)
+    production_uom_id = fields.Many2one(
+        related='production_plan_id.production_uom_id', readonly=True)
+    consumption_uom_id = fields.Many2one(
+        related='production_plan_id.consumption_uom_id', readonly=True)
     application_type = fields.Selection(
         [
             ("sum", "Sum"),
-            ("per_land_unit", "Per land unit"),
-            ("per_consumption_unit", "Per consumption unit"),
             ("per_production_unit", "Per production unit"),
-            ("perc_of_production_value", "Percentage of production value"),
+            ("per_consumption_unit", "Per consumption unit"),
+            ("of_gross_production_value", "% of gross production value"),
+            ("of_total_costs", "% of total costs"),
         ],
         string="Application Type",
         required=True,
-        default="per_land_unit",
+        default="sum",
     )
+    quantity = fields.Float('Quantity', default=1, digits='Stock Weight')
     application_uom_id = fields.Many2one(related='product_category_id.uom_id',
                                          string='Application UoM')
     application_rate = fields.Float('Application Rate',
                                     default=1,
                                     digits='Stock Weight')
-    no_of_times = fields.Float('No of times', default=1, digits='Stock Weight')
-    total = fields.Monetary(string='Total',
-                            compute='_compute_total',
-                            store=True)
+    application_rate_type = fields.Selection(
+        [('percentage', '%'), ('no_of_times', 'no. of times')],
+        string="Application Rate Type",
+        required=True,
+        default="no_of_times",
+    )
+    is_catch_weight = fields.Boolean('Is Catch Weight',
+                                     related='product_id.is_catch_weight')
+    catch_weight_percent = fields.Float(
+        'Catch Weight Percent',
+        default=lambda self: self._get_default_catch_weight_percent())
+    amount_total = fields.Monetary(string='Total',
+                                   compute='_compute_total',
+                                   store=True)
+    amount_produced = fields.Monetary(string='Amount Produced',
+                                      compute='_compute_total',
+                                      store=True,
+                                      help="The value produced by this item")
+    amount_consumed = fields.Monetary(
+        string='Amount Consumed',
+        compute='_compute_total',
+        store=True,
+        help="The value consumed by this expense")
+    quantity_produced = fields.Float(
+        string='Quantity Produced',
+        compute='_compute_total',
+        store=True,
+        help="The production quantity measured in the production UoM")
 
     @api.onchange('product_id')
     def _compute_product_price_uom(self):
@@ -212,17 +257,50 @@ class ProductionPlanLine(models.Model):
                                 and not line.product_category_id.sale_ok
                                 ) if line.product_category_id else False
 
-    @api.onchange('no_of_times', 'price')
-    @api.depends('no_of_times', 'price', 'production_plan_id.total_land_area')
+    @api.onchange('price', 'quantity', 'application_type', 'application_rate',
+                  'application_rate_type'
+                  'catch_weight_percent')
+    @api.depends('price', 'quantity', 'application_rate',
+                 'catch_weight_percent', 'production_plan_id.total_land_area',
+                 'production_plan_id.total_production',
+                 'production_plan_id.gross_production_value')
     def _compute_total(self):
+        total_land_area = self.production_plan_id.total_land_area
+        total_production = self.production_plan_id.total_production
+        gross_production_value = self.production_plan_id.gross_production_value
+        total_costs = self.production_plan_id.total_costs
         for line in self:
-            if line.application_type == 'variable':
-                line_total = line.price * line.production_plan_id.total_land_area * (
-                    line.no_of_times or 1.0) * (line.application_rate or 1.0)
+            price = 0
+            # Adjust priced based on catach weight percent
+            if line.is_catch_weight is True:
+                price = line.price * line.catch_weight_percent / 100
             else:
-                line_total = line.price * (line.application_rate
-                                           or 1.0) * (line.no_of_times or 1.0)
-            line.total = line_total
+                price = line.price
+            quantity = line.quantity or 1.0
+            # Adjust application rate value if it is a percentage
+            application_rate = 1
+            if line.application_rate_type == 'percentage':
+                application_rate = line.application_rate / 100
+            else:
+                application_rate = line.application_rate
+            value = price * quantity * application_rate
+            if line.application_type == 'sum':
+                amount_total = value
+            elif line.application_type == 'per_consumption_unit':
+                amount_total = total_land_area * value
+            elif line.application_type == 'per_production_unit':
+                amount_total = total_production * value
+            elif line.application_type == 'of_gross_production_value':
+                amount_total = gross_production_value * application_rate
+            elif line.application_type == 'of_total_costs':
+                amount_total = total_costs * application_rate
+            else:
+                amount_total = value
+            line.amount_total = amount_total
+            # mock
+            line.amount_produced = 9000
+            line.amount_consumed = 6000
+            line.quantity_produced = 90
 
     def name_get(self):
         return [(line.id, "{}".format(line.product_category_id.name, ))
