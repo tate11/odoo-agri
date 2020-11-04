@@ -56,19 +56,19 @@ class ProductionPlan(models.Model):
         required=True,
         tracking=True)
     total_production = fields.Float('Total Production',
-                                    compute='_compute_production',
+                                    compute='_compute_total',
                                     store=True,
                                     tracking=True)
-    gross_production_value = fields.Float('Gross Production Value',
-                                          compute='_compute_production',
-                                          store=True)
+    gross_production_value = fields.Monetary('Gross Production Value',
+                                             compute='_compute_total',
+                                             store=True)
     production_yield = fields.Float('Yield',
-                                    compute='_compute_production',
+                                    compute='_compute_total',
                                     store=True,
                                     tracking=True)
-    total_costs = fields.Float('Total costs',
-                               compute='_compute_production',
-                               store=True)
+    total_costs = fields.Monetary('Total costs',
+                                  compute='_compute_total',
+                                  store=True)
     line_ids = fields.One2many(comodel_name='agri.production.plan.line',
                                inverse_name='production_plan_id',
                                string='Production Plan Lines',
@@ -107,25 +107,23 @@ class ProductionPlan(models.Model):
 
     @api.depends('total_land_area', 'line_ids', 'land_uom_id',
                  'consumption_uom_id', 'production_uom_id')
-    def _compute_production(self):
+    def _compute_total(self):
         for plan in self:
-            quantity = 0.0
-            value = 0.0
-            total_costs = 0.0
+            amount_produced = 0.0
+            amount_consumed = 0.0
+            quantity_produced = 0.0
             for line in plan.line_ids:
-                # TODO: Check if units are standardised
-                if (not line.is_purchase and line.product_category_id.uom_id.id
-                        == plan.production_uom_id.id):
-                    quantity += line.no_of_times * line.application_rate
-                    value += line.total
-            plan.total_production = plan.total_land_area * quantity
-            plan.total_production_value = plan.total_land_area * value
-            plan.total_yield = (
-                plan.total_production /
-                plan.total_land_area if not float_is_zero(
-                    plan.total_land_area,
-                    precision_rounding=plan.land_area_uom_id.rounding) else
-                0.0)
+                amount_produced += line.amount_produced
+                amount_consumed += line.amount_consumed
+                quantity_produced += line.quantity_produced
+            plan.total_production = quantity_produced
+            plan.gross_production_value = amount_produced
+            plan.total_costs = amount_consumed
+            plan.production_yield = (
+                plan.total_production / plan.total_land_area if
+                not float_is_zero(plan.total_land_area,
+                                  precision_rounding=plan.land_uom_id.rounding)
+                else 0.0)
 
 
 class ProductionPlanLine(models.Model):
@@ -214,20 +212,20 @@ class ProductionPlanLine(models.Model):
         'Catch Weight Percent',
         default=lambda self: self._get_default_catch_weight_percent())
     amount_total = fields.Monetary(string='Total',
-                                   compute='_compute_total',
+                                   compute='_compute_subtotal',
                                    store=True)
     amount_produced = fields.Monetary(string='Amount Produced',
-                                      compute='_compute_total',
+                                      compute='_compute_subtotal',
                                       store=True,
                                       help="The value produced by this item")
     amount_consumed = fields.Monetary(
         string='Amount Consumed',
-        compute='_compute_total',
+        compute='_compute_subtotal',
         store=True,
         help="The value consumed by this expense")
     quantity_produced = fields.Float(
         string='Quantity Produced',
-        compute='_compute_total',
+        compute='_compute_subtotal',
         store=True,
         help="The production quantity measured in the production UoM")
 
@@ -264,7 +262,7 @@ class ProductionPlanLine(models.Model):
                  'catch_weight_percent', 'production_plan_id.total_land_area',
                  'production_plan_id.total_production',
                  'production_plan_id.gross_production_value')
-    def _compute_total(self):
+    def _compute_subtotal(self):
         total_land_area = self.production_plan_id.total_land_area
         total_production = self.production_plan_id.total_production
         gross_production_value = self.production_plan_id.gross_production_value
@@ -298,16 +296,20 @@ class ProductionPlanLine(models.Model):
                 amount_total = value
             line.amount_total = amount_total
             # mock
-            line.amount_produced = 9000
-            line.amount_consumed = 6000
-            line.quantity_produced = 90
+            if line.sale_ok is True:
+                line.amount_produced = amount_total
+                line.amount_consumed = 0
+                line.quantity_produced = quantity * application_rate
+            else:
+                line.amount_produced = 0
+                line.amount_consumed = amount_total
 
     def name_get(self):
         return [(line.id, "{}".format(line.product_category_id.name, ))
                 for line in self]
 
     @api.depends('product_ids.subtotal')
-    def _compute_total_cost(self):
+    def _compute_subtotal_cost(self):
         for plan in self:
             products_with_costs = plan.product_ids.filtered(
                 lambda product: product.subtotal)

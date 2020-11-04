@@ -31,8 +31,8 @@
                             <field name="purchase_ok" invisible="1" />
                             <field name="is_purchase" attrs="{'invisible': ['|', ('purchase_ok', '=', False), ('sale_ok', '=', False)]}" />
                             <field name="application_type" widget="radio" />
-                            <label for="quantity" />
-                            <div>
+                            <label for="quantity" attrs="{'invisible': ['|', ('application_type', '=', 'of_gross_production_value'), ('application_type', '=', 'of_total_costs')]}" />
+                            <div attrs="{'invisible': ['|', ('application_type', '=', 'of_gross_production_value'), ('application_type', '=', 'of_total_costs')]}">
                                 <field name="quantity" class="oe_inline" />
                                 <![CDATA[&nbsp;]]>
                                 <field name="product_uom_id" class="oe_inline" options="{'no_open': True}" />
@@ -165,7 +165,8 @@
                                     /
                                     <field name="land_uom_id" readonly="1" class="oe_inline" options="{'no_open': 1}" />
                                 </div>
-                                <label for="gross_production_value" />
+                                <field name="gross_production_value" />
+                                <field name="total_costs" />
                             </group>
                         </page>
                         <page string="Fields" name="fields_tab">
