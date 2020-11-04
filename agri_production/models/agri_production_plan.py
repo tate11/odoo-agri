@@ -59,16 +59,16 @@ class ProductionPlan(models.Model):
                                     compute='_compute_production',
                                     store=True,
                                     tracking=True)
-    gross_production_value = fields.Float('Gross Production Value',
-                                          compute='_compute_production',
-                                          store=True)
+    gross_production_value = fields.Monetary('Gross Production Value',
+                                             compute='_compute_production',
+                                             store=True)
     production_yield = fields.Float('Yield',
                                     compute='_compute_production',
                                     store=True,
                                     tracking=True)
-    total_costs = fields.Float('Total costs',
-                               compute='_compute_production',
-                               store=True)
+    total_costs = fields.Monetary('Total costs',
+                                  compute='_compute_production',
+                                  store=True)
     line_ids = fields.One2many(comodel_name='agri.production.plan.line',
                                inverse_name='production_plan_id',
                                string='Production Plan Lines',
@@ -116,16 +116,15 @@ class ProductionPlan(models.Model):
                 # TODO: Check if units are standardised
                 if (not line.is_purchase and line.product_category_id.uom_id.id
                         == plan.production_uom_id.id):
-                    quantity += line.no_of_times * line.application_rate
-                    value += line.total
+                    quantity += line.quantity_produced
+                    value += line.amount_total
             plan.total_production = plan.total_land_area * quantity
-            plan.total_production_value = plan.total_land_area * value
-            plan.total_yield = (
-                plan.total_production /
-                plan.total_land_area if not float_is_zero(
-                    plan.total_land_area,
-                    precision_rounding=plan.land_area_uom_id.rounding) else
-                0.0)
+            plan.gross_production_value = plan.total_land_area * value
+            plan.production_yield = (
+                plan.total_production / plan.total_land_area if
+                not float_is_zero(plan.total_land_area,
+                                  precision_rounding=plan.land_uom_id.rounding)
+                else 0.0)
 
 
 class ProductionPlanLine(models.Model):
@@ -258,31 +257,25 @@ class ProductionPlanLine(models.Model):
                                 ) if line.product_category_id else False
 
     @api.onchange('price', 'quantity', 'application_type', 'application_rate',
-                  'application_rate_type'
-                  'catch_weight_percent')
+                  'application_rate_type', 'catch_weight_percent')
     @api.depends('price', 'quantity', 'application_rate',
                  'catch_weight_percent', 'production_plan_id.total_land_area',
                  'production_plan_id.total_production',
                  'production_plan_id.gross_production_value')
     def _compute_total(self):
-        total_land_area = self.production_plan_id.total_land_area
-        total_production = self.production_plan_id.total_production
-        gross_production_value = self.production_plan_id.gross_production_value
-        total_costs = self.production_plan_id.total_costs
         for line in self:
-            price = 0
+            total_land_area = line.production_plan_id.total_land_area
+            total_production = line.production_plan_id.total_production
+            gross_production_value = line.production_plan_id.gross_production_value
+            total_costs = line.production_plan_id.total_costs
             # Adjust priced based on catach weight percent
-            if line.is_catch_weight is True:
-                price = line.price * line.catch_weight_percent / 100
-            else:
-                price = line.price
+            price = (line.price * line.catch_weight_percent /
+                     100.0 if line.is_catch_weight else line.price)
             quantity = line.quantity or 1.0
             # Adjust application rate value if it is a percentage
-            application_rate = 1
-            if line.application_rate_type == 'percentage':
-                application_rate = line.application_rate / 100
-            else:
-                application_rate = line.application_rate
+            application_rate = (line.application_rate /
+                                100.0 if line.application_rate_type
+                                == 'percentage' else line.application_rate)
             value = price * quantity * application_rate
             if line.application_type == 'sum':
                 amount_total = value
