@@ -24,11 +24,27 @@
                 <group name="first" position="after">
                     <group string="Agri" groups="agri.agri_group_manager">
                         <field name="is_agri"/>
+                        <field name="cost_type"/>
                         <field name="uom_id" attrs="{'required': [('is_agri', '=', True)]}"/>
                         <field name="sale_ok"/>
                         <field name="purchase_ok"/>
                     </group>
                 </group>
+            </field>
+        </record>
+
+        <record id="product_category_list_view" model="ir.ui.view">
+            <field name="name">product.category.list.inherit.agri</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_list_view"/>
+            <field name="arch" type="xml">
+                <field name="display_name" position="after">
+                    <field name="is_agri"/>
+                    <field name="cost_type"/>
+                    <field name="uom_id" attrs="{'required': [('is_agri', '=', True)]}"/>
+                    <field name="sale_ok"/>
+                    <field name="purchase_ok"/>
+                </field>
             </field>
         </record>
 
@@ -54,7 +70,7 @@
         <!-- menu items -->
 
         <menuitem id="agri_product_category_action_menu" name="Product Categories"
-            parent="agri_configuration_menu" 
+            parent="agri_configuration_menu"
             sequence="10"
             action="agri_product_category_action"
             groups="agri.agri_group_manager"/>

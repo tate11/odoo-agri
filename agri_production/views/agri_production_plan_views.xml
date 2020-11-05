@@ -15,22 +15,22 @@
                             <field name="production_plan_id" />
                             <field name="product_category_id" />
                             <field name="product_id" context="{'default_categ_id': product_category_id, 'default_lst_price': price, 'default_type': 'product', 'default_uom_id': product_uom_id}" />
-                            <field name="currency_id" invisible="1" />
-                            <label for="price" />
-                            <div>
-                                <field name="price" class="oe_inline" options="{'no_open': True}" />
-                                /
-                                <field name="product_uom_id" class="oe_inline" options="{'no_open': True}" />
-                            </div>
                             <field name="calendar_period_ids" invisible="1" />
                             <field name="date_range_id" options="{'no_open': True}" />
                             <field name="payment_term_id" options="{'no_open': True}" />
+                            <field name="application_type" widget="radio" />
                         </group>
                         <group name="group_col2">
                             <field name="sale_ok" invisible="1" />
                             <field name="purchase_ok" invisible="1" />
                             <field name="is_purchase" attrs="{'invisible': ['|', ('purchase_ok', '=', False), ('sale_ok', '=', False)]}" />
-                            <field name="application_type" widget="radio" />
+                            <field name="currency_id" invisible="1" />
+                            <label for="price" attrs="{'invisible': ['|', ('application_type', '=', 'of_gross_production_value'), ('application_type', '=', 'of_total_costs')]}" />
+                            <div attrs="{'invisible': ['|', ('application_type', '=', 'of_gross_production_value'), ('application_type', '=', 'of_total_costs')]}">
+                                <field name="price" class="oe_inline" options="{'no_open': True}" />
+                                /
+                                <field name="product_uom_id" class="oe_inline" options="{'no_open': True}" />
+                            </div>
                             <label for="quantity" attrs="{'invisible': ['|', ('application_type', '=', 'of_gross_production_value'), ('application_type', '=', 'of_total_costs')]}" />
                             <div attrs="{'invisible': ['|', ('application_type', '=', 'of_gross_production_value'), ('application_type', '=', 'of_total_costs')]}">
                                 <field name="quantity" class="oe_inline" />

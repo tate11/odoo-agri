@@ -1,0 +1,9 @@
+product_category_id,product,product_package,product_uom_id,price_type,price,land_area,total_production,total_expenses,application_type,production_uom_id,quantity,application_rate,total_unit,total_value
+Permanent Crop / Sugarcane,Sugarcane,1,t,unit,4200,1,474626866,,,sum,t,98,8,0,12952,12,796576,53745,6192
+Permanent Crop / Sugarcane,Sugarcane,1,t,unit,4200,1,474626866,,,per_land_unit,t,67,0,12952,12,796576,53745,6192
+Harvest /Testing,CTS,1,Unit,unit,2,855,,12,796576,,per_harvest_unit,t,1,1,12,796576,36,53422448
+Crop / Maize (Yellow),Maize,1,t,unit,3500,1,,,per_land_unit,t,6,1,6,21000
+Input / Seed,Delta 12,25,kg,unit,3250,1,,,per_land_unit,kg,8,1,8,26000
+Livestock / Bull,Bull,585,kg,per_kg,18,1,,,sum,kg,2,0,58,678,6,12214,8
+Input / Insurance,Hail insurance,1,Unit,unit,6000,,,,percentage_gross_production_value,t,0,6,0,06,0,036,216
+,,,,,,,,,percentage_total_costs,,,,,
