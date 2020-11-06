@@ -1,4 +1,5 @@
-from odoo import models, fields, api, _, exceptions
+from odoo import models, fields, api, _
+from odoo.exceptions import UserError
 
 
 class DateRangeType(models.Model):
@@ -10,9 +11,9 @@ class DateRangeType(models.Model):
 
     def unlink(self):
         for rec in self:
-            if rec.is_calendar_period or rec.is_season:
-                raise exceptions.ValidationError(
+            if (rec.is_calendar_period or
+                    rec.is_season) and not self._context.get('force_delete'):
+                raise UserError(
                     _('You cannot delete a date range type with '
                       'flag "is_calendar_period" or "is_season"'))
-            else:
-                super(DateRangeType, rec).unlink()
+        return super(DateRangeType, self).unlink()
