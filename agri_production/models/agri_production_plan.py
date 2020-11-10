@@ -84,6 +84,13 @@ class ProductionPlan(models.Model):
                                 ondelete='restrict',
                                 domain="[('is_calendar_period', '=', True)]",
                                 required=True)
+    payment_term_id = fields.Many2one(
+        'account.payment.term',
+        string='Payment Terms',
+        default=lambda self: self.env.ref(
+            'account.account_payment_term_immediate'),
+        check_company=True,
+        required=True)
     consumption_uom_id = fields.Many2one(
         'uom.uom',
         'Consumption Unit',
@@ -173,9 +180,11 @@ class ProductionPlanLine(models.Model):
     product_uom_id = fields.Many2one('uom.uom',
                                      string='Purchase UoM',
                                      required=True)
-    payment_term_id = fields.Many2one("account.payment.term",
-                                      string="Payment Terms",
-                                      required=True)
+    payment_term_id = fields.Many2one(
+        'account.payment.term',
+        default=lambda self: self.production_plan_id.payment_term_id,
+        string='Payment Terms',
+        required=True)
     land_uom_id = fields.Many2one(related='production_plan_id.land_uom_id',
                                   readonly=True)
     production_uom_id = fields.Many2one(
@@ -228,6 +237,13 @@ class ProductionPlanLine(models.Model):
         compute='_compute_subtotal',
         store=True,
         help="The production quantity measured in the production UoM")
+
+    @api.depends('production_plan_id')
+    @api.onchange('product_category_id', 'production_plan_id')
+    def _compute_payment_term_id(self):
+        for line in self:
+            if line.production_plan_id and not line.payment_term_id:
+                line.payment_term_id = line.production_plan_id.payment_term_id
 
     @api.onchange('product_id')
     def _compute_product_price_uom(self):

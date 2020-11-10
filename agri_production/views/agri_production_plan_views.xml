@@ -141,6 +141,7 @@
                             <field name="partner_id" />
                             <field name="season_id" context="{'default_is_season': 1}" />
                             <field name="company_id" />
+                            <field name="payment_term_id" options="{'no_open': 1}" />
                             <field name="enterprise_type" />
                         </group>
                     </group>
@@ -210,6 +211,7 @@
                 <field name="partner_id" />
                 <field name="season_id" />
                 <field name="period_id" />
+                <field name="payment_term_id" />
             </tree>
         </field>
     </record>

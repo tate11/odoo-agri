@@ -11,4 +11,6 @@
 
     <menuitem id="agri_cultivar_action_menu" name="Cultivars" parent="agri_production_menu" sequence="20" action="agri_cultivar_action" />
 
+    <menuitem id="agrifinance_management_payment_terms_action_menu" name="Payment Terms" parent="agri.agri_configuration_menu" sequence="10" action="account.action_payment_term_form" />
+
 </odoo>
