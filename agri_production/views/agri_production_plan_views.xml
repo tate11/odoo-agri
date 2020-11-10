@@ -55,7 +55,10 @@
                                 <![CDATA[&nbsp;]]>
                                 <span class="oe_inline">%</span>
                             </div>
-                            <field name="amount_total" />
+                            <field name="amount_produced" invisible="1"  force_save="1" />
+                            <field name="amount_consumed" invisible="1"  force_save="1" />
+                            <field name="amount_total" force_save="1" />
+                            <field name="quantity_produced"  invisible="1" force_save="1" />
                         </group>
                     </group>
                 </sheet>

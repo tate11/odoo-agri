@@ -113,7 +113,9 @@ class ProductionPlan(models.Model):
             plan.total_land_area = sum(fields_with_area.mapped('area_ha'))
 
     @api.depends('total_land_area', 'line_ids', 'land_uom_id',
-                 'consumption_uom_id', 'production_uom_id')
+                 'consumption_uom_id', 'production_uom_id', 'total_land_area',
+                 'line_ids.amount_consumed', 'line_ids.amount_produced',
+                 'line_ids.quantity_produced')
     def _compute_total(self):
         for plan in self:
             amount_produced = 0.0
@@ -171,8 +173,8 @@ class ProductionPlanLine(models.Model):
                                           required=True)
     product_id = fields.Many2one('product.product',
                                  string='Product',
+                                 domain="[('categ_id.is_agri', '=', True)]",
                                  required=True)
-
     is_purchase = fields.Boolean('Is Purchase', default='_compute_is_purchase')
     price = fields.Monetary(string='Price', required=True)
     currency_id = fields.Many2one(related='production_plan_id.currency_id',
@@ -249,6 +251,7 @@ class ProductionPlanLine(models.Model):
     def _compute_product_price_uom(self):
         for line in self:
             if line.product_id:
+                line.product_category_id = line.product_id.categ_id or line.product_category_id
                 line.price = line.product_id.lst_price or line.price
                 line.product_uom_id = line.product_id.uom_id or line.product_uom
 
@@ -287,7 +290,7 @@ class ProductionPlanLine(models.Model):
             total_production = line.production_plan_id.total_production
             gross_production_value = line.production_plan_id.gross_production_value
             total_costs = line.production_plan_id.total_costs
-            # Adjust priced based on catach weight percent
+            # Adjust priced based on catch weight percent
             price = (line.price * line.catch_weight_percent /
                      100.0 if line.is_catch_weight else line.price)
             quantity = line.quantity or 1.0
