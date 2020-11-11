@@ -10,37 +10,53 @@ class ProductionPlan(models.Model):
     _order = 'name, create_date desc'
     _check_company_auto = True
 
-    name = fields.Char('Name', required=True, tracking=True)
+    name = fields.Char('Name',
+                       states={'draft': [('readonly', False)]},
+                       readonly=True,
+                       required=True,
+                       tracking=True)
     partner_id = fields.Many2one('res.partner',
                                  string='Partner',
                                  ondelete='cascade',
-                                 check_company=True,
+                                 states={'draft': [('readonly', False)]},
+                                 readonly=True,
                                  required=True)
     company_id = fields.Many2one('res.company',
-                                 required=True,
-                                 default=lambda self: self.env.company)
+                                 default=lambda self: self.env.company,
+                                 states={'draft': [('readonly', False)]},
+                                 readonly=True,
+                                 required=True)
     currency_id = fields.Many2one(
         'res.currency',
         default=lambda self: self.env.company.currency_id,
+        states={'draft': [('readonly', False)]},
+        readonly=True,
         required=True)
     enterprise_type = fields.Selection([('crop', 'Crop'),
                                         ('permanent_crop', 'Permanent Crop'),
                                         ('livestock', 'Livestock')],
-                                       string="Type",
-                                       required=True,
-                                       default="crop")
+                                       string='Type',
+                                       default='crop',
+                                       states={'draft': [('readonly', False)]},
+                                       readonly=True,
+                                       required=True)
     farm_field_ids = fields.Many2many(
         'agri.farm.field',
         'agri_production_plan_farm_field_rel',
         'production_plan_id',
         'farm_field_id',
         domain="[('farm_id.partner_id', '=', partner_id)]",
-        string='Fields')
+        string='Fields',
+        states={'draft': [('readonly', False)]},
+        readonly=True,
+        copy=False)
     land_uom_id = fields.Many2one(
         'uom.uom',
         'Land Area Unit',
         domain="[('name', 'in', ['ac', 'ha'])]",
         default=lambda self: self.env.ref('agri.agri_uom_ha'),
+        states={'draft': [('readonly', False)]},
+        readonly=True,
         required=True,
         tracking=True)
     total_land_area = fields.Float('Total Land Area',
@@ -53,6 +69,8 @@ class ProductionPlan(models.Model):
         domain=
         "[('category_id', 'in', ['agri_category_lsu', 'agri_category_lsu'])]",
         default=lambda self: self.env.ref('uom.product_uom_ton'),
+        states={'draft': [('readonly', False)]},
+        readonly=True,
         required=True,
         tracking=True)
     total_production = fields.Float('Total Production',
@@ -68,7 +86,8 @@ class ProductionPlan(models.Model):
                                     tracking=True)
     total_costs = fields.Monetary('Total costs',
                                   compute='_compute_total',
-                                  store=True)
+                                  store=True,
+                                  tracking=True)
     line_ids = fields.One2many(comodel_name='agri.production.plan.line',
                                inverse_name='production_plan_id',
                                string='Production Plan Lines',
@@ -77,28 +96,46 @@ class ProductionPlan(models.Model):
                                 string='Season',
                                 ondelete='restrict',
                                 domain="[('type_id.is_season', '=', True)]",
-                                required=True,
-                                tracking=True)
+                                states={'draft': [('readonly', False)]},
+                                readonly=True,
+                                tracking=True,
+                                copy=False)
     period_id = fields.Many2one('date.range.type',
                                 string='Period',
                                 ondelete='restrict',
                                 domain="[('is_calendar_period', '=', True)]",
-                                required=True)
+                                states={'draft': [('readonly', False)]},
+                                readonly=True,
+                                required=True,
+                                tracking=True)
     payment_term_id = fields.Many2one(
         'account.payment.term',
         string='Payment Terms',
         default=lambda self: self.env.ref(
             'account.account_payment_term_immediate'),
-        check_company=True,
-        required=True)
+        states={'draft': [('readonly', False)]},
+        readonly=True,
+        required=True,
+        tracking=True)
     consumption_uom_id = fields.Many2one(
         'uom.uom',
         'Consumption Unit',
         domain=
         "[('category_id', 'in', ['agri_category_area', 'agri_category_lsu'])]",
         default=lambda self: self.env.ref('agri.agri_uom_ha'),
-        required=True)
-    gross_yield = fields.Float('Gross Yield')
+        states={'draft': [('readonly', False)]},
+        readonly=True,
+        required=True,
+        tracking=True)
+    gross_yield = fields.Float('Gross Yield', tracking=True)
+    state = fields.Selection(selection=[('draft', 'Draft'),
+                                        ('scheduled', 'Scheduled'),
+                                        ('done', 'Done')],
+                             string='State',
+                             default='draft',
+                             readonly=True,
+                             copy=False,
+                             tracking=True)
 
     @api.onchange('season_id', 'period_id')
     def _onchange_season_period(self):
@@ -134,6 +171,22 @@ class ProductionPlan(models.Model):
                                   precision_rounding=plan.land_uom_id.rounding)
                 else 0.0)
 
+    def action_schedule(self):
+        for plan in self:
+            plan.state = 'scheduled'
+            plan.line_ids._compute_state()
+
+    def action_done(self):
+        for plan in self:
+            plan.state = 'done'
+            plan.line_ids._compute_state()
+
+    @api.returns('self', lambda value: value.id)
+    def copy(self, default=None):
+        default = dict(default or {})
+        default.setdefault('name', _("%s (copy)") % (self.name, ))
+        return super(ProductionPlan, self).copy(default)
+
 
 class ProductionPlanLine(models.Model):
     _name = 'agri.production.plan.line'
@@ -165,27 +218,41 @@ class ProductionPlanLine(models.Model):
         string='Period',
         ondelete='restrict',
         domain="[('id', 'in', calendar_period_ids)]",
+        states={'draft': [('readonly', False)]},
+        readonly=True,
         required=True)
-    product_category_id = fields.Many2one('product.category',
-                                          string='Category',
-                                          domain="[('is_agri', '=', True)]",
-                                          ondelete='cascade',
-                                          required=True)
+    product_category_id = fields.Many2one(
+        'product.category',
+        string='Category',
+        domain="[('is_agri', '=', True)]",
+        ondelete='cascade',
+        states={'draft': [('readonly', False)]},
+        readonly=True,
+        required=True)
     product_id = fields.Many2one('product.product',
                                  string='Product',
                                  domain="[('categ_id.is_agri', '=', True)]",
+                                 states={'draft': [('readonly', False)]},
+                                 readonly=True,
                                  required=True)
     is_purchase = fields.Boolean('Is Purchase', default='_compute_is_purchase')
-    price = fields.Monetary(string='Price', required=True)
+    price = fields.Monetary(string='Price',
+                            states={'draft': [('readonly', False)]},
+                            readonly=True,
+                            required=True)
     currency_id = fields.Many2one(related='production_plan_id.currency_id',
                                   readonly=True)
     product_uom_id = fields.Many2one('uom.uom',
                                      string='Purchase UoM',
+                                     states={'draft': [('readonly', False)]},
+                                     readonly=True,
                                      required=True)
     payment_term_id = fields.Many2one(
         'account.payment.term',
         default=lambda self: self.production_plan_id.payment_term_id,
         string='Payment Terms',
+        states={'draft': [('readonly', False)]},
+        readonly=True,
         required=True)
     land_uom_id = fields.Many2one(related='production_plan_id.land_uom_id',
                                   readonly=True)
@@ -195,33 +262,44 @@ class ProductionPlanLine(models.Model):
         related='production_plan_id.consumption_uom_id', readonly=True)
     application_type = fields.Selection(
         [
-            ("sum", "Sum"),
-            ("per_production_unit", "Per production unit"),
-            ("per_consumption_unit", "Per consumption unit"),
-            ("of_gross_production_value", "% of gross production value"),
-            ("of_total_costs", "% of total costs"),
+            ('sum', 'Sum'),
+            ('per_production_unit', 'Per production unit'),
+            ('per_consumption_unit', 'Per consumption unit'),
+            ('of_gross_production_value', '% of gross production value'),
+            ('of_total_costs', '% of total costs'),
         ],
-        string="Application Type",
+        string='Application Type',
+        default='sum',
+        states={'draft': [('readonly', False)]},
+        readonly=True,
         required=True,
-        default="sum",
     )
-    quantity = fields.Float('Quantity', default=1, digits='Stock Weight')
+    quantity = fields.Float('Quantity',
+                            default=1,
+                            digits='Stock Weight',
+                            states={'draft': [('readonly', False)]},
+                            readonly=True)
     application_uom_id = fields.Many2one(related='product_category_id.uom_id',
                                          string='Application UoM')
     application_rate = fields.Float('Application Rate',
                                     default=1,
-                                    digits='Stock Weight')
+                                    digits='Stock Weight',
+                                    states={'draft': [('readonly', False)]},
+                                    readonly=True)
     application_rate_type = fields.Selection(
         [('percentage', '%'), ('no_of_times', 'no. of times')],
-        string="Application Rate Type",
-        required=True,
-        default="no_of_times",
-    )
+        string='Application Rate Type',
+        default='no_of_times',
+        states={'draft': [('readonly', False)]},
+        readonly=True,
+        required=True)
     is_catch_weight = fields.Boolean('Is Catch Weight',
                                      related='product_id.is_catch_weight')
     catch_weight_percent = fields.Float(
         'Catch Weight Percent',
-        default=lambda self: self._get_default_catch_weight_percent())
+        default=lambda self: self._get_default_catch_weight_percent(),
+        states={'draft': [('readonly', False)]},
+        readonly=True)
     amount_total = fields.Monetary(string='Total',
                                    compute='_compute_subtotal',
                                    store=True)
@@ -239,6 +317,19 @@ class ProductionPlanLine(models.Model):
         compute='_compute_subtotal',
         store=True,
         help="The production quantity measured in the production UoM")
+    state = fields.Selection(selection=[('draft', 'Draft'),
+                                        ('scheduled', 'Scheduled'),
+                                        ('done', 'Done')],
+                             string='State',
+                             default='draft',
+                             readonly=True,
+                             copy=False)
+
+    @api.depends('production_plan_id.state')
+    def _compute_state(self):
+        for line in self:
+            if line.state == 'draft':
+                line.state = line.production_plan_id.state
 
     @api.depends('production_plan_id')
     @api.onchange('product_category_id', 'production_plan_id')
