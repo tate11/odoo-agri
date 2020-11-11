@@ -11,11 +11,13 @@
                 <field name="name" />
                 <field name="farm_field_ids" />
                 <field name="farm_parcel_ids" />
+                <field name="farm_version_id" />
                 <separator />
                 <filter string="Active" name="filter_active" domain="[('active', '=', True)]" />
                 <filter string="Not located" name="filter_not_located" domain="[('boundary', '=', False)]" />
                 <group expand="0" string="Group By">
                     <filter string="Partner" name="group_partner" context="{'group_by': 'partner_id'}" />
+                    <filter string="Farm Version" name="group_farm_version" context="{'group_by': 'farm_version_id'}" />
                 </group>
             </search>
         </field>
@@ -29,8 +31,9 @@
             <tree string="Farms">
                 <field name="name" />
                 <field name="area_ha" />
-                <field name="company_id" />
+                <field name="company_id" groups="base.group_multi_company" />
                 <field name="partner_id" />
+                <field name="farm_version_id" />
                 <field name="active" />
             </tree>
         </field>
@@ -88,6 +91,7 @@
             <search string="Fields">
                 <field name="name" />
                 <field name="farm_id" />
+                <field name="farm_version_id" />
                 <separator />
                 <field name="crop_potential_id" />
                 <field name="soil_effective_depth_id" />
@@ -102,6 +106,7 @@
                 <filter string="Not located" name="filter_not_located" domain="[('boundary', '=', False)]" />
                 <group expand="0" string="Group By">
                     <filter string="Farm" name="group_farm" context="{'group_by': 'farm_id'}" />
+                    <filter string="Farm Version" name="group_farm_version" context="{'group_by': 'farm_version_id'}" />
                     <filter string="Land Class" name="group_land_class" context="{'group_by': 'land_use_id'}" />
                     <filter string="Cropping Potential" name="group_crop_potential" context="{'group_by': 'crop_potential_id'}" />
                     <filter string="Effective Depth" name="group_effective_depth" context="{'group_by': 'soil_effective_depth_id'}" />
@@ -154,6 +159,7 @@
                 <field name="name" />
                 <field name="area_ha" />
                 <field name="farm_id" />
+                <field name="farm_version_id" />
                 <field name="land_use_id" />
                 <field name="active" />
             </tree>
@@ -231,6 +237,7 @@
             <search string="Parcels">
                 <field name="name" />
                 <field name="farm_id" />
+                <field name="farm_version_id" />
                 <separator />
                 <field name="code" />
                 <field name="short_name" />
@@ -238,6 +245,7 @@
                 <separator />
                 <group expand="0" string="Group By">
                     <filter string="Farm" name="group_farm" context="{'group_by': 'farm_id'}" />
+                    <filter string="Farm Version" name="group_farm_version" context="{'group_by': 'farm_version_id'}" />
                 </group>
             </search>
         </field>
@@ -254,6 +262,7 @@
                 <field name="code" />
                 <field name="area_ha" />
                 <field name="farm_id" />
+                <field name="farm_version_id" />
             </tree>
         </field>
     </record>
@@ -307,6 +316,51 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='farm_id']" position="replace" />
             <xpath expr="//div[hasclass('oe_chatter')]" position="replace" />
+        </field>
+    </record>
+
+    <!-- agri.farm.version views -->
+
+    <record id="agri_farm_version_view_tree" model="ir.ui.view">
+        <field name="name">agri.farm.version.view.tree</field>
+        <field name="model">agri.farm.version</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <tree string="Farm Versions">
+                <field name="partner_id" />
+                <field name="name" />
+                <field name="parent_farm_version_id" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="agri_farm_version_view_form" model="ir.ui.view">
+        <field name="name">agri.farm.version.view.form</field>
+        <field name="model">agri.farm.version</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <form string="Farm Version">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="partner_id" />
+                            <field name="date" />
+                            <field name="parent_farm_version_id" required="1" />
+                        </group>
+                        <group>
+                            <field name="company_id" groups="base.group_multi_company" />
+                        </group>
+                    </group>
+                    <group>
+                        <field name="child_farm_version_ids" readonly="1" colspan="2">
+                            <tree>
+                                <field name="name" />
+                                <field name="parent_farm_version_id" />
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
         </field>
     </record>
 
