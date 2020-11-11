@@ -21,6 +21,9 @@ class ProductionPlan(models.Model):
                                  states={'draft': [('readonly', False)]},
                                  readonly=True,
                                  required=True)
+    partner_farm_version_id = fields.Many2one(related='partner_id.farm_version_id',
+                                              string='Partner Farm Version',
+                                              readonly=True)
     company_id = fields.Many2one('res.company',
                                  default=lambda self: self.env.company,
                                  states={'draft': [('readonly', False)]},
@@ -40,12 +43,19 @@ class ProductionPlan(models.Model):
                                        states={'draft': [('readonly', False)]},
                                        readonly=True,
                                        required=True)
+    farm_version_id = fields.Many2one(
+        'agri.farm.version',
+        'Farm Version',
+        domain="[('partner_id', '=', partner_id)]",
+        states={'draft': [('readonly', False)]},
+        readonly=True,
+        required=True)
     farm_field_ids = fields.Many2many(
         'agri.farm.field',
         'agri_production_plan_farm_field_rel',
         'production_plan_id',
         'farm_field_id',
-        domain="[('farm_id.partner_id', '=', partner_id)]",
+        domain="[('farm_id.farm_version_id', '=', farm_version_id)]",
         string='Fields',
         states={'draft': [('readonly', False)]},
         readonly=True,
@@ -100,6 +110,8 @@ class ProductionPlan(models.Model):
                                 readonly=True,
                                 tracking=True,
                                 copy=False)
+    season_date_start = fields.Date(related='season_id.date_start',
+                                    readonly=True)
     period_id = fields.Many2one('date.range.type',
                                 string='Period',
                                 ondelete='restrict',
@@ -136,6 +148,18 @@ class ProductionPlan(models.Model):
                              readonly=True,
                              copy=False,
                              tracking=True)
+
+    @api.depends('partner_id')
+    @api.onchange('partner_id')
+    def _onchange_partner_id(self):
+        for plan in self:
+            plan.farm_version_id = plan.partner_id.farm_version_id
+
+    @api.onchange('farm_field_ids')
+    def _onchange_farm_field_ids(self):
+        for plan in self:
+            if not plan.farm_version_id:
+                plan.farm_version_id = plan.farm_field_ids.farm_id.farm_version_id
 
     @api.onchange('season_id', 'period_id')
     def _onchange_season_period(self):
@@ -372,10 +396,6 @@ class ProductionPlanLine(models.Model):
                  'production_plan_id.total_production',
                  'production_plan_id.gross_production_value')
     def _compute_subtotal(self):
-        total_land_area = self.production_plan_id.total_land_area
-        total_production = self.production_plan_id.total_production
-        gross_production_value = self.production_plan_id.gross_production_value
-        total_costs = self.production_plan_id.total_costs
         for line in self:
             total_land_area = line.production_plan_id.total_land_area
             total_production = line.production_plan_id.total_production
@@ -404,13 +424,14 @@ class ProductionPlanLine(models.Model):
                 amount_total = value
             line.amount_total = amount_total
             # mock
-            if line.sale_ok is True:
+            if line.sale_ok:
                 line.amount_produced = amount_total
                 line.amount_consumed = 0
                 line.quantity_produced = quantity * application_rate
             else:
                 line.amount_produced = 0
                 line.amount_consumed = amount_total
+                line.quantity_produced = 0
 
     def name_get(self):
         return [(line.id, "{}".format(line.product_category_id.name, ))

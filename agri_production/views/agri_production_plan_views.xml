@@ -154,7 +154,11 @@
                         <group>
                             <field name="partner_id" />
                             <field name="season_id" required="1" context="{'default_is_season': 1}" />
-                            <field name="company_id" />
+                            <field name="season_date_start" invisible="1" />
+                            <field name="partner_farm_version_id" invisible="1" />
+                            <field name="farm_version_id" 
+                                   context="{'default_partner_id': partner_id, 'default_date': season_date_start, 'default_parent_farm_version_id': partner_farm_version_id}" />
+                            <field name="company_id" groups="base.group_multi_company" />
                             <field name="payment_term_id" options="{'no_open': 1}" />
                             <field name="enterprise_type" />
                         </group>
