@@ -176,17 +176,17 @@ class ProductionPlan(models.Model):
     @api.depends('total_land_area', 'line_ids', 'land_uom_id',
                  'consumption_uom_id', 'production_uom_id', 'total_land_area',
                  'line_ids.amount_consumed', 'line_ids.amount_produced',
-                 'line_ids.quantity_produced')
+                 'line_ids.production')
     def _compute_total(self):
         for plan in self:
             amount_produced = 0.0
             amount_consumed = 0.0
-            quantity_produced = 0.0
+            production = 0.0
             for line in plan.line_ids:
                 amount_produced += line.amount_produced
                 amount_consumed += line.amount_consumed
-                quantity_produced += line.quantity_produced
-            plan.total_production = quantity_produced
+                production += line.production
+            plan.total_production = production
             plan.gross_production_value = amount_produced
             plan.total_costs = amount_consumed
             plan.production_yield = (
@@ -208,7 +208,7 @@ class ProductionPlan(models.Model):
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         default = dict(default or {})
-        default.setdefault('name', _("%s (copy)") % (self.name, ))
+        default.setdefault('name', _("%s (copy)") % (self.name,))
         return super(ProductionPlan, self).copy(default)
 
 
@@ -216,11 +216,6 @@ class ProductionPlanLine(models.Model):
     _name = 'agri.production.plan.line'
     _description = 'Production Plan Line'
     _order = 'date_range_id asc'
-
-    # TODO: Return product default CW%
-    @api.model
-    def _get_default_catch_weight_percent(self):
-        return 12.5
 
     sale_ok = fields.Boolean(related='product_category_id.sale_ok',
                              store=False)
@@ -289,6 +284,7 @@ class ProductionPlanLine(models.Model):
             ('sum', 'Sum'),
             ('per_production_unit', 'Per production unit'),
             ('per_consumption_unit', 'Per consumption unit'),
+            ('of_gross_production', '% of gross production'),
             ('of_gross_production_value', '% of gross production value'),
             ('of_total_costs', '% of total costs'),
         ],
@@ -317,13 +313,6 @@ class ProductionPlanLine(models.Model):
         states={'draft': [('readonly', False)]},
         readonly=True,
         required=True)
-    is_catch_weight = fields.Boolean('Is Catch Weight',
-                                     related='product_id.is_catch_weight')
-    catch_weight_percent = fields.Float(
-        'Catch Weight Percent',
-        default=lambda self: self._get_default_catch_weight_percent(),
-        states={'draft': [('readonly', False)]},
-        readonly=True)
     amount_total = fields.Monetary(string='Total',
                                    compute='_compute_subtotal',
                                    store=True)
@@ -336,8 +325,8 @@ class ProductionPlanLine(models.Model):
         compute='_compute_subtotal',
         store=True,
         help="The value consumed by this expense")
-    quantity_produced = fields.Float(
-        string='Quantity Produced',
+    production = fields.Float(
+        string='Production',
         compute='_compute_subtotal',
         store=True,
         help="The production quantity measured in the production UoM")
@@ -390,36 +379,41 @@ class ProductionPlanLine(models.Model):
                                 ) if line.product_category_id else False
 
     @api.onchange('price', 'quantity', 'application_type', 'application_rate',
-                  'application_rate_type', 'catch_weight_percent')
+                  'application_rate_type')
     @api.depends('price', 'quantity', 'application_rate',
-                 'catch_weight_percent', 'production_plan_id.total_land_area',
+                 'production_plan_id.total_land_area',
                  'production_plan_id.total_production',
                  'production_plan_id.gross_production_value')
     def _compute_subtotal(self):
+        period_total_production = 0.0
         for line in self:
-            total_land_area = line.production_plan_id.total_land_area
-            total_production = line.production_plan_id.total_production
-            gross_production_value = line.production_plan_id.gross_production_value
-            total_costs = line.production_plan_id.total_costs
-            # Adjust priced based on catch weight percent
-            price = (line.price * line.catch_weight_percent /
-                     100.0 if line.is_catch_weight else line.price)
-            quantity = line.quantity or 1.0
+            if line.period_id.id == self.period_id.id:
+                period_total_production += line.production
+        total_land_area = self.production_plan_id.total_land_area
+        period_gross_production_value = self.production_plan_id.gross_production_value
+        period_total_costs = self.production_plan_id.total_costs
+        for line in self:
             # Adjust application rate value if it is a percentage
             application_rate = (line.application_rate /
                                 100.0 if line.application_rate_type
-                                == 'percentage' else line.application_rate)
-            value = price * quantity * application_rate
+                                         == 'percentage' else line.application_rate)
+            line_production = line.quantity * line.application_rate
+            line_value = line.price * line_production
             if line.application_type == 'sum':
-                amount_total = value
+                amount_total = line_value
+                line.production = line_production
             elif line.application_type == 'per_consumption_unit':
-                amount_total = total_land_area * value
+                amount_total = total_land_area * line_value
             elif line.application_type == 'per_production_unit':
-                amount_total = total_production * value
+                amount_total = period_total_production * line_value
+            elif line.application_type == 'of_gross_production':
+                line.quantity = line_production
+                amount_total = period_total_production * application_rate * line.price
+                line.production = 0
             elif line.application_type == 'of_gross_production_value':
-                amount_total = gross_production_value * application_rate
+                amount_total = period_gross_production_value * application_rate
             elif line.application_type == 'of_total_costs':
-                amount_total = total_costs * application_rate
+                amount_total = period_total_costs * application_rate
             else:
                 amount_total = value
             line.amount_total = amount_total
@@ -427,11 +421,10 @@ class ProductionPlanLine(models.Model):
             if line.sale_ok:
                 line.amount_produced = amount_total
                 line.amount_consumed = 0
-                line.quantity_produced = quantity * application_rate
             else:
                 line.amount_produced = 0
                 line.amount_consumed = amount_total
-                line.quantity_produced = 0
+                line.production = 0
 
     def name_get(self):
         return [(line.id, "{}".format(line.product_category_id.name, ))
