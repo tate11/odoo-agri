@@ -115,7 +115,7 @@ class FarmField(models.Model):
     def constrains_name(self):
         for farm in self:
             domain = [('farm_id', '=', farm.farm_id.id), ('active', '=', True),
-                    ('name', 'ilike', farm.name)]
+                      ('name', 'ilike', farm.name)]
             if farm.id:
                 domain.append(('id', '!=', farm.id))
             field = self.env['agri.farm.field'].search(domain, limit=1)
@@ -133,6 +133,36 @@ class FarmField(models.Model):
         return [(field.id, "{} ({:.3f} ha)".format(field.name, field.area_ha))
                 for field in self]
 
+    def _message_log(self, **kwargs):
+        res = super(FarmField, self)._message_log(**kwargs)
+        if 'tracking_value_ids' in kwargs:
+            body = _(
+                "%s <a href=# data-oe-model=%s data-oe-id=%d>%s</a> updated:"
+            ) % (self._description, self._name, self.id, self.name)
+            self.farm_id._message_log(**kwargs, body=body)
+
+
+class FarmFieldCrop(models.Model):
+    _name = 'agri.farm.field.crop'
+    _description = 'Field Crop'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _order = 'name, create_date desc'
+
+    product_id = fields.Many2one('product.product',
+                                 string='Product',
+                                 domain="[('categ_id.is_agri', '=', True)]",
+                                 states={'draft': [('readonly', False)]},
+                                 readonly=True,
+                                 required=True)
+    state = fields.Selection(selection=[('draft', 'Draft'),
+                                        ('planted', 'Planted'),
+                                        ('emerged', 'Emerged'),
+                                        ('harvested', 'Harvested')],
+                             string='State',
+                             default='draft',
+                             readonly=True,
+                             copy=False)
+
 
 class FarmParcel(models.Model):
     _name = 'agri.farm.parcel'
@@ -140,10 +170,12 @@ class FarmParcel(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'name, create_date desc'
 
-    name = fields.Char('Name', required=True)
-    short_name = fields.Char('Short Name', required=True)
-    code = fields.Char('Code', required=True)
-    country_id = fields.Many2one('res.country', string='Country')
+    name = fields.Char('Name', required=True, tracking=True)
+    short_name = fields.Char('Short Name', required=True, tracking=True)
+    code = fields.Char('Code', required=True, tracking=True)
+    country_id = fields.Many2one('res.country',
+                                 string='Country',
+                                 tracking=True)
     area_ha = fields.Float('Hectares', digits='Hectare', tracking=True)
     boundary = fields.GeoPolygon('Boundary', srid=4326, gist_index=True)
     has_boundary = fields.Boolean('Has Boundary',
@@ -178,6 +210,14 @@ class FarmParcel(models.Model):
     def name_get(self):
         return [(land.id, "{} ({:.3f} ha)".format(land.name, land.area_ha))
                 for land in self]
+
+    def _message_log(self, **kwargs):
+        res = super(FarmParcel, self)._message_log(**kwargs)
+        if 'tracking_value_ids' in kwargs:
+            body = _(
+                "%s <a href=# data-oe-model=%s data-oe-id=%d>%s</a> updated:"
+            ) % (self._description, self._name, self.id, self.name)
+            self.farm_id._message_log(**kwargs, body=body)
 
 
 class FarmVersion(models.Model):
