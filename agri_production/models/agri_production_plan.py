@@ -21,9 +21,10 @@ class ProductionPlan(models.Model):
                                  states={'draft': [('readonly', False)]},
                                  readonly=True,
                                  required=True)
-    partner_farm_version_id = fields.Many2one(related='partner_id.farm_version_id',
-                                              string='Partner Farm Version',
-                                              readonly=True)
+    partner_farm_version_id = fields.Many2one(
+        related='partner_id.farm_version_id',
+        string='Partner Farm Version',
+        readonly=True)
     company_id = fields.Many2one('res.company',
                                  default=lambda self: self.env.company,
                                  states={'draft': [('readonly', False)]},
@@ -166,12 +167,12 @@ class ProductionPlan(models.Model):
         for plan in self:
             plan.line_ids._compute_calendar_period_ids()
 
-    @api.depends('farm_field_ids.area_ha')
+    @api.depends('farm_field_ids.area')
     def _compute_total_land_area(self):
         for plan in self:
             fields_with_area = plan.farm_field_ids.filtered(
-                lambda field: field.area_ha)
-            plan.total_land_area = sum(fields_with_area.mapped('area_ha'))
+                lambda field: field.area)
+            plan.total_land_area = sum(fields_with_area.mapped('area'))
 
     @api.depends('total_land_area', 'line_ids', 'land_uom_id',
                  'consumption_uom_id', 'production_uom_id', 'total_land_area',
@@ -208,7 +209,7 @@ class ProductionPlan(models.Model):
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         default = dict(default or {})
-        default.setdefault('name', _("%s (copy)") % (self.name,))
+        default.setdefault('name', _("%s (copy)") % (self.name, ))
         return super(ProductionPlan, self).copy(default)
 
 
