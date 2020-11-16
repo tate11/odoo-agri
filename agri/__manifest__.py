@@ -36,6 +36,7 @@
         'data/agri_water_data.xml',
         'data/decimal_precision_data.xml',
         'views/agri_views.xml',
+        'views/ir_attachment_views.xml',
         'views/product_views.xml',
         'views/res_config_settings_views.xml',
     ],
