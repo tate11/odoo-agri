@@ -21,9 +21,10 @@ class ProductionPlan(models.Model):
                                  states={'draft': [('readonly', False)]},
                                  readonly=True,
                                  required=True)
-    partner_farm_version_id = fields.Many2one(related='partner_id.farm_version_id',
-                                              string='Partner Farm Version',
-                                              readonly=True)
+    partner_farm_version_id = fields.Many2one(
+        related='partner_id.farm_version_id',
+        string='Partner Farm Version',
+        readonly=True)
     company_id = fields.Many2one('res.company',
                                  default=lambda self: self.env.company,
                                  states={'draft': [('readonly', False)]},
@@ -60,6 +61,9 @@ class ProductionPlan(models.Model):
         states={'draft': [('readonly', False)]},
         readonly=True,
         copy=False)
+    field_crop_ids = fields.One2many(comodel_name='agri.farm.field.crop',
+                                     inverse_name='production_plan_id',
+                                     string='Crops')
     land_uom_id = fields.Many2one(
         'uom.uom',
         'Land Area Unit',
@@ -166,12 +170,12 @@ class ProductionPlan(models.Model):
         for plan in self:
             plan.line_ids._compute_calendar_period_ids()
 
-    @api.depends('farm_field_ids.area_ha')
+    @api.depends('farm_field_ids.area')
     def _compute_total_land_area(self):
         for plan in self:
             fields_with_area = plan.farm_field_ids.filtered(
-                lambda field: field.area_ha)
-            plan.total_land_area = sum(fields_with_area.mapped('area_ha'))
+                lambda field: field.area)
+            plan.total_land_area = sum(fields_with_area.mapped('area'))
 
     @api.depends('total_land_area', 'line_ids', 'land_uom_id',
                  'consumption_uom_id', 'production_uom_id', 'total_land_area',
@@ -195,8 +199,41 @@ class ProductionPlan(models.Model):
                                   precision_rounding=plan.land_uom_id.rounding)
                 else 0.0)
 
+    @api.model
+    def _create_crops(self):
+        for plan in self:
+            plant_lines = plan.line_ids.filtered(
+                lambda line: line.product_category_id.cost_type in
+                ['crop_establishment', 'crop_input']).sorted(
+                    lambda line: line.date_range_id.date_start)
+            harvest_lines = plan.line_ids.filtered(
+                lambda line: line.product_category_id.cost_type ==
+                'crop_harvest').sorted(
+                    lambda line: line.date_range_id.date_start)
+            sale_lines = plan.line_ids.filtered(
+                lambda line: line.product_category_id.cost_type in
+                ['crop_sale', 'permanent_crop_sale']).sorted(
+                    lambda line: line.date_range_id.date_start)
+            if len(plant_lines) == 0:
+                raise Warning(_('No crop establishment or input line found'))
+            if len(harvest_lines) == 0:
+                raise Warning(_('No crop harvest line found'))
+            if len(sale_lines) == 0:
+                raise Warning(_('No crop sale line found'))
+            vals = {
+                'harvested_date': harvest_lines[0].date_range_id.date_start,
+                'planted_date': plant_lines[0].date_range_id.date_start,
+                'product_category_id': sale_lines[0].product_category_id.id,
+                'product_id': sale_lines[0].product_id.id,
+                'production_plan_id': plan.id
+            }
+            for field in plan.farm_field_ids:
+                vals.update({'field_id': field.id, 'planted_area': field.area})
+                crop = self.env['agri.farm.field.crop'].create(vals)
+
     def action_schedule(self):
         for plan in self:
+            plan._create_crops()
             plan.state = 'scheduled'
             plan.line_ids._compute_state()
 
@@ -208,7 +245,7 @@ class ProductionPlan(models.Model):
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         default = dict(default or {})
-        default.setdefault('name', _("%s (copy)") % (self.name,))
+        default.setdefault('name', _("%s (copy)") % (self.name, ))
         return super(ProductionPlan, self).copy(default)
 
 

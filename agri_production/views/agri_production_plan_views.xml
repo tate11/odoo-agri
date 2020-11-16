@@ -141,12 +141,12 @@
                     <div class="oe_button_box" name="button_box">
                         <button name="%(agri_production_plan_line_action_revenue)d" type="action"
                                 context="{'default_production_plan_id': id}"
-                                class="oe_stat_button oe_inline" icon="fa-coins">
+                                class="oe_stat_button" icon="fa-coins">
                             <field name="gross_production_value" widget="statinfo" string="Revenue"/>
                         </button>
                         <button name="%(agri_production_plan_line_action_costs)d" type="action"
                                 context="{'default_production_plan_id': id}"
-                                class="oe_stat_button oe_inline" icon="fa-shopping-cart">
+                                class="oe_stat_button" icon="fa-shopping-cart">
                             <field name="total_costs" widget="statinfo" string="Costs"/>
                         </button>
                     </div>
