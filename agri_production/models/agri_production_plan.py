@@ -61,6 +61,9 @@ class ProductionPlan(models.Model):
         states={'draft': [('readonly', False)]},
         readonly=True,
         copy=False)
+    field_crop_ids = fields.One2many(comodel_name='agri.farm.field.crop',
+                                     inverse_name='production_plan_id',
+                                     string='Crops')
     land_uom_id = fields.Many2one(
         'uom.uom',
         'Land Area Unit',

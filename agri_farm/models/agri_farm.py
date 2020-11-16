@@ -203,9 +203,6 @@ class FarmFieldCrop(models.Model):
         readonly=True,
         required=True,
         tracking=True)
-    production_plan_id = fields.Many2one('agri.production.plan',
-                                         string='Production Plan',
-                                         ondelete='null')
     problem_ids = fields.One2many(comodel_name='agri.farm.field.crop.problem',
                                   inverse_name='crop_id',
                                   string='Problems',
@@ -303,7 +300,10 @@ class FarmFieldCrop(models.Model):
 
     @api.model
     def create(self, vals):
-        crop_vals = {key: vals[key] for key in self._fields.keys() if key in vals}
+        crop_vals = {
+            key: vals[key]
+            for key in self._fields.keys() if key in vals
+        }
         crop = super(FarmFieldCrop, self).create(crop_vals)
         if all(key in vals
                for key in ('planted_area', 'planted_date', 'product_id')):
@@ -557,7 +557,10 @@ class FarmFieldCropZone(models.Model):
 
     @api.model
     def create(self, vals):
-        zone_vals = {key: vals[key] for key in self._fields.keys() if key in vals}
+        zone_vals = {
+            key: vals[key]
+            for key in self._fields.keys() if key in vals
+        }
         return super(FarmFieldCropZone, self).create(zone_vals)
 
 
