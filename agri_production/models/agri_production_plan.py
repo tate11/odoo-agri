@@ -423,8 +423,10 @@ class ProductionPlanLine(models.Model):
                  'production_plan_id.gross_production_value')
     def _compute_subtotal(self):
         period_total_production = 0.0
-        for line in self:
-            if line.period_id.id == self.period_id.id:
+        for line in self.production_plan_id.line_ids:
+            x = line.date_range_id.id
+            y = self.date_range_id.id
+            if line.date_range_id.id == self.date_range_id.id:
                 period_total_production += line.production
         total_land_area = self.production_plan_id.total_land_area
         period_gross_production_value = self.production_plan_id.gross_production_value
@@ -444,9 +446,8 @@ class ProductionPlanLine(models.Model):
             elif line.application_type == 'per_production_unit':
                 amount_total = period_total_production * line_value
             elif line.application_type == 'of_gross_production':
-                line.quantity = line_production
                 amount_total = period_total_production * application_rate * line.price
-                line.production = 0
+                line.production = line.quantity
             elif line.application_type == 'of_gross_production_value':
                 amount_total = period_gross_production_value * application_rate
             elif line.application_type == 'of_total_costs':

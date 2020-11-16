@@ -26,3 +26,6 @@ access_agri_terrain_manager,agri_terrain_manager,model_agri_terrain,agri.agri_gr
 access_agri_water_source_all,agri_water_source_all,model_agri_water_source,base.group_user,1,0,0,0
 access_agri_water_source_user,agri_water_source_user,model_agri_water_source,agri.agri_group_user,1,0,0,0
 access_agri_water_source_manager,agri_water_source_manager,model_agri_water_source,agri.agri_group_manager,1,1,1,1
+access_agri_document_all,agri_document_all,model_agri_document,base.group_user,1,0,0,0
+access_agri_document_user,agri_document_user,model_agri_document,agri.agri_group_user,1,0,0,0
+access_agri_document_manager,agri_document_manager,model_agri_document,agri.agri_group_manager,1,1,1,1
