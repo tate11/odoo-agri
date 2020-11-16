@@ -336,6 +336,8 @@
                 <field name="field_id" />
                 <field name="farm_id" />
                 <field name="product_category_id" />
+                <field name="established_date" />
+                <field name="cleared_date" />
                 <field name="problem_count" string="Problems" />
                 <field name="zone_count" string="Zones" />
                 <field name="state" />
@@ -515,7 +517,6 @@
                                 <field name="area_uom_id" class="oe_inline" options="{'no_open': 1}" />
                             </div>
                             <field name="has_boundary" invisible="1" />
-                            <field name="established_date" />
                         </group>
                         <group>
                             <field name="create_date" readonly="1" />
