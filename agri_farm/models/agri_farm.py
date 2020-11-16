@@ -203,6 +203,9 @@ class FarmFieldCrop(models.Model):
         readonly=True,
         required=True,
         tracking=True)
+    production_plan_id = fields.Many2one('agri.production.plan',
+                                         string='Production Plan',
+                                         ondelete='null')
     problem_ids = fields.One2many(comodel_name='agri.farm.field.crop.problem',
                                   inverse_name='crop_id',
                                   string='Problems',
@@ -297,6 +300,15 @@ class FarmFieldCrop(models.Model):
                     _("%s <a href=# data-oe-model=%s data-oe-id=%d>%s</a>") %
                     (self._description, self._name, self.id, self.name))
             self.field_id._message_log(**log_values, body=body)
+
+    @api.model
+    def create(self, vals):
+        crop_vals = {key: vals[key] for key in self._fields.keys() if key in vals}
+        crop = super(FarmFieldCrop, self).create(crop_vals)
+        if all(key in vals
+               for key in ('planted_area', 'planted_date', 'product_id')):
+            vals.update(crop_id=crop.id)
+            self.env['agri.farm.field.crop.zone'].create(vals)
 
 
 class FarmFieldCropProblem(models.Model):
@@ -483,6 +495,35 @@ class FarmFieldCropZone(models.Model):
             zone.name = _('%s on %s') % (zone.product_id.name,
                                          zone.field_id.name)
 
+    @api.constrains('planted_date', 'harvested_date')
+    def _check_planted_harvested_date(self):
+        for zone in self:
+            # Zone on the same crop_id AND
+            #    IF harvested_date
+            #       planted date between zone planted_date AND harvested_date
+            #       OR
+            #       harvested date between zone planted_date AND harvested_date
+            #    ELSE
+            #       planted date greater than zone planted_date AND
+            #           harvested date less than zone planted_date
+            domain = [('crop_id', '=', zone.crop_id.id)]
+            if not zone.harvested_date:
+                domain += [('planted_date', '<=', zone.planted_date),
+                           ('harvested_date', '>=', zone.planted_date)]
+            else:
+                domain += [
+                    '|', '&', ('planted_date', '>=', zone.planted_date),
+                    ('planted_date', '<=', zone.harvested_date), '&',
+                    ('harvested_date', '>=', zone.planted_date),
+                    ('harvested_date', '<=', zone.harvested_date)
+                ]
+            if zone.id:
+                domain = [('id', '!=', zone.id)] + domain
+            dup_zone = self.env['agri.farm.field.crop.zone'].search(domain,
+                                                                    limit=1)
+            if dup_zone:
+                raise ValidationError(_('Crop Zone overlaps existing Zone'))
+
     def action_plant(self):
         for zone in self:
             zone.state = 'planted'
@@ -513,6 +554,11 @@ class FarmFieldCropZone(models.Model):
                     _("%s <a href=# data-oe-model=%s data-oe-id=%d>%s</a>") %
                     (self._description, self._name, self.id, self.name))
             self.crop_id._message_log(**log_values, body=body)
+
+    @api.model
+    def create(self, vals):
+        zone_vals = {key: vals[key] for key in self._fields.keys() if key in vals}
+        return super(FarmFieldCropZone, self).create(zone_vals)
 
 
 class FarmParcel(models.Model):

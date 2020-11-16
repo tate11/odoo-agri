@@ -196,8 +196,41 @@ class ProductionPlan(models.Model):
                                   precision_rounding=plan.land_uom_id.rounding)
                 else 0.0)
 
+    @api.model
+    def _create_crops(self):
+        for plan in self:
+            plant_lines = plan.line_ids.filtered(
+                lambda line: line.product_category_id.cost_type in
+                ['crop_establishment', 'crop_input']).sorted(
+                    lambda line: line.date_range_id.date_start)
+            harvest_lines = plan.line_ids.filtered(
+                lambda line: line.product_category_id.cost_type ==
+                'crop_harvest').sorted(
+                    lambda line: line.date_range_id.date_start)
+            sale_lines = plan.line_ids.filtered(
+                lambda line: line.product_category_id.cost_type in
+                ['crop_sale', 'permanent_crop_sale']).sorted(
+                    lambda line: line.date_range_id.date_start)
+            if len(plant_lines) == 0:
+                raise Warning(_('No crop establishment or input line found'))
+            if len(harvest_lines) == 0:
+                raise Warning(_('No crop harvest line found'))
+            if len(sale_lines) == 0:
+                raise Warning(_('No crop sale line found'))
+            vals = {
+                'harvested_date': harvest_lines[0].date_range_id.date_start,
+                'planted_date': plant_lines[0].date_range_id.date_start,
+                'product_category_id': sale_lines[0].product_category_id.id,
+                'product_id': sale_lines[0].product_id.id,
+                'production_plan_id': plan.id
+            }
+            for field in plan.farm_field_ids:
+                vals.update({'field_id': field.id, 'planted_area': field.area})
+                crop = self.env['agri.farm.field.crop'].create(vals)
+
     def action_schedule(self):
         for plan in self:
+            plan._create_crops()
             plan.state = 'scheduled'
             plan.line_ids._compute_state()
 
