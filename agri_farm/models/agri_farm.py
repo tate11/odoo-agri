@@ -86,7 +86,6 @@ class FarmField(models.Model):
     has_boundary = fields.Boolean('Has Boundary',
                                   compute='_compute_has_boundary',
                                   default=False)
-    established_date = fields.Date('Established Date', tracking=True)
     farm_id = fields.Many2one('agri.farm',
                               'Farm',
                               ondelete='cascade',
@@ -225,6 +224,14 @@ class FarmFieldCrop(models.Model):
                                 compute='_compute_areas',
                                 store=True,
                                 tracking=True)
+    established_date = fields.Date('Established Date',
+                                   compute='_compute_dates',
+                                   store=True,
+                                   tracking=True)
+    cleared_date = fields.Date('Cleared Date',
+                               compute='_compute_dates',
+                               store=True,
+                               tracking=True)
     state = fields.Selection(selection=[('draft', 'Draft'),
                                         ('planted', 'Planted'),
                                         ('emerged', 'Emerged'),
@@ -263,6 +270,19 @@ class FarmFieldCrop(models.Model):
                 crop.zone_ids.filtered(lambda zone: zone.state in (
                     'emerged', 'harvested')).mapped('emerged_area'))
 
+    @api.depends('zone_ids', 'zone_ids.planted_date',
+                 'zone_ids.harvested_date')
+    def _compute_dates(self):
+        for crop in self:
+            planted_zone = self.env['agri.farm.field.crop.zone'].search(
+                [('crop_id', '=', crop.id)], limit=1, order='planted_date ASC')
+            harvested_zone = self.env['agri.farm.field.crop.zone'].search(
+                [('crop_id', '=', crop.id), ('harvested_date', '!=', False)],
+                limit=1,
+                order='harvested_date DESC')
+            crop.established_date = planted_zone.planted_date if planted_zone else False
+            crop.cleared_date = harvested_zone.harvested_date if harvested_zone else False
+
     @api.model
     def _has_zones_in_state(self, state):
         return len(self.zone_ids.filtered(lambda zone: zone.state == state))
@@ -278,6 +298,29 @@ class FarmFieldCrop(models.Model):
                 crop.state = 'planted'
             else:
                 crop.state = 'draft'
+
+    @api.constrains('established_date', 'cleared_date')
+    def _check_established_cleared_date(self):
+        for crop in self:
+            domain = [('field_id', '=', crop.field_id.id), '|', '&',
+                      ('established_date', '<=', crop.established_date),
+                      ('cleared_date', '=', False)]
+            if not crop.cleared_date:
+                domain += ['&', ('established_date', '<=', crop.established_date),
+                           ('cleared_date', '>=', crop.established_date)]
+            else:
+                domain += [
+                    '|', '&',
+                    ('established_date', '>=', crop.established_date),
+                    ('established_date', '<=', crop.cleared_date), '&',
+                    ('cleared_date', '>=', crop.established_date),
+                    ('cleared_date', '<=', crop.cleared_date)
+                ]
+            if crop.id:
+                domain = [('id', '!=', crop.id)] + domain
+            dup_crop = self.env['agri.farm.field.crop'].search(domain, limit=1)
+            if dup_crop:
+                raise ValidationError(_('Crop overlaps existing Crop'))
 
     def _message_create(self, values_list):
         if not isinstance(values_list, (list)):
@@ -494,35 +537,6 @@ class FarmFieldCropZone(models.Model):
         for zone in self:
             zone.name = _('%s on %s') % (zone.product_id.name,
                                          zone.field_id.name)
-
-    @api.constrains('planted_date', 'harvested_date')
-    def _check_planted_harvested_date(self):
-        for zone in self:
-            # Zone on the same crop_id AND
-            #    IF harvested_date
-            #       planted date between zone planted_date AND harvested_date
-            #       OR
-            #       harvested date between zone planted_date AND harvested_date
-            #    ELSE
-            #       planted date greater than zone planted_date AND
-            #           harvested date less than zone planted_date
-            domain = [('crop_id', '=', zone.crop_id.id)]
-            if not zone.harvested_date:
-                domain += [('planted_date', '<=', zone.planted_date),
-                           ('harvested_date', '>=', zone.planted_date)]
-            else:
-                domain += [
-                    '|', '&', ('planted_date', '>=', zone.planted_date),
-                    ('planted_date', '<=', zone.harvested_date), '&',
-                    ('harvested_date', '>=', zone.planted_date),
-                    ('harvested_date', '<=', zone.harvested_date)
-                ]
-            if zone.id:
-                domain = [('id', '!=', zone.id)] + domain
-            dup_zone = self.env['agri.farm.field.crop.zone'].search(domain,
-                                                                    limit=1)
-            if dup_zone:
-                raise ValidationError(_('Crop Zone overlaps existing Zone'))
 
     def action_plant(self):
         for zone in self:
