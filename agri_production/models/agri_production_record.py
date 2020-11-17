@@ -65,10 +65,10 @@ class ProductionRecord(models.Model):
                                   compute='_compute_delivered_t_ha',
                                   readonly=False,
                                   store=True)
-    delivered_warehouse_id = fields.Many2one('stock.warehouse',
-                                             'Delivery Point',
-                                             ondelete='cascade',
-                                             check_company=True)
+    delivered_address_id = fields.Many2one('res.partner',
+                                           string='Delivery Point',
+                                           domain="[('type', '=', 'delivery')]",
+                                           ondelete='cascade')
 
     _sql_constraints = [
         ('production_record_uniq',

@@ -12,14 +12,14 @@
                 <field name="partner_id" />
                 <field name="farm_field_id" />
                 <field name="cultivar_product_id" />
-                <field name="delivered_warehouse_id" />
+                <field name="delivered_address_id" />
                 <separator />
                 <filter string="Planted" name="filter_planted" domain="[('planted_date', '!=', False)]" />
                 <filter string="Delivered" name="filter_delivered" domain="[('delivered_uom_qty', '!=', False)]" />
                 <group expand="0" string="Group By">
                     <filter string="Partner" name="group_partner" context="{'group_by': 'partner_id'}" />
                     <filter string="Cultivar" name="group_cultivar_product" context="{'group_by': 'cultivar_product_id'}" />
-                    <filter string="Delivery Point" name="group_delivered_warehouse" context="{'group_by': 'delivered_warehouse_id'}" />
+                    <filter string="Delivery Point" name="group_delivered_address" context="{'group_by': 'delivered_address_id'}" />
                 </group>
             </search>
         </field>
@@ -38,7 +38,7 @@
                 <field name="delivered_uom_qty" />
                 <field name="delivered_uom_id" />
                 <field name="delivered_t_ha" />
-                <field name="delivered_warehouse_id" />
+                <field name="delivered_address_id" />
             </tree>
         </field>
     </record>
@@ -62,7 +62,7 @@
                         </group>
                         <group>
                             <field name="cultivar_product_id" context="{'default_type': 'product', 'default_is_cultivar': 1}" />
-                            <field name="delivered_warehouse_id" />
+                            <field name="delivered_address_id" />
                         </group>
                     </group>
                     <group>

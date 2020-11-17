@@ -20,7 +20,7 @@
     "AGPL-3",
     "description":
     "Agriculture module for Production management",
-    "depends": ['base', 'date_range', 'stock', 'agri_farm'],
+    "depends": ['base', 'date_range', 'agri_farm'],
     "data": [
         'security/ir.model.access.csv',
         'data/res_company_data.xml',
