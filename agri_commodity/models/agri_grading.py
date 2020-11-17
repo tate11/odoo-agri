@@ -42,6 +42,10 @@ class Grading(models.Model):
         help="Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control",
         domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
+    # price: total price, context dependent (partner, pricelist, quantity)
+    price = fields.Float(
+        'Price', compute='_compute_product_price',
+        digits='Product Price', inverse='_set_product_price')
     sequence = fields.Integer('Sequence', help="Gives the sequence order when displaying a list of gradings.")
     company_id = fields.Many2one(
         'res.company', 'Company', index=True,
@@ -163,76 +167,6 @@ class Grading(models.Model):
             return domain
         return self.search(domain, order='sequence, product_id', limit=1)
 
-    def explode(self, product, quantity, picking_type=False):
-        """
-            Explodes the BoM and creates two lists with all the information you need: bom_done and line_done
-            Quantity describes the number of times you need the BoM: so the quantity divided by the number created by the BoM
-            and converted into its UoM
-        """
-        from collections import defaultdict
-
-        graph = defaultdict(list)
-        V = set()
-
-        def check_cycle(v, visited, recStack, graph):
-            visited[v] = True
-            recStack[v] = True
-            for neighbour in graph[v]:
-                if visited[neighbour] == False:
-                    if check_cycle(neighbour, visited, recStack, graph) == True:
-                        return True
-                elif recStack[neighbour] == True:
-                    return True
-            recStack[v] = False
-            return False
-
-        gradings_done = [(self, {'qty': quantity, 'product': product, 'original_qty': quantity, 'parent_line': False})]
-        lines_done = []
-        V |= set([product.product_tmpl_id.id])
-
-        grading_lines = [(grading_line, product, quantity, False) for grading_line in self.grading_line_ids]
-        for grading_line in self.grading_line_ids:
-            V |= set([grading_line.product_id.product_tmpl_id.id])
-            graph[product.product_tmpl_id.id].append(grading_line.product_id.product_tmpl_id.id)
-        while grading_lines:
-            current_line, current_product, current_qty, parent_line = grading_lines[0]
-            grading_lines = grading_lines[1:]
-
-            if current_line._skip_grading_line(current_product):
-                continue
-
-            line_quantity = current_qty * current_line.product_qty
-            grading = self._grading_find(product=current_line.product_id,
-                                         picking_type=picking_type or self.picking_type_id,
-                                         company_id=self.company_id.id)
-            if grading:
-                converted_line_quantity = current_line.product_uom_id._compute_quantity(
-                    line_quantity / grading.product_qty,
-                    grading.product_uom_id)
-                grading_lines = [(line, current_line.product_id, converted_line_quantity, current_line) for line in
-                                 grading.grading_line_ids] + grading_lines
-                for grading_line in grading.grading_line_ids:
-                    graph[current_line.product_id.product_tmpl_id.id].append(grading_line.product_id.product_tmpl_id.id)
-                    if grading_line.product_id.product_tmpl_id.id in V and check_cycle(
-                        grading_line.product_id.product_tmpl_id.id, {key: False for key in V},
-                        {key: False for key in V},
-                        graph):
-                        raise UserError(_(
-                            'Recursion error!  A product with a grading should not have itself in its grading or child gradings!'))
-                    V |= set([grading_line.product_id.product_tmpl_id.id])
-                gradings_done.append((grading, {'qty': converted_line_quantity, 'product': current_product,
-                                                'original_qty': quantity, 'parent_line': current_line}))
-            else:
-                # We round up here because the user expects that if he has to consume a little more, the whole UOM unit
-                # should be consumed.
-                rounding = current_line.product_uom_id.rounding
-                line_quantity = float_round(line_quantity, precision_rounding=rounding, rounding_method='UP')
-                lines_done.append((current_line,
-                                   {'qty': line_quantity, 'product': current_product, 'original_qty': quantity,
-                                    'parent_line': parent_line}))
-
-        return gradings_done, lines_done
-
     @api.model
     def get_import_templates(self):
         return [{
@@ -351,7 +285,7 @@ class GradingLine(models.Model):
         return super(GradingLine, self).create(vals_list)
 
     def _skip_grading_line(self, product):
-        """ Control if a BoM line should be produced, can be inherited to add
+        """ Control if a grading line should be produced, can be inherited to add
         custom control. It currently checks that all variant values are in the
         product.
 
@@ -363,8 +297,8 @@ class GradingLine(models.Model):
             return False
         if self.grading_product_template_attribute_value_ids:
             for ptal, iter_ptav in groupby(
-                self.grading_product_template_attribute_value_ids.sorted('attribute_line_id'),
-                lambda ptav: ptav.attribute_line_id):
+                    self.grading_product_template_attribute_value_ids.sorted('attribute_line_id'),
+                    lambda ptav: ptav.attribute_line_id):
                 if not any([ptav in product.product_template_attribute_value_ids for ptav in iter_ptav]):
                     return True
         return False

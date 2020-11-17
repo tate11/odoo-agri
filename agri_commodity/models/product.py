@@ -31,39 +31,6 @@ class ProductTemplate(models.Model):
         action['domain'] = [('grading_line_ids.product_id', 'in', self.product_variant_ids.ids)]
         return action
 
-    def _compute_quantities(self):
-        """ When the product template is a kit, this override computes the fields :
-         - 'virtual_available'
-         - 'qty_available'
-         - 'incoming_qty'
-         - 'outgoing_qty'
-         - 'free_qty'
-        """
-        product_without_grading = self.browse([])
-        for product_template in self:
-            if not self.env['agri.grading']._grading_find(product_tmpl=product_template):
-                product_without_grading |= product_template
-                continue
-            virtual_available = 0
-            qty_available = 0
-            incoming_qty = 0
-            outgoing_qty = 0
-            free_qty = 0
-            for product in product_template.product_variant_ids:
-                if self.env['agri.grading']._grading_find(product=product):
-                    qty_available += product.qty_available
-                    virtual_available += product.virtual_available
-                    incoming_qty += product.incoming_qty
-                    outgoing_qty += product.outgoing_qty
-                    free_qty += product.free_qty
-            product_template.qty_available = qty_available
-            product_template.virtual_available = virtual_available
-            product_template.incoming_qty = incoming_qty
-            product_template.outgoing_qty = outgoing_qty
-            product_template.free_qty = free_qty
-
-        super(ProductTemplate, product_without_grading)._compute_quantities()
-
 
 class ProductProduct(models.Model):
     _inherit = "product.product"
