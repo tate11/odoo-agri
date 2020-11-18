@@ -1,61 +1,9 @@
-# -*- coding: utf-8 -*-
 from odoo.addons.rest_api.controllers.main import *
 
 _logger = logging.getLogger(__name__)
 
-# List of REST resources in current file:
-#   (url prefix)                (method)     (action)
-# /api/agri.farm.field                GET     - Read all (with optional filters, offset, limit, order)
-# /api/agri.farm.field/<id>           GET     - Read one
-# /api/agri.farm.field                POST    - Create one
-# /api/agri.farm.field/<id>           PUT     - Update one
-# /api/agri.farm.field/<id>           DELETE  - Delete one
-# /api/agri.farm.field/<id>/<method>  PUT     - Call method (with optional parameters)
-
-# List of IN/OUT data (json data and HTTP-headers) for each REST resource:
-
-# /api/agri.farm.field  GET  - Read all (with optional filters, offset, limit, order)
-# IN data:
-#   HEADERS:
-#       'access_token'
-#   JSON:
-#       (optional filters (Odoo domain), offset, limit, order)
-#           {                                       # editable
-#               "filters": [('some_field_1', '=', some_value_1), ('some_field_2', '!=', some_value_2), ...],
-#               "offset":  XXX,
-#               "limit":   XXX,
-#               "order":   "list_of_fields"  # default 'name asc'
-#           }
-# OUT data:
-OUT__agri_farm_field__read_all__SUCCESS_CODE = 200  # editable
-#   JSON:
-#       {
-#           "count":   XXX,     # number of returned records
-#           "results": [
-OUT__agri_farm_field__read_all__SCHEMA = (  # editable
-    'id',
-    'area',
-    'boundary',
-    'farm_id',
-    'name',
-    # many2one fields:
-    ('area_uom_id', ('id', 'name')),
-)
-#           ]
-#       }
-
-# /api/agri.farm.field/<id>  GET  - Read one
-# IN data:
-#   HEADERS:
-#       'access_token'
-#   JSON:
-#       (optional parameter 'search_field' for search object not by 'id' field)
-#           {"search_field": "some_field_name"}     # editable
-# OUT data:
-OUT__agri_farm_field__read_one__SUCCESS_CODE = 200  # editable
-OUT__agri_farm_field__read_one__SCHEMA = (  # editable
-    # (The order of fields of different types maybe arbitrary)
-    # simple fields (non relational):
+OUT__agri_farm_field__read_all__SUCCESS_CODE = 200
+OUT__agri_farm_field__read_all__SCHEMA = (
     'id',
     'area',
     'boundary',
@@ -65,61 +13,78 @@ OUT__agri_farm_field__read_one__SCHEMA = (  # editable
     ('farm_id', ('id', 'name')),
 )
 
-# /api/agri.farm.field  POST  - Create one
-# IN data:
-#   HEADERS:
-#       'access_token'
-#   DEFAULTS:
-#       (optional default values of fields)
-DEFAULTS__agri_farm_field__create_one__JSON = {  # editable
-    # "some_field_1": some_value_1,
-    # "some_field_2": some_value_2,
-    # ...
-}
-#   JSON:
-#       (fields and its values of created object;
-#        don't forget about model's mandatory fields!)
-#           ...                                     # editable
-# OUT data:
-OUT__agri_farm_field__create_one__SUCCESS_CODE = 200  # editable
-OUT__agri_farm_field__create_one__SCHEMA = (  # editable
+OUT__agri_farm_field__read_one__SUCCESS_CODE = 200
+OUT__agri_farm_field__read_one__SCHEMA = (
     'id',
     'area',
     'boundary',
-    'farm_id',
     'name',
     # many2one fields:
     ('area_uom_id', ('id', 'name')),
+    ('farm_id', ('id', 'name')),
+    # one2many field:
+    (
+        'crop_ids',
+        [(
+            'id',
+            'cleared_date',
+            'emerged_area',
+            'established_date',
+            'field_id',
+            'name',
+            'planted_area',
+            'state',
+            # many2one fields:
+            ('product_category_id', ('id', 'name')),
+            # one2many field:
+            (
+                'problem_ids',
+                [(
+                    'id',
+                    'area',
+                    'centroid',
+                    'crop_id',
+                    'date',
+                    'description',
+                    'type',
+                    'state',
+                    # many2one fields:
+                    ('area_uom_id', ('id', 'name')),
+                )]),
+            (
+                'zone_ids',
+                [(
+                    'id',
+                    'emerged_area',
+                    'emerged_date',
+                    'harvested_date',
+                    'planted_area',
+                    'planted_date',
+                    'crop_id',
+                    'state',
+                    # many2one fields:
+                    ('area_uom_id', ('id', 'name')),
+                    ('product_id', ('id', 'name')),
+                )]),
+        )]),
 )
 
-# /api/agri.farm.field/<id>  PUT  - Update one
-# IN data:
-#   HEADERS:
-#       'access_token'
-#   JSON:
-#       (fields and new values of updated object)   # editable
-#           ...
-# OUT data:
-OUT__agri_farm_field__update_one__SUCCESS_CODE = 200  # editable
+DEFAULTS__agri_farm_field__create_one__JSON = {}
+OUT__agri_farm_field__create_one__SUCCESS_CODE = 200
+OUT__agri_farm_field__create_one__SCHEMA = (
+    'id',
+    'area',
+    'area_uom_id',
+    'boundary',
+    'farm_id',
+    'name',
+)
 
-# /api/agri.farm.field/<id>  DELETE  - Delete one
-# IN data:
-#   HEADERS:
-#       'access_token'
-# OUT data:
-OUT__agri_farm_field__delete_one__SUCCESS_CODE = 200  # editable
+OUT__agri_farm_field__update_one__SUCCESS_CODE = 200
 
-# /api/agri.farm.field/<id>/<method>  PUT  - Call method (with optional parameters)
-# IN data:
-#   HEADERS:
-#       'access_token'
-#   JSON:
-#       (named parameters of method)                # editable
-#           ...
-# OUT data:
-OUT__agri_farm_field__call_method__SUCCESS_CODE = 200  # editable
+OUT__agri_farm_field__delete_one__SUCCESS_CODE = 200
 
-# HTTP controller of REST resources:
+OUT__agri_farm_field__call_method__SUCCESS_CODE = 200
 
 
 class ControllerREST(http.Controller):
@@ -156,7 +121,7 @@ class ControllerREST(http.Controller):
     @http.route('/api/agri.farm.field',
                 methods=['POST', 'OPTIONS'],
                 type='http',
-                auth='none',
+                auth='admin',
                 cors=True,
                 csrf=False)
     @check_permissions

@@ -6,7 +6,14 @@ from odoo.addons.rest_api.controllers import model__res_partner as ResPartnerCon
 class AgriControllerREST(ResPartnerController.ControllerREST):
     def __init__(self):
         super(AgriControllerREST, self).__init__()
+        self.OUT__res_partner__read_all__SCHEMA.extend([
+            # many2one fields:
+            ('farm_version_id', ('id', 'name')),
+        ])
         self.OUT__res_partner__read_one__SCHEMA.extend([
+            # many2one fields:
+            ('farm_version_id', ('id', 'name')),
+            # one2many field:
             (
                 'farm_ids',
                 [(
@@ -44,4 +51,8 @@ class AgriControllerREST(ResPartnerController.ControllerREST):
                                 'name',
                                 'code',
                             )))]))]),
+        ])
+        self.OUT__res_partner__create_one__SCHEMA.extend([
+            # many2one fields:
+            ('farm_version_id', ('id', 'name')),
         ])
