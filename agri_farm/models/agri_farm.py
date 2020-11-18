@@ -28,7 +28,7 @@ class Farm(models.Model):
         required=True,
         tracking=True)
     area = fields.Float('Area', digits='Hectare', tracking=True)
-    boundary = fields.GeoPolygon('Boundary', srid=4326, gist_index=True)
+    boundary = fields.GeoMultiPolygon('Boundary', srid=4326, gist_index=True)
     has_boundary = fields.Boolean('Has Boundary',
                                   compute='_compute_has_boundary',
                                   default=False)
@@ -82,7 +82,7 @@ class FarmField(models.Model):
     name = fields.Char('Name', required=True, tracking=True)
     area = fields.Float('Area', digits='Hectare', tracking=True)
     area_uom_id = fields.Many2one(related='farm_id.area_uom_id', store=True)
-    boundary = fields.GeoPolygon('Boundary', srid=4326, gist_index=True)
+    boundary = fields.GeoMultiPolygon('Boundary', srid=4326, gist_index=True)
     has_boundary = fields.Boolean('Has Boundary',
                                   compute='_compute_has_boundary',
                                   default=False)
@@ -596,7 +596,7 @@ class FarmParcel(models.Model):
                                  tracking=True)
     area = fields.Float('Area', digits='Hectare', tracking=True)
     area_uom_id = fields.Many2one(related='farm_id.area_uom_id', store=True)
-    boundary = fields.GeoPolygon('Boundary', srid=4326, gist_index=True)
+    boundary = fields.GeoMultiPolygon('Boundary', srid=4326, gist_index=True)
     has_boundary = fields.Boolean('Has Boundary',
                                   compute='_compute_has_boundary',
                                   default=False)
