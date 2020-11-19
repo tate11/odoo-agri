@@ -23,6 +23,38 @@
         </field>
     </record>
 
+    <record id="agri_farm_view_geoengine" model="ir.ui.view">
+        <field name="name">agri.farm.view.geoengine</field>
+        <field name="model">agri.farm</field>
+        <field eval="16" name="priority" />
+        <field name="arch" type="xml">
+            <geoengine>
+                <field name="name" select="1" />
+                <field name="partner_id" />
+                <field name="area" />
+                <field name="area_uom_id" />
+                <field name="boundary" />
+            </geoengine>
+        </field>
+    </record>
+
+    <record id="agri_farm_view_geoengine_vector_layer" model="geoengine.vector.layer">
+        <field name="geo_field_id" ref="agri_farm.field_agri_farm__boundary" />
+        <field name="name">Boundary</field>
+        <field eval="6" name="sequence" />
+        <field name="view_id" ref="agri_farm_view_geoengine" />
+        <field name="geo_repr">basic</field>
+        <field eval="1" name="nb_class" />
+        <field name="begin_color">#FF680A</field>
+    </record>
+
+    <record id="agri_farm_geoengine_raster_layer_osm" model="geoengine.raster.layer">
+        <field name="raster_type">osm</field>
+        <field name="name">Background</field>
+        <field name="view_id" ref="agri_farm_view_geoengine" />
+        <field eval="0" name="overlay" />
+    </record>
+
     <record id="agri_farm_view_tree" model="ir.ui.view">
         <field name="name">agri.farm.view.tree</field>
         <field name="model">agri.farm</field>
@@ -64,7 +96,6 @@
                                 <span class="oe_read_only"><![CDATA[&nbsp;]]></span>
                                 <field name="area_uom_id" class="oe_inline" options="{'no_open': 1}" />
                             </div>
-                            <field name="has_boundary" invisible="1" />
                         </group>
                         <group>
                             <field name="has_boundary" invisible="1" />
@@ -77,6 +108,9 @@
                         </page>
                         <page string="Fields" name="fields_tab">
                             <field name="farm_field_ids" nolabel="1" context="{'default_farm_id': id, 'tree_view_ref': 'agri_farm.agri_farm_field_view_tree', 'form_view_ref': 'agri_farm.agri_farm_field_inline_view_form'}" />
+                        </page>
+                        <page string="Boundary" name="map_tab">
+                            <field name="boundary" nolabel="1" widget="geo_edit_map" />
                         </page>
                     </notebook>
                 </sheet>
@@ -523,23 +557,27 @@
                             <field name="active" />
                         </group>
                     </group>
-                    <group>
-                        <group>
-                            <field name="land_use_id" />
-                            <field name="crop_potential_id" />
-                            <field name="soil_effective_depth_id" />
-                            <field name="irrigation_type_id" />
-                            <field name="irrigated" invisible="1" />
-                        </group>
-                        <group>
-                            <field name="soil_texture_id" />
-                            <field name="terrain_id" />
-                            <field name="water_source_id" />
-                        </group>
-                    </group>
-                    <group>
-                        <field name="boundary" widget="geo_edit_map" />
-                    </group>
+                    <notebook>
+                        <page string="Details" name="details_tab">
+                            <group>
+                                <group>
+                                    <field name="land_use_id" />
+                                    <field name="crop_potential_id" />
+                                    <field name="soil_effective_depth_id" />
+                                    <field name="irrigation_type_id" />
+                                    <field name="irrigated" invisible="1" />
+                                </group>
+                                <group>
+                                    <field name="soil_texture_id" />
+                                    <field name="terrain_id" />
+                                    <field name="water_source_id" />
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Boundary" name="map_tab">
+                            <field name="boundary" nolabel="1" widget="geo_edit_map" />
+                        </page>
+                    </notebook>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers" />
@@ -581,6 +619,38 @@
                 </group>
             </search>
         </field>
+    </record>
+
+    <record id="agri_farm_parcel_view_geoengine" model="ir.ui.view">
+        <field name="name">agri.farm.parcel.view.geoengine</field>
+        <field name="model">agri.farm.parcel</field>
+        <field eval="16" name="priority" />
+        <field name="arch" type="xml">
+            <geoengine>
+                <field name="name" select="1" />
+                <field name="farm_id" />
+                <field name="area" />
+                <field name="area_uom_id" />
+                <field name="boundary" />
+            </geoengine>
+        </field>
+    </record>
+
+    <record id="agri_farm_parcel_view_geoengine_vector_layer" model="geoengine.vector.layer">
+        <field name="geo_field_id" ref="agri_farm.field_agri_farm_parcel__boundary" />
+        <field name="name">Boundary</field>
+        <field eval="6" name="sequence" />
+        <field name="view_id" ref="agri_farm_parcel_view_geoengine" />
+        <field name="geo_repr">basic</field>
+        <field eval="1" name="nb_class" />
+        <field name="begin_color">#FF680A</field>
+    </record>
+
+    <record id="agri_farm_parcel_geoengine_raster_layer_osm" model="geoengine.raster.layer">
+        <field name="raster_type">osm</field>
+        <field name="name">Background</field>
+        <field name="view_id" ref="agri_farm_parcel_view_geoengine" />
+        <field eval="0" name="overlay" />
     </record>
 
     <record id="agri_farm_parcel_view_tree" model="ir.ui.view">
@@ -631,13 +701,20 @@
                             <field name="has_boundary" invisible="1" />
                         </group>
                     </group>
-                    <field name="land_cover_ids" groups="agri.agri_group_manager">
-                        <tree editable="bottom" context="{'default_parcel_id': id}">
-                            <field name="land_use_id" />
-                            <field name="area" />
-                            <field name="area_uom_id" />
-                        </tree>
-                    </field>
+                    <notebook>
+                        <page string="Land Cover" name="land_cover_tab" groups="agri.agri_group_manager">
+                            <field name="land_cover_ids" nolabel="1">
+                                <tree editable="bottom" context="{'default_parcel_id': id}">
+                                    <field name="land_use_id" />
+                                    <field name="area" />
+                                    <field name="area_uom_id" />
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Boundary" name="map_tab">
+                            <field name="boundary" nolabel="1" widget="geo_edit_map" />
+                        </page>
+                    </notebook>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers" />
@@ -708,7 +785,7 @@
     <record id="agri_farm_action" model="ir.actions.act_window">
         <field name="name">Farms</field>
         <field name="res_model">agri.farm</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,form,geoengine</field>
         <field name="domain">[]</field>
         <field name="context">{'search_default_filter_active': 1}</field>
         <field name="help" type="html">
@@ -734,7 +811,7 @@
     <record id="agri_farm_parcel_action" model="ir.actions.act_window">
         <field name="name">Parcels</field>
         <field name="res_model">agri.farm.parcel</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,form,geoengine</field>
         <field name="domain">[]</field>
         <field name="context">{}</field>
         <field name="help" type="html">
