@@ -72,7 +72,7 @@ class ProductionRecord(models.Model):
 
     _sql_constraints = [
         ('production_record_uniq',
-         'unique(farm_field_id, season_id, delivered_warehouse_id)',
+         'unique(farm_field_id, season_id, delivered_address_id)',
          'The production record must be unique!'),
     ]
 
