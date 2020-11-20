@@ -36,16 +36,21 @@ class Grading(models.Model):
     product_qty = fields.Float(
         'Quantity', default=1.0,
         digits='Unit of Measure', required=True)
+    currency_id = fields.Many2one(
+        'res.currency',
+        string='Currency',
+        required=True,
+        readonly=True,
+        default=lambda self: self.env.user.company_id.currency_id)
+    price = fields.Monetary(
+        'Price', compute='_compute_product_price',
+        digits='Product Price')
     product_uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure',
         default=_get_default_product_uom_id, required=True,
         help="Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control",
         domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
-    # price: total price, context dependent (partner, pricelist, quantity)
-    price = fields.Float(
-        'Price', compute='_compute_product_price',
-        digits='Product Price', inverse='_set_product_price')
     sequence = fields.Integer('Sequence', help="Gives the sequence order when displaying a list of gradings.")
     company_id = fields.Many2one(
         'res.company', 'Company', index=True,
@@ -87,6 +92,11 @@ class Grading(models.Model):
                             (ptav.display_name, ptav.product_tmpl_id.display_name,
                              grading_line.parent_product_tmpl_id.display_name)
                         )
+
+    @api.onchange('grading_line_ids')
+    def _compute_product_price(self):
+        for grading in self:
+            grading.price = 1.0
 
     @api.onchange('product_uom_id')
     def onchange_product_uom_id(self):
@@ -191,8 +201,8 @@ class GradingLine(models.Model):
     company_id = fields.Many2one(
         related='grading_id.company_id', store=True, index=True, readonly=True)
     product_qty = fields.Float(
-        'Quantity', default=1.0,
-        digits='Product Unit of Measure', required=True)
+        'Quantity', compute='_compute_product_price',
+        digits='Product Unit of Measure')
     product_uom_id = fields.Many2one(
         'uom.uom', 'Product Unit of Measure',
         default=_get_default_product_uom_id,
@@ -200,6 +210,13 @@ class GradingLine(models.Model):
         help="Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control",
         domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
+    currency_id = fields.Many2one(related='grading_id.currency_id',
+                                  store=True)
+    # price: total price, context dependent (partner, pricelist, quantity)
+    price = fields.Monetary(
+        'Price', compute='_compute_product_price',
+        digits='Product Price')
+    percent = fields.Float('Percent', default=1.0, digits='Product Unit of Measure', required=True)
     sequence = fields.Integer(
         'Sequence', default=1,
         help="Gives the sequence order when displaying.")
@@ -217,14 +234,14 @@ class GradingLine(models.Model):
     child_grading_id = fields.Many2one(
         'agri.grading', 'Sub Grading', compute='_compute_child_grading_id')
     child_line_ids = fields.One2many(
-        'agri.grading.line', string="Grading lines of the referred bom",
+        'agri.grading.line', string="Grading lines of the referred grading",
         compute='_compute_child_line_ids')
     attachments_count = fields.Integer('Attachments Count', compute='_compute_attachments_count')
 
     _sql_constraints = [
-        ('bom_qty_zero', 'CHECK (product_qty>=0)', 'All product quantities must be greater or equal to 0.\n'
-                                                   'Lines with 0 quantities can be used as optional lines. \n'
-                                                   'You should install the mrp_byproduct module if you want to manage extra products on BoMs !'),
+        ('grading_qty_zero', 'CHECK (product_qty>=0)', 'All product quantities must be greater or equal to 0.\n'
+                                                       'Lines with 0 quantities can be used as optional lines. \n'
+                                                       'You should install the mrp_byproduct module if you want to manage extra products on gradings !'),
     ]
 
     @api.depends(
@@ -272,6 +289,13 @@ class GradingLine(models.Model):
                 'The Product Unit of Measure you chose has a different category than in the product form.')}
         return res
 
+    @api.depends_context('product_uom_id' 'product_qty')
+    def _compute_product_price(self):
+        for line in self:
+            line.price = line.product_id.uom_id._compute_price(
+                line.product_id.with_context(force_company=line.company_id.id).list_price,
+                line.product_uom_id) * line.product_qty
+
     @api.onchange('product_id')
     def onchange_product_id(self):
         if self.product_id:
@@ -297,8 +321,8 @@ class GradingLine(models.Model):
             return False
         if self.grading_product_template_attribute_value_ids:
             for ptal, iter_ptav in groupby(
-                    self.grading_product_template_attribute_value_ids.sorted('attribute_line_id'),
-                    lambda ptav: ptav.attribute_line_id):
+                self.grading_product_template_attribute_value_ids.sorted('attribute_line_id'),
+                lambda ptav: ptav.attribute_line_id):
                 if not any([ptav in product.product_template_attribute_value_ids for ptav in iter_ptav]):
                     return True
         return False
