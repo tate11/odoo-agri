@@ -9,6 +9,7 @@ from odoo.tools.float_utils import float_round, float_is_zero
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
+    is_agri_commodity = fields.Boolean("Is Agri Commodity")
     grading_line_ids = fields.One2many('agri.grading.line', 'product_tmpl_id', 'Grading Components')
     grading_ids = fields.One2many('agri.grading', 'product_tmpl_id', 'Grading')
     grading_count = fields.Integer('# Gradings',

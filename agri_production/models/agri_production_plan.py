@@ -321,7 +321,6 @@ class ProductionPlanLine(models.Model):
             ('sum', 'Sum'),
             ('per_production_unit', 'Per production unit'),
             ('per_consumption_unit', 'Per consumption unit'),
-            ('of_gross_production', '% of gross production'),
             ('of_gross_production_value', '% of gross production value'),
             ('of_total_costs', '% of total costs'),
         ],
@@ -393,7 +392,7 @@ class ProductionPlanLine(models.Model):
         for line in self:
             if line.product_id:
                 line.product_category_id = line.product_id.categ_id or line.product_category_id
-                line.price = line.product_id.lst_price or line.price
+                line.price = line.product_id.price or line.price
                 line.product_uom_id = line.product_id.uom_id or line.product_uom
 
     @api.depends('season_id', 'period_id')

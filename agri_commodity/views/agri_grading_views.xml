@@ -61,7 +61,7 @@
                                         <field name="sequence" widget="handle"/>
                                         <field name="product_id" context="{'default_type': 'product'}"/>
                                         <field name="product_tmpl_id" invisible="1"/>
-                                        <field name="price"/>
+                                        <field name="unit_price"/>
                                         <field name="product_uom_category_id" invisible="1"/>
                                         <field name="grading_product_tmpl_id" invisible="1"/>
                                         <field name="grading_product_tmpl_categ_id" invisible="1"/>
@@ -76,7 +76,7 @@
                                                groups="product.group_product_variant"/>
                                         <field name="percent"/>
                                         <field name="product_qty"/>
-
+                                        <field name="price"/>
                                     </tree>
                                 </field>
                             </page>
