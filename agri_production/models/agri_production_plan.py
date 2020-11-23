@@ -61,9 +61,14 @@ class ProductionPlan(models.Model):
         states={'draft': [('readonly', False)]},
         readonly=True,
         copy=False)
+    delivery_ids = fields.One2many(comodel_name='agri.delivery',
+                                   inverse_name='production_plan_id',
+                                   string='Deliveries',
+                                   copy=False)
     field_crop_ids = fields.One2many(comodel_name='agri.farm.field.crop',
                                      inverse_name='production_plan_id',
-                                     string='Crops')
+                                     string='Crops',
+                                     copy=False)
     land_uom_id = fields.Many2one(
         'uom.uom',
         'Land Area Unit',
@@ -434,7 +439,7 @@ class ProductionPlanLine(models.Model):
             # Adjust application rate value if it is a percentage
             application_rate = (line.application_rate /
                                 100.0 if line.application_rate_type
-                                         == 'percentage' else line.application_rate)
+                                == 'percentage' else line.application_rate)
             line_production = line.quantity * line.application_rate
             line_value = line.price * line_production
             if line.application_type == 'sum':
