@@ -21,9 +21,8 @@ class Grading(models.Model):
     active = fields.Boolean(
         'Active',
         default=True,
-        help=
-        "If the active field is set to False, it will allow you to hide the gradings without removing it."
-    )
+        help="If the active field is set to False, it will allow "
+        "you to hide the gradings without removing it.")
     product_tmpl_id = fields.Many2one(
         'product.template',
         'Product',
@@ -43,9 +42,8 @@ class Grading(models.Model):
         "'|', "
         "('company_id', '=', False), "
         "('company_id', '=', company_id)]",
-        help=
-        "If a product variant is defined the Grading is available only for this product."
-    )
+        help="If a product variant is defined the Grading is available "
+        "only for this product.")
     grading_line_ids = fields.One2many('agri.grading.line',
                                        'grading_id',
                                        'Grading Lines',
@@ -72,8 +70,8 @@ class Grading(models.Model):
         'Unit of Measure',
         default=_get_default_product_uom_id,
         required=True,
-        help=
-        "Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control",
+        help="Unit of Measure (Unit of Measure) is the unit of "
+        "measurement for the inventory control",
         domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(
         related='product_id.uom_id.category_id')
@@ -86,8 +84,8 @@ class Grading(models.Model):
                                  default=lambda self: self.env.company)
     consumption = fields.Selection(
         [('strict', 'Strict'), ('flexible', 'Flexible')],
-        help=
-        "Defines if you can consume more or less components than the quantity defined on the grading.",
+        help="Defines if you can consume more or less components than "
+        "the quantity defined on the grading.",
         default='strict',
         string='Consumption')
 
@@ -117,20 +115,22 @@ class Grading(models.Model):
                     same_product = grading.product_tmpl_id == grading_line.product_id.product_tmpl_id
                 if same_product:
                     raise ValidationError(
-                        _("Grading line product %s should not be the same as grading product."
-                          ) % grading.display_name)
+                        _("Grading line product %s should not be "
+                          "the same as grading product.") %
+                        grading.display_name)
                 if grading.product_id and grading_line.grading_product_template_attribute_value_ids:
                     raise ValidationError(
-                        _("Grading cannot concern product %s and have a line with attributes (%s) at the same time."
-                          ) % (grading.product_id.display_name, ", ".join([
-                              ptav.display_name for ptav in grading_line.
-                              grading_product_template_attribute_value_ids
-                          ])))
+                        _("Grading cannot concern product %s and have a "
+                          "line with attributes (%s) at the same time.") %
+                        (grading.product_id.display_name, ", ".join([
+                            ptav.display_name for ptav in grading_line.
+                            grading_product_template_attribute_value_ids
+                        ])))
                 for ptav in grading_line.grading_product_template_attribute_value_ids:
                     if ptav.product_tmpl_id != grading.product_tmpl_id:
                         raise ValidationError(
-                            _("The attribute value %s set on product %s does not match the Grading product %s."
-                              ) %
+                            _("The attribute value %s set on product %s does "
+                              "not match the Grading product %s.") %
                             (ptav.display_name,
                              ptav.product_tmpl_id.display_name, grading_line.
                              grading_product_tmpl_id.display_name))
@@ -222,8 +222,8 @@ class Grading(models.Model):
         else:
             # neither product nor template, makes no sense to search
             raise UserError(
-                _('You should provide either a product or a product template to search a grading'
-                  ))
+                _('You should provide either a product or a product '
+                  'template to search a grading'))
         if picking_type:
             domain += [
                 '|', ('picking_type_id', '=', picking_type.id),
@@ -313,8 +313,8 @@ class GradingLine(models.Model):
         'Unit',
         default=_get_default_product_uom_id,
         required=True,
-        help=
-        "Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control",
+        help="Unit of Measure (Unit of Measure) is the unit of "
+        "measurement for the inventory control",
         domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(
         related='product_id.uom_id.category_id')
@@ -356,8 +356,8 @@ class GradingLine(models.Model):
         ('grading_qty_zero', 'CHECK (product_qty>=0)',
          'All product quantities must be greater or equal to 0.\n'
          'Lines with 0 quantities can be used as optional lines. \n'
-         'You should install the mrp_byproduct module if you want to manage extra products on gradings !'
-         ),
+         'You should install the mrp_byproduct module if you want '
+         'to manage extra products on gradings !'),
     ]
 
     @api.constrains('percent')
