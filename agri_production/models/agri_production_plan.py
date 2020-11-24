@@ -61,9 +61,14 @@ class ProductionPlan(models.Model):
         states={'draft': [('readonly', False)]},
         readonly=True,
         copy=False)
+    delivery_ids = fields.One2many(comodel_name='agri.delivery',
+                                   inverse_name='production_plan_id',
+                                   string='Deliveries',
+                                   copy=False)
     field_crop_ids = fields.One2many(comodel_name='agri.farm.field.crop',
                                      inverse_name='production_plan_id',
-                                     string='Crops')
+                                     string='Crops',
+                                     copy=False)
     land_uom_id = fields.Many2one(
         'uom.uom',
         'Land Area Unit',
@@ -321,7 +326,6 @@ class ProductionPlanLine(models.Model):
             ('sum', 'Sum'),
             ('per_production_unit', 'Per production unit'),
             ('per_consumption_unit', 'Per consumption unit'),
-            ('of_gross_production', '% of gross production'),
             ('of_gross_production_value', '% of gross production value'),
             ('of_total_costs', '% of total costs'),
         ],
@@ -393,7 +397,7 @@ class ProductionPlanLine(models.Model):
         for line in self:
             if line.product_id:
                 line.product_category_id = line.product_id.categ_id or line.product_category_id
-                line.price = line.product_id.lst_price or line.price
+                line.price = line.product_id.price or line.price
                 line.product_uom_id = line.product_id.uom_id or line.product_uom
 
     @api.depends('season_id', 'period_id')
@@ -435,7 +439,7 @@ class ProductionPlanLine(models.Model):
             # Adjust application rate value if it is a percentage
             application_rate = (line.application_rate /
                                 100.0 if line.application_rate_type
-                                         == 'percentage' else line.application_rate)
+                                == 'percentage' else line.application_rate)
             line_production = line.quantity * line.application_rate
             line_value = line.price * line_production
             if line.application_type == 'sum':

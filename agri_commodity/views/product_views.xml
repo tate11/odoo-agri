@@ -3,6 +3,21 @@
     <data>
         <!-- Product Template -->
 
+        <record id="product_template_action" model="ir.actions.act_window">
+            <field name="name">Agri Commodities</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.template</field>
+            <field name="view_mode">tree,form,kanban</field>
+            <field name="domain">[('is_agri_commodity','=', True)]</field>
+            <field name="context">{'default_is_commodity': True, 'default_type': 'commodity'}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new commodity
+                </p>
+            </field>
+        </record>
+
+
         <record id="product_template_search_view" model="ir.ui.view">
             <field name="name">product.template.search.view.inherit.agri.commodity</field>
             <field name="model">product.template</field>
@@ -11,9 +26,9 @@
             <field name="arch" type="xml">
                 <xpath expr="//filter[@name='consumable']" position="after">
                     <separator/>
-                    <filter string="Manufactured Products" name="manufactured_products"
-                            domain="[('grading_ids', '!=', False)]"/>
-                    <filter string="Grading Components" name="components" domain="[('grading_line_ids', '!=', False)]"/>
+                    <filter string="Agri Commodity Products" name="graded_products"
+                            domain="[('is_agri_commodity', '!=', False)]"/>
+                    <filter string="Graded Products" name="components" domain="[('grading_line_ids', '!=', False)]"/>
                 </xpath>
             </field>
         </record>
@@ -33,13 +48,12 @@
             </field>
         </record>
 
-        <record id="product_template_action" model="ir.actions.act_window">
-            <field name="name">Products</field>
-            <field name="res_model">product.template</field>
-            <field name="search_view_id" ref="agri_commodity.product_template_search_view"/>
-            <field name="view_mode">kanban,tree,form</field>
-            <field name="context">{"search_default_consumable": 1, 'default_type': 'product'}</field>
-        </record>
+        <menuitem id="agri_product_menu" name="Products"
+                  parent="agri.agri_menu_root"
+                  sequence="30"/>
+
+        <menuitem id="agri_commodity_product_template_menu" name="Agri Commodities" action="product_template_action"
+                  parent="agri.agri_menu_root" sequence="10"/>
 
         <!--
                 <menuitem id="menu_mrp_product_form"

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- agri.delivery views -->
+
+    <record id="agri_delivery_view_search" model="ir.ui.view">
+        <field name="name">agri.delivery.view.search</field>
+        <field name="model">agri.delivery</field>
+        <field name="arch" type="xml">
+            <search string="Deliveries">
+                <field name="name" />
+                <field name="partner_id" />
+                <field name="delivery_number" />
+                <field name="destination_partner_id" />
+                <field name="sale_order_id" />
+                <field name="transport_partner_id" />
+                <separator />
+                <group expand="0" string="Group By">
+                    <filter string="Partner" name="group_partner" context="{'group_by': 'partner_id'}" />
+                    <filter string="Destination" name="group_destination_partner" context="{'group_by': 'destination_partner_id'}" />
+                    <filter string="Sale Order" name="group_sale_order" context="{'group_by': 'sale_order_id'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="agri_delivery_view_tree" model="ir.ui.view">
+        <field name="name">agri.delivery.view.tree</field>
+        <field name="model">agri.delivery</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <tree string="Deliveries">
+                <field name="name" />
+                <field name="partner_id" />
+                <field name="company_id" groups="base.group_multi_company" />
+                <field name="delivery_date" />
+                <field name="delivered_mass" />
+                <field name="delivered_mass_uom" />
+                <field name="destination_partner_id" />                
+                <field name="state" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="agri_delivery_view_form" model="ir.ui.view">
+        <field name="name">agri.delivery.view.form</field>
+        <field name="model">agri.delivery</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <form string="Deliveries">
+                <header>
+                    <button string="Delivered" type="object" name="action_deliver" groups="agri.agri_group_user" class="oe_highlight" states="draft" />
+                    <button string="Done" type="object" name="action_done" domain="[('state', '=', 'delivered'), ('grading_id', '!=', False)]"/>
+                    <button string="Done" type="object" name="action_done" domain="[('state', '=', 'delivered'), ('grading_id', '=', False)]" confirm="Delivery is not yet graded. Are you sure?" />
+                    <field name="state" widget="statusbar" />
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                                <field name="name" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id" />
+                            <field name="company_id" groups="base.group_multi_company" />
+                            <field name="sale_order_id" />
+                       </group>
+                        <group>
+                            <field name="delivery_date" />
+                            <field name="delivery_number"  />
+                            <field name="destination_partner_id" invisible="1" />
+                            <field name="destination_address_id" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Details" name="details_tab">
+                            <group>
+                                <group>
+                                    <label for="delivered_mass" />
+                                    <div style="display: inline-flex">
+                                        <field name="delivered_mass" class="oe_inline" />
+                                        <span class="oe_read_only"><![CDATA[&nbsp;]]></span>
+                                        <field name="delivered_mass_uom" class="oe_inline" options="{'no_open': 1}" />
+                                    </div>
+                                    <field name="transport_partner_id"  />
+                                </group>
+                                <group>
+                                    <field name="advance_payment_date" />
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Grading" name="grading_tab">
+                            <field name="grading_id" nolabel="1" />
+                        </page>
+                        <page string="Notes" name="nots_tab">
+                            <field name="notes" nolabel="1" />
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" />
+                    <field name="message_ids" widget="mail_thread" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- actions -->
+
+    <record id="agri_delivery_action" model="ir.actions.act_window">
+        <field name="name">Deliveries</field>
+        <field name="res_model">agri.delivery</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a delivery
+            </p>
+        </field>
+    </record>
+
+</odoo>

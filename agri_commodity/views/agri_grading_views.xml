@@ -43,6 +43,8 @@
                                     <field name="product_uom_id" options="{'no_open':True,'no_create':True}"
                                            groups="uom.group_uom"/>
                                 </div>
+                                <field name="currency_id" invisible="1"/>
+                                <field name="price"/>
                             </group>
                             <group>
                                 <field name="code"/>
@@ -51,22 +53,18 @@
                             </group>
                         </group>
                         <notebook>
-                            <page string="Components">
+                            <page string="Gradings">
                                 <field name="grading_line_ids" widget="one2many"
-                                       context="{'default_parent_product_tmpl_id': product_tmpl_id, 'default_product_id': False, 'default_company_id': company_id}">
+                                       context="{'default_grading_id': id, 'default_grading_product_tmpl_id': product_tmpl_id, 'default_product_id': False, 'default_company_id': company_id}">
                                     <tree string="Components" editable="bottom">
                                         <field name="company_id" invisible="1"/>
                                         <field name="sequence" widget="handle"/>
                                         <field name="product_id" context="{'default_type': 'product'}"/>
                                         <field name="product_tmpl_id" invisible="1"/>
-                                        <button name="action_see_attachments" type="object" icon="fa-files-o"
-                                                aria-label="Product Attachments" title="Product Attachments"
-                                                class="float-right oe_read_only"/>
-                                        <field name="attachments_count" class="text-left oe_read_only"
-                                               string=" "/>
-                                        <field name="product_qty"/>
+                                        <field name="unit_price"/>
                                         <field name="product_uom_category_id" invisible="1"/>
-                                        <field name="parent_product_tmpl_id" invisible="1"/>
+                                        <field name="grading_product_tmpl_id" invisible="1"/>
+                                        <field name="grading_product_tmpl_categ_id" invisible="1"/>
                                         <field name="possible_grading_product_template_attribute_value_ids"
                                                invisible="1"/>
                                         <field name="product_uom_id" options="{'no_open':True,'no_create':True}"
@@ -76,6 +74,9 @@
                                                options="{'no_create': True}"
                                                attrs="{'column_invisible': [('parent.product_id', '!=', False)]}"
                                                groups="product.group_product_variant"/>
+                                        <field name="percent"/>
+                                        <field name="product_qty"/>
+                                        <field name="price"/>
                                     </tree>
                                 </field>
                             </page>
@@ -199,7 +200,8 @@
                     <group>
                         <group string="Product">
                             <field name="product_id"/>
-                            <field name="parent_product_tmpl_id" invisible="1"/>
+                            <field name="grading_product_tmpl_id" invisible="1"/>
+                            <field name="grading_product_tmpl_categ_id" invisible="1"/>
                             <label for="product_qty" string="Quantity"/>
                             <div class="o_row">
                                 <field name="product_qty"/>

@@ -12,8 +12,9 @@
     'version': '0.1',
     'depends': ['agri', 'product', 'stock'],
     'data': [
+        'data/agri_delivery_sequence.xml',
         'security/ir.model.access.csv',
-        # 'views/menus.xml',
+        'views/agri_delivery_views.xml',
         'views/agri_grading_views.xml',
         'views/product_views.xml',
         'views/templates.xml',
