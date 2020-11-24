@@ -397,7 +397,7 @@ class ProductionPlanLine(models.Model):
         for line in self:
             if line.product_id:
                 line.product_category_id = line.product_id.categ_id or line.product_category_id
-                line.price = line.product_id.price or line.price
+                line.price = line.product_id.lst_price or line.price
                 line.product_uom_id = line.product_id.uom_id or line.product_uom
 
     @api.depends('season_id', 'period_id')
@@ -426,16 +426,14 @@ class ProductionPlanLine(models.Model):
                  'production_plan_id.total_production',
                  'production_plan_id.gross_production_value')
     def _compute_subtotal(self):
-        period_total_production = 0.0
-        for line in self.production_plan_id.line_ids:
-            x = line.date_range_id.id
-            y = self.date_range_id.id
-            if line.date_range_id.id == self.date_range_id.id:
-                period_total_production += line.production
-        total_land_area = self.production_plan_id.total_land_area
-        period_gross_production_value = self.production_plan_id.gross_production_value
-        period_total_costs = self.production_plan_id.total_costs
         for line in self:
+            period_total_production = sum(
+                line.production_plan_id.line_ids.filtered(
+                    lambda plan_line: line.date_range_id.id == plan_line.
+                    date_range_id.id).mapped('production'))
+            total_land_area = line.production_plan_id.total_land_area
+            period_gross_production_value = line.production_plan_id.gross_production_value
+            period_total_costs = line.production_plan_id.total_costs
             # Adjust application rate value if it is a percentage
             application_rate = (line.application_rate /
                                 100.0 if line.application_rate_type
