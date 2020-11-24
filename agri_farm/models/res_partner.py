@@ -25,11 +25,10 @@ class ResPartner(models.Model):
 
     def _create_farm_version(self):
         for partner in self:
-            farm_version = self.env['agri.farm.version'].create({
-                'partner_id':
-                partner.id,
-            })
-
+            vals = {'partner_id': partner.id}
+            if partner.company_id:
+                vals.update(company_id=partner.company_id.id)
+            farm_version = self.env['agri.farm.version'].create(vals)
             partner.write({'farm_version_id': farm_version.id})
 
     @api.model
@@ -49,3 +48,12 @@ class ResPartner(models.Model):
         partner = super(ResPartner, self).create(vals)
         partner.sudo()._create_per_partner_farm_version()
         return partner
+
+    def write(self, vals):
+        res = super(ResPartner, self).write(vals)
+        if 'company_id' in vals:
+            farm_versions = self.env['agri.farm.version'].search([
+                ('partner_id', '=', self.id)
+            ])
+            farm_versions.write({'company_id': vals['company_id']})
+        return res
