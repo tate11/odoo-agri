@@ -73,7 +73,6 @@
                         <group>
                             <field name="delivery_date" />
                             <field name="delivery_number"  />
-                            <field name="destination_address_id" />
                         </group>
                     </group>
                     <notebook>
@@ -91,7 +90,11 @@
                                         <span class="oe_read_only"><![CDATA[&nbsp;]]></span>
                                         <field name="delivered_mass_uom" class="oe_inline" options="{'no_open': 1}" />
                                     </div>
-                                    <field name="grading_id" />
+                                    <field name="grading_id" context="{
+                                        'default_delivery_id': id, 
+                                        'default_product_qty': delivered_mass, 
+                                        'default_product_uom_id': delivered_mass_uom
+                                    }" />
                                 </group>
                             </group>
                         </page>

@@ -62,10 +62,12 @@ class Delivery(models.Model):
         states={'draft': [('readonly', False)]},
         readonly=True,
         required=True)
-    grading_id = fields.Many2one('agri.grading',
-                                 string='Grading',
-                                 states={'done': [('readonly', True)]},
-                                 readonly=False)
+    grading_id = fields.Many2one(
+        'agri.grading',
+        string='Grading',
+        domain="['|', ('delivery_id', '=', False), ('delivery_id', '=', id)]",
+        states={'done': [('readonly', True)]},
+        readonly=False)
     sale_order_id = fields.Many2one(
         'sale.order',
         ondelete='restrict',

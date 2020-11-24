@@ -29,23 +29,26 @@ class Grading(models.Model):
         'Product',
         check_company=True,
         domain="[('type', 'in', ['product', 'consu']), "
-               "'|', "
-               "('company_id', '=', False), "
-               "('company_id', '=', company_id)]",
+        "'|', "
+        "('company_id', '=', False), "
+        "('company_id', '=', company_id)]",
         required=True)
     product_id = fields.Many2one(
         'product.product',
         'Product Variant',
         check_company=True,
         domain="['&', "
-               "('product_tmpl_id', '=', product_tmpl_id), "
-               "('type', 'in', ['product', 'consu']),  "
-               "'|', "
-               "('company_id', '=', False), "
-               "('company_id', '=', company_id)]",
+        "('product_tmpl_id', '=', product_tmpl_id), "
+        "('type', 'in', ['product', 'consu']),  "
+        "'|', "
+        "('company_id', '=', False), "
+        "('company_id', '=', company_id)]",
         help=
         "If a product variant is defined the Grading is available only for this product."
     )
+    delivery_id = fields.Many2one('agri.delivery',
+                                  string='Delivery',
+                                  copy=False)
     grading_line_ids = fields.One2many('agri.grading.line',
                                        'grading_id',
                                        'Grading Lines',
@@ -123,9 +126,9 @@ class Grading(models.Model):
                     raise ValidationError(
                         _("Grading cannot concern product %s and have a line with attributes (%s) at the same time."
                           ) % (grading.product_id.display_name, ", ".join([
-                            ptav.display_name for ptav in grading_line.
-                                grading_product_template_attribute_value_ids
-                        ])))
+                              ptav.display_name for ptav in grading_line.
+                              grading_product_template_attribute_value_ids
+                          ])))
                 for ptav in grading_line.grading_product_template_attribute_value_ids:
                     if ptav.product_tmpl_id != grading.product_tmpl_id:
                         raise ValidationError(
@@ -148,14 +151,14 @@ class Grading(models.Model):
             if not grading.product_uom_id or not grading.product_tmpl_id:
                 return
             if (grading.product_uom_id.category_id.id !=
-                grading.product_tmpl_id.uom_id.category_id.id):
+                    grading.product_tmpl_id.uom_id.category_id.id):
                 grading.product_uom_id = grading.product_tmpl_id.uom_id.id
                 res['warning'] = {
                     'title':
-                        _('Warning'),
+                    _('Warning'),
                     'message':
-                        _('The Product Unit of Measure you chose has a different '
-                          'category than in the product form.')
+                    _('The Product Unit of Measure you chose has a different '
+                      'category than in the product form.')
                 }
         return res
 
@@ -174,9 +177,9 @@ class Grading(models.Model):
         res = super().create(vals_list)
         for grading in res:
             if float_compare(
-                grading.product_qty,
-                0,
-                precision_rounding=grading.product_uom_id.rounding) <= 0:
+                    grading.product_qty,
+                    0,
+                    precision_rounding=grading.product_uom_id.rounding) <= 0:
                 raise UserError(_('The quantity to produce must be positive!'))
         return res
 
@@ -184,9 +187,9 @@ class Grading(models.Model):
         res = super().write(values)
         for grading in self:
             if float_compare(
-                grading.product_qty,
-                0,
-                precision_rounding=grading.product_uom_id.rounding) <= 0:
+                    grading.product_qty,
+                    0,
+                    precision_rounding=grading.product_uom_id.rounding) <= 0:
                 raise UserError(_('The quantity to produce must be positive!'))
         return res
 
@@ -246,7 +249,7 @@ class Grading(models.Model):
                       company_id=False):
         """ Finds BoM for particular product, picking and company """
         if (product and product.type == 'service'
-            or product_tmpl and product_tmpl.type == 'service'):
+                or product_tmpl and product_tmpl.type == 'service'):
             return False
         domain = self._grading_find_domain(product_tmpl=product_tmpl,
                                            product=product,
@@ -292,8 +295,8 @@ class GradingLine(models.Model):
         'product.product',
         'Component',
         domain="[('product_tmpl_id', '!=', False), "
-               "('product_tmpl_id', '!=', grading_product_tmpl_id), "
-               "('product_tmpl_id.categ_id', '=', grading_product_tmpl_categ_id)]",
+        "('product_tmpl_id', '!=', grading_product_tmpl_id), "
+        "('product_tmpl_id.categ_id', '=', grading_product_tmpl_categ_id)]",
         required=True,
         check_company=True)
     product_tmpl_id = fields.Many2one('product.template',
@@ -417,10 +420,10 @@ class GradingLine(models.Model):
                 line.product_uom_id = line.product_id.uom_id.id
                 res['warning'] = {
                     'title':
-                        _('Warning'),
+                    _('Warning'),
                     'message':
-                        _('The Product Unit of Measure you chose has a different '
-                          'category than in the product form.')
+                    _('The Product Unit of Measure you chose has a different '
+                      'category than in the product form.')
                 }
         return res
 
@@ -463,12 +466,12 @@ class GradingLine(models.Model):
             return False
         if self.grading_product_template_attribute_value_ids:
             for ptal, iter_ptav in groupby(
-                self.grading_product_template_attribute_value_ids.sorted(
-                    'attribute_line_id'),
-                lambda ptav: ptav.attribute_line_id):
+                    self.grading_product_template_attribute_value_ids.sorted(
+                        'attribute_line_id'),
+                    lambda ptav: ptav.attribute_line_id):
                 if not any([
-                    ptav in product.product_template_attribute_value_ids
-                    for ptav in iter_ptav
+                        ptav in product.product_template_attribute_value_ids
+                        for ptav in iter_ptav
                 ]):
                     return True
         return False
@@ -483,29 +486,29 @@ class GradingLine(models.Model):
         attachment_view = self.env.ref('agri.agri_document_view_kanban')
         return {
             'name':
-                _('Attachments'),
+            _('Attachments'),
             'domain':
-                domain,
+            domain,
             'res_model':
-                'mrp.document',
+            'mrp.document',
             'type':
-                'ir.actions.act_window',
+            'ir.actions.act_window',
             'view_id':
-                attachment_view.id,
+            attachment_view.id,
             'views': [(attachment_view.id, 'kanban'), (False, 'form')],
             'view_mode':
-                'kanban,tree,form',
+            'kanban,tree,form',
             'help':
-                _('''<p class="o_view_nocontent_smiling_face">
+            _('''<p class="o_view_nocontent_smiling_face">
                         Upload files to your product
                     </p><p>
                         Use this feature to store any files, like drawings or specifications.
                     </p>'''),
             'limit':
-                80,
+            80,
             'context':
-                "{'default_res_model': '%s','default_res_id': %d, 'default_company_id': %s}"
-                % ('product.product', self.product_id.id, self.company_id.id)
+            "{'default_res_model': '%s','default_res_id': %d, 'default_company_id': %s}"
+            % ('product.product', self.product_id.id, self.company_id.id)
         }
 
 
@@ -543,14 +546,14 @@ class ByProduct(models.Model):
         res = {}
         for byproduct in self:
             if (byproduct.product_uom_id and byproduct.product_id
-                and byproduct.product_uom_id.category_id !=
-                byproduct.product_id.uom_id.category_id):
+                    and byproduct.product_uom_id.category_id !=
+                    byproduct.product_id.uom_id.category_id):
                 res['warning'] = {
                     'title':
-                        _('Warning'),
+                    _('Warning'),
                     'message':
-                        _('The unit of measure you choose is in a different '
-                          'category than the product unit of measure.')
+                    _('The unit of measure you choose is in a different '
+                      'category than the product unit of measure.')
                 }
                 byproduct.product_uom_id = byproduct.product_id.uom_id.id
         return res
