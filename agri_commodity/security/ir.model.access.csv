@@ -1,4 +1,7 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_agri_delivery_all,agri_delivery_all,model_agri_delivery,base.group_user,1,0,0,0
+access_agri_delivery_user,agri_delivery_user,model_agri_delivery,agri.agri_group_user,1,0,0,0
+access_agri_delivery_manager,agri_delivery_manager,model_agri_delivery,agri.agri_group_manager,1,1,1,1
 access_agri_grading_all,agri_grading_all,model_agri_grading,base.group_user,1,0,0,0
 access_agri_grading_user,agri_grading_user,model_agri_grading,agri.agri_group_user,1,0,0,0
 access_agri_grading_manager,agri_grading_manager,model_agri_grading,agri.agri_group_manager,1,1,1,1

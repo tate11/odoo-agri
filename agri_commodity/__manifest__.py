@@ -10,7 +10,7 @@
     'website': "https://agrista.com",
     'category': 'Manufacturing',
     'version': '0.1',
-    'depends': ['agri', 'product', 'stock'],
+    'depends': ['agri', 'product', 'sale', 'stock'],
     'data': [
         'data/agri_delivery_sequence.xml',
         'security/ir.model.access.csv',

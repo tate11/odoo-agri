@@ -34,7 +34,7 @@ class Delivery(models.Model):
                                   readonly=True,
                                   copy=False,
                                   tracking=True)
-    note = fields.Text('Notes')
+    notes = fields.Text('Notes')
     delivered_mass = fields.Float('Delivered Mass',
                                   digits='Unit of Measure',
                                   states={'draft': [('readonly', False)]},
