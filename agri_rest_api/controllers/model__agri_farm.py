@@ -103,12 +103,19 @@ class ControllerREST(http.Controller):
                 type='http',
                 auth='admin',
                 cors=True,
-                csrf=False)
+                csrf=False,
+                website=True)
     @check_permissions
     def api__agri_farm__POST(self, **kw):
+        default_vals = dict(DEFAULTS__agri_farm__create_one__JSON)
+        if request.website and request.website.company_id:
+            website = request.website
+            default_vals.update({
+                'company_id': website.company_id.id,
+            })
         return wrap__resource__create_one(
             modelname='agri.farm',
-            default_vals=DEFAULTS__agri_farm__create_one__JSON,
+            default_vals=default_vals,
             success_code=OUT__agri_farm__create_one__SUCCESS_CODE,
             OUT_fields=OUT__agri_farm__create_one__SCHEMA)
 
