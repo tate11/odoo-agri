@@ -48,6 +48,61 @@
             </field>
         </record>
 
+        <record id="product_template_form_view" model="ir.ui.view">
+            <field name="name">product.template.common.form.inherit.agri.commodity</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('oe_title')]/div[@name='options']" position="inside">
+                    <div>
+                        <field name="is_agri_commodity" />
+                        <label for="is_agri_commodity" />
+                    </div>
+                </xpath>
+                <xpath expr="//page[@name='general_information']" position="after">
+                    <page string="Grading" name="grading" attrs="{'invisible': [('is_agri_commodity', '=', False)]}">
+                        <group>
+                            <group>
+                                <field name="default_grading_id" invisible="1" />
+                                <field name="delivery_loss_perc" attrs="{'required': [('is_agri_commodity', '=', True)]}" />
+                            </group>
+                        </group>
+                        <group>
+                            <separator string="Grading Lines" />
+                            <field name="default_grading_line_ids" nolabel="1" colspan="2" widget="one2many"
+                                   context="{'default_grading_id': default_grading_id, 'default_grading_product_tmpl_id': id, 'default_grading_product_qty': 1.0, 'default_product_id': False, 'default_company_id': company_id}">
+                                <tree string="Components" editable="bottom">
+                                    <field name="company_id" invisible="1"/>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="product_id" context="{'default_type': 'product'}"/>
+                                    <field name="product_tmpl_id" invisible="1"/>
+                                    <field name="unit_price"/>
+                                    <field name="product_uom_category_id" invisible="1"/>
+                                    <field name="grading_product_tmpl_id" invisible="1"/>
+                                    <field name="grading_product_tmpl_categ_id" invisible="1"/>
+                                    <field name="possible_grading_product_template_attribute_value_ids" invisible="1"/>
+                                    <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="uom.group_uom"/>
+                                    <field name="percent"/>
+                                    <field name="product_qty"/>
+                                    <field name="price"/>
+                                </tree>
+                            </field>
+                            <separator string="By-products" />
+                            <field name="default_grading_byproduct_ids" nolabel="1" colspan="2" widget="one2many" 
+                                   context="{'default_grading_id': default_grading_id, 'default_company_id': company_id}">
+                                <tree string="By-products" editable="top">
+                                    <field name="company_id" invisible="1"/>
+                                    <field name="product_id" context="{'default_type': 'product'}"/>
+                                    <field name="product_qty"/>
+                                    <field name="product_uom_id" groups="uom.group_uom"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
         <menuitem id="agri_product_menu" name="Products"
                   parent="agri.agri_menu_root"
                   sequence="30"/>

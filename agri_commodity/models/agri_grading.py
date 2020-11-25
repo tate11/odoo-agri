@@ -430,8 +430,8 @@ class GradingLine(models.Model):
     @api.depends('grading_product_qty', 'product_uom_id', 'percent')
     def _compute_product_price(self):
         for line in self:
-            line.product_qty = (line.grading_id.product_qty * line.percent /
-                                100.0)
+            line.product_qty = (line.grading_id.product_qty if line.grading_id
+                                else 1.0) * line.percent / 100.0
             if line.product_id:
                 unit_price = line.product_id.uom_id._compute_price(
                     line.product_id.with_context(
@@ -533,7 +533,7 @@ class ByProduct(models.Model):
     product_uom_id = fields.Many2one('uom.uom',
                                      'Unit of Measure',
                                      required=True)
-    grading_id = fields.Many2one('agri.grading', 'BoM', ondelete='cascade')
+    grading_id = fields.Many2one('agri.grading', 'Grading', ondelete='cascade')
 
     @api.onchange('product_id')
     def _compute_product_id(self):
