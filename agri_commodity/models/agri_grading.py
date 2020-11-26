@@ -68,7 +68,7 @@ class Grading(models.Model):
         readonly=True,
         default=lambda self: self.env.user.company_id.currency_id)
     price = fields.Monetary('Price',
-                            compute='_compute_product_price',
+                            compute='_compute_grading_lines',
                             digits='Product Price')
     product_uom_id = fields.Many2one(
         'uom.uom',
@@ -140,7 +140,7 @@ class Grading(models.Model):
 
     @api.depends('grading_line_ids', 'grading_line_ids.price')
     @api.onchange('grading_line_ids', 'grading_line_ids.price')
-    def _compute_product_price(self):
+    def _compute_grading_lines(self):
         for grading in self:
             grading.price = sum(grading.grading_line_ids.mapped('price'))
 
@@ -308,7 +308,7 @@ class GradingLine(models.Model):
                                  index=True,
                                  readonly=True)
     product_qty = fields.Float('Quantity',
-                               compute='_compute_product_price',
+                               compute='_compute_product_qty',
                                digits='Product Unit of Measure',
                                store=True)
     product_uom_id = fields.Many2one(
@@ -324,11 +324,11 @@ class GradingLine(models.Model):
     currency_id = fields.Many2one(related='grading_id.currency_id', store=True)
     # price: total price, context dependent (partner, pricelist, quantity)
     unit_price = fields.Monetary('Unit Price',
-                                 compute='_compute_product_price',
+                                 compute='_compute_product_qty',
                                  digits='Product Price',
                                  store=True)
     price = fields.Monetary('Price',
-                            compute='_compute_product_price',
+                            compute='_compute_product_qty',
                             digits='Product Price',
                             store=True)
     percent = fields.Float('Percent',
@@ -428,22 +428,16 @@ class GradingLine(models.Model):
         return res
 
     @api.depends('grading_product_qty', 'product_uom_id', 'percent')
-    def _compute_product_price(self):
+    def _compute_product_qty(self):
         for line in self:
             line.product_qty = (line.grading_id.product_qty if line.grading_id
                                 else 1.0) * line.percent / 100.0
-            if line.product_id:
-                unit_price = line.product_id.uom_id._compute_price(
+            line.unit_price = line.product_id.uom_id._compute_price(
                     line.product_id.with_context(
                         force_company=line.company_id.id).list_price,
-                    line.product_uom_id)
-                line.unit_price = unit_price
-                line.price = unit_price * line.product_qty
-
-    @api.onchange('product_id')
-    def _compute_product_id(self):
-        for line in self:
-            line.product_uom_id = line.product_id.uom_id.id if line.product_id else False
+                    line.product_uom_id) if line.product_id else 0.0
+            line.price = line.unit_price * line.product_qty
+        self.grading_id._compute_grading_lines()
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -539,7 +533,7 @@ class ByProduct(models.Model):
     def _compute_product_id(self):
         """ Changes UoM if product_id changes. """
         for byproduct in self:
-            self.product_uom_id = self.product_id.uom_id.id if self.product_id else False
+            byproduct.product_uom_id = byproduct.product_id.uom_id.id if byproduct.product_id else False
 
     @api.onchange('product_uom_id')
     def _compute_uom(self):

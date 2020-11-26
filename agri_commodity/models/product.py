@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from datetime import timedelta
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
@@ -14,11 +11,7 @@ class ProductTemplate(models.Model):
     delivery_loss_perc = fields.Float('Delivery Loss Percent',
                                       default=0.0,
                                       digits=(3, 2))
-    default_grading_id = fields.Many2one('agri.grading', string='Grading')
-    default_grading_product_tmpl_id = fields.Many2one(
-        related='default_grading_id.product_tmpl_id')
-    default_grading_product_uom_id = fields.Many2one(
-        related='default_grading_id.product_uom_id')
+    default_grading_id = fields.Many2one('agri.grading', string='Default Grading')
     default_grading_line_ids = fields.One2many(
         related='default_grading_id.grading_line_ids', readonly=False)
     default_grading_byproduct_ids = fields.One2many(

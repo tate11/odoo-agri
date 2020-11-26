@@ -29,6 +29,7 @@
                             <field name="purchase_ok" invisible="1"/>
                             <field name="is_purchase"
                                    attrs="{'invisible': ['|', ('purchase_ok', '=', False), ('sale_ok', '=', False)]}"/>
+                            <field name="company_id" invisible="1"/>
                             <field name="currency_id" invisible="1"/>
                             <label for="price"
                                    attrs="{'invisible': ['|', ('application_type', '=', 'of_gross_production'), ('application_type', '=', 'of_gross_production_value'), ('application_type', '=', 'of_total_costs')]}"/>
@@ -67,6 +68,28 @@
                             <field name="amount_total" force_save="1"/>
                             <field name="production" invisible="1" force_save="1"/>
                         </group>
+                    </group>
+                    <group attrs="{'invisible': [('grading_id', '=', False)]}">
+                        <field name="grading_id" invisible="1"/>
+                        <separator string="Grading Lines" />
+                        <field name="grading_line_ids" nolabel="1" colspan="2" widget="one2many"
+                               context="{'default_grading_id': grading_id, 'default_grading_product_tmpl_id': product_id, 'default_product_id': False, 'default_company_id': company_id}">
+                            <tree string="Components" editable="bottom">
+                                <field name="company_id" invisible="1"/>
+                                <field name="sequence" widget="handle"/>
+                                <field name="product_id" context="{'default_type': 'product'}"/>
+                                <field name="product_tmpl_id" invisible="1"/>
+                                <field name="unit_price"/>
+                                <field name="product_uom_category_id" invisible="1"/>
+                                <field name="grading_product_tmpl_id" invisible="1"/>
+                                <field name="grading_product_tmpl_categ_id" invisible="1"/>
+                                <field name="possible_grading_product_template_attribute_value_ids" invisible="1"/>
+                                <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="uom.group_uom"/>
+                                <field name="percent"/>
+                                <field name="product_qty"/>
+                                <field name="price"/>
+                            </tree>
+                        </field>
                     </group>
                 </sheet>
             </form>

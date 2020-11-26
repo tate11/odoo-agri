@@ -173,7 +173,7 @@ class ProductionPlan(models.Model):
     @api.onchange('season_id', 'period_id')
     def _onchange_season_period(self):
         for plan in self:
-            plan.line_ids._compute_calendar_period_ids()
+            plan.line_ids._compute_calendar_periods()
 
     @api.depends('farm_field_ids.area')
     def _compute_total_land_area(self):
@@ -272,8 +272,8 @@ class ProductionPlanLine(models.Model):
     period_id = fields.Many2one(related='production_plan_id.period_id',
                                 string='Plan Period',
                                 readonly=True)
-    calendar_period_ids = fields.One2many(
-        'date.range', compute='_compute_calendar_period_ids')
+    calendar_period_ids = fields.One2many('date.range',
+                                          compute='_compute_calendar_periods')
     date_range_id = fields.Many2one(
         'date.range',
         string='Period',
@@ -296,11 +296,20 @@ class ProductionPlanLine(models.Model):
                                  states={'draft': [('readonly', False)]},
                                  readonly=True,
                                  required=True)
+    grading_id = fields.Many2one('agri.grading',
+                                 string='Grading',
+                                 ondelete='set null',
+                                 states={'draft': [('readonly', False)]},
+                                 readonly=True)
+    grading_line_ids = fields.One2many(related='grading_id.grading_line_ids',
+                                       readonly=False)
     is_purchase = fields.Boolean('Is Purchase', default='_compute_is_purchase')
     price = fields.Monetary(string='Price',
                             states={'draft': [('readonly', False)]},
                             readonly=True,
                             required=True)
+    company_id = fields.Many2one(related='production_plan_id.company_id',
+                                 readonly=True)
     currency_id = fields.Many2one(related='production_plan_id.currency_id',
                                   readonly=True)
     product_uom_id = fields.Many2one('uom.uom',
@@ -387,10 +396,34 @@ class ProductionPlanLine(models.Model):
 
     @api.depends('production_plan_id')
     @api.onchange('product_category_id', 'production_plan_id')
-    def _compute_payment_term_id(self):
+    def _compute_payment_term(self):
         for line in self:
             if line.production_plan_id and not line.payment_term_id:
                 line.payment_term_id = line.production_plan_id.payment_term_id
+
+    @api.onchange('product_id', 'product_uom_id')
+    def _compute_grading(self):
+        self.ensure_one()
+        for line in self:
+            if line.product_id and line.product_uom_id:
+                if (line.grading_id and line.grading_id.product_tmpl_id.id !=
+                        line.product_id.id) or line.application_type not in (
+                            'sum', 'per_consumption_unit'):
+                    line_data = line.copy_data({'grading_id': False})
+                    line.grading_id.unlink()
+                    line.write(line_data[0])
+                if not line.grading_id and line.application_type in (
+                        'sum', 'per_consumption_unit'):
+                    vals = {
+                        'product_qty': line.quantity,
+                        'product_uom_id': line.product_uom_id.id
+                    }
+                    if line.product_id.default_grading_id:
+                        line.grading_id = line.product_id.default_grading_id.copy(
+                            vals)
+                    else:
+                        vals.update(product_tmpl_id=line.product_id.id)
+                        line.grading_id = self.env['agri.grading'].create(vals)
 
     @api.onchange('product_id')
     def _compute_product_price_uom(self):
@@ -402,7 +435,7 @@ class ProductionPlanLine(models.Model):
 
     @api.depends('season_id', 'period_id')
     @api.onchange('product_category_id', 'season_id', 'period_id')
-    def _compute_calendar_period_ids(self):
+    def _compute_calendar_periods(self):
         for line in self:
             domain = []
             if line.season_id:
@@ -420,8 +453,10 @@ class ProductionPlanLine(models.Model):
                                 ) if line.product_category_id else False
 
     @api.onchange('price', 'quantity', 'application_type', 'application_rate',
-                  'application_rate_type')
-    @api.depends('price', 'quantity', 'application_rate',
+                  'application_rate_type', 'grading_id',
+                  'grading_id.price')
+    @api.depends('price', 'quantity', 'application_rate', 'grading_id',
+                 'grading_id.price',
                  'production_plan_id.total_land_area',
                  'production_plan_id.total_production',
                  'production_plan_id.gross_production_value')
@@ -445,6 +480,8 @@ class ProductionPlanLine(models.Model):
                 line.production = line_production
             elif line.application_type == 'per_consumption_unit':
                 amount_total = total_land_area * line_value
+                line_production *= total_land_area
+                line.production = line_production
             elif line.application_type == 'per_production_unit':
                 amount_total = period_total_production * line_value
             elif line.application_type == 'of_gross_production':
@@ -456,6 +493,9 @@ class ProductionPlanLine(models.Model):
                 amount_total = period_total_costs * application_rate
             else:
                 amount_total = value
+            if line.grading_id:
+                line.grading_id.product_qty = line_production
+                amount_total = line.grading_id.price
             line.amount_total = amount_total
             # mock
             if line.sale_ok:
