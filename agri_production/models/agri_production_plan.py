@@ -412,8 +412,9 @@ class ProductionPlanLine(models.Model):
                     line_data = line.copy_data({'grading_id': False})
                     line.grading_id.unlink()
                     line.write(line_data[0])
-                if not line.grading_id and line.application_type in (
-                        'sum', 'per_consumption_unit'):
+                if (not line.grading_id and line.product_id.is_agri_commodity
+                        and line.application_type
+                        in ('sum', 'per_consumption_unit')):
                     vals = {
                         'product_qty': line.quantity,
                         'product_uom_id': line.product_uom_id.id
@@ -453,11 +454,9 @@ class ProductionPlanLine(models.Model):
                                 ) if line.product_category_id else False
 
     @api.onchange('price', 'quantity', 'application_type', 'application_rate',
-                  'application_rate_type', 'grading_id',
-                  'grading_id.price')
+                  'application_rate_type', 'grading_id', 'grading_id.price')
     @api.depends('price', 'quantity', 'application_rate', 'grading_id',
-                 'grading_id.price',
-                 'production_plan_id.total_land_area',
+                 'grading_id.price', 'production_plan_id.total_land_area',
                  'production_plan_id.total_production',
                  'production_plan_id.gross_production_value')
     def _compute_subtotal(self):
