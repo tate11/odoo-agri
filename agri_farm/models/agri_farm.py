@@ -78,21 +78,21 @@ class Farm(models.Model):
         return farm
 
     def write(self, vals):
+        partner_id = self.partner_id.id
         res = super(Farm, self).write(vals)
-        if 'partner_id' in vals:
-            farm = self.browse(self.id)
-            farm.message_unsubscribe([self.partner_id.id])
-            farm.message_subscribe([farm.partner_id.id])
-            for field in farm.farm_field_ids:
-                field.message_unsubscribe([self.partner_id.id])
-                field.message_subscribe([farm.partner_id.id])
+        if 'partner_id' in vals and partner_id != vals['partner_id']:
+            self.message_unsubscribe([partner_id])
+            self.message_subscribe([self.partner_id.id])
+            for field in self.farm_field_ids:
+                field.message_unsubscribe([partner_id])
+                field.message_subscribe([self.partner_id.id])
                 for crop in field.crop_ids:
-                    crop.message_unsubscribe([self.partner_id.id])
-                    crop.message_subscribe([farm.partner_id.id])
-                    crop.zone_ids.message_unsubscribe([self.partner_id.id])
-                    crop.zone_ids.message_subscribe([farm.partner_id.id])
-            farm.farm_parcel_ids.message_unsubscribe([self.partner_id.id])
-            farm.farm_parcel_ids.message_subscribe([farm.partner_id.id])
+                    crop.message_unsubscribe([partner_id])
+                    crop.message_subscribe([self.partner_id.id])
+                    crop.zone_ids.message_unsubscribe([partner_id])
+                    crop.zone_ids.message_subscribe([self.partner_id.id])
+            self.farm_parcel_ids.message_unsubscribe([partner_id])
+            self.farm_parcel_ids.message_subscribe([self.partner_id.id])
         return res
 
 
