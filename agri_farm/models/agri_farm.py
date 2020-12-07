@@ -71,6 +71,30 @@ class Farm(models.Model):
                                                   farm.area_uom_id.name))
                 for farm in self]
 
+    @api.model
+    def create(self, vals):
+        farm = super(Farm, self).create(vals)
+        farm.message_subscribe([farm.partner_id.id])
+        return farm
+
+    def write(self, vals):
+        res = super(Farm, self).write(vals)
+        if 'partner_id' in vals:
+            farm = self.browse(self.id)
+            farm.message_unsubscribe([self.partner_id.id])
+            farm.message_subscribe([farm.partner_id.id])
+            for field in farm.farm_field_ids:
+                field.message_unsubscribe([self.partner_id.id])
+                field.message_subscribe([farm.partner_id.id])
+                for crop in field.crop_ids:
+                    crop.message_unsubscribe([self.partner_id.id])
+                    crop.message_subscribe([farm.partner_id.id])
+                    crop.zone_ids.message_unsubscribe([self.partner_id.id])
+                    crop.zone_ids.message_subscribe([farm.partner_id.id])
+            farm.farm_parcel_ids.message_unsubscribe([self.partner_id.id])
+            farm.farm_parcel_ids.message_subscribe([farm.partner_id.id])
+        return res
+
 
 class FarmField(models.Model):
     _name = 'agri.farm.field'
@@ -172,6 +196,12 @@ class FarmField(models.Model):
                     _("%s <a href=# data-oe-model=%s data-oe-id=%d>%s</a>") %
                     (self._description, self._name, self.id, self.name))
             self.farm_id._message_log(**log_values, body=body)
+
+    @api.model
+    def create(self, vals):
+        field = super(FarmField, self).create(vals)
+        field.message_subscribe([field.farm_id.partner_id.id])
+        return field
 
 
 class FarmFieldCrop(models.Model):
@@ -287,7 +317,7 @@ class FarmFieldCrop(models.Model):
     def _has_zones_in_state(self, state):
         return len(self.zone_ids.filtered(lambda zone: zone.state == state))
 
-    @api.depends('zone_ids.state')
+    @api.depends('field_id', 'zone_ids.state')
     def _compute_state(self):
         for crop in self:
             if crop._has_zones_in_state('harvested'):
@@ -348,10 +378,12 @@ class FarmFieldCrop(models.Model):
             for key in self._fields.keys() if key in vals
         }
         crop = super(FarmFieldCrop, self).create(crop_vals)
+        crop.message_subscribe([crop.farm_id.partner_id.id])
         if all(key in vals
                for key in ('planted_area', 'planted_date', 'product_id')):
             vals.update(crop_id=crop.id)
             self.env['agri.farm.field.crop.zone'].create(vals)
+        return crop
 
 
 class FarmFieldCropProblem(models.Model):
@@ -434,6 +466,12 @@ class FarmFieldCropProblem(models.Model):
         for problem in self:
             problem.state = 'posted'
 
+    @api.model
+    def create(self, vals):
+        problem = super(FarmFieldCropProblem, self).create(vals)
+        problem.message_subscribe([problem.farm_id.partner_id.id])
+        return problem
+
     def write(self, vals):
         res = super(FarmFieldCropProblem, self).write(vals)
         if 'state' in vals:
@@ -445,6 +483,7 @@ class FarmFieldCropProblem(models.Model):
                      _(":\n\n%s") %
                      (self.description, ) if self.description else '')
             self.crop_id._message_log(body=body)
+        return res
 
 
 class FarmFieldCropZone(models.Model):
@@ -575,7 +614,9 @@ class FarmFieldCropZone(models.Model):
             key: vals[key]
             for key in self._fields.keys() if key in vals
         }
-        return super(FarmFieldCropZone, self).create(zone_vals)
+        zone = super(FarmFieldCropZone, self).create(zone_vals)
+        zone.message_subscribe([zone.farm_id.partner_id.id])
+        return zone
 
 
 class FarmParcel(models.Model):
@@ -645,6 +686,12 @@ class FarmParcel(models.Model):
                     _("%s <a href=# data-oe-model=%s data-oe-id=%d>%s</a>") %
                     (self._description, self._name, self.id, self.name))
             self.farm_id._message_log(**log_values, body=body)
+
+    @api.model
+    def create(self, vals):
+        parcel = super(FarmParcel, self).create(vals)
+        parcel.message_subscribe([parcel.farm_id.partner_id.id])
+        return parcel
 
 
 class FarmVersion(models.Model):

@@ -253,6 +253,20 @@ class ProductionPlan(models.Model):
         default.setdefault('name', _("%s (copy)") % (self.name, ))
         return super(ProductionPlan, self).copy(default)
 
+    @api.model
+    def create(self, vals):
+        plan = super(ProductionPlan, self).create(vals)
+        plan.message_subscribe([plan.partner_id.id])
+        return farm
+
+    def write(self, vals):
+        res = super(ProductionPlan, self).write(vals)
+        if 'partner_id' in vals:
+            plan = self.browse(self.id)
+            plan.message_unsubscribe([self.partner_id.id])
+            plan.message_subscribe([plan.partner_id.id])
+        return res
+
 
 class ProductionPlanLine(models.Model):
     _name = 'agri.production.plan.line'

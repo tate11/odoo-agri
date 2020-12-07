@@ -90,11 +90,12 @@ class Delivery(models.Model):
     )
 
     def action_deliver(self):
-        for deal in self:
+        for delivery in self:
             seq_no = self.env['ir.sequence'].next_by_code('agri.delivery')
-            deal.state = 'delivered'
-            deal.name = seq_no
+            delivery.state = 'delivered'
+            delivery.name = seq_no
+            delivery.message_subscribe([delivery.partner_id.id])
 
     def action_done(self):
-        for deal in self:
-            deal.state = 'done'
+        for delivery in self:
+            delivery.state = 'done'
