@@ -1,0 +1,9 @@
+<odoo>
+
+    <template id="assets_frontend" name="agri sidebar" inherit_id="web.assets_frontend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/agri/static/src/js/agri_portal_sidebar.js"></script>
+        </xpath>
+    </template>
+
+</odoo>
