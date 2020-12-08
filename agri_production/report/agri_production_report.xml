@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- QWeb Reports -->
+        <report
+            id="agri_production_plans"
+            model="agri.production.plan"
+            string="Production Plans"
+            report_type="qweb-pdf"
+            name="agri_production.report_plans"
+            file="agri_production.report_plans"
+            attachment="(object.name.replace('/','_')+'.pdf')"
+            print_report_name="(object._get_report_base_filename())"
+        />
+
+    </data>
+</odoo>

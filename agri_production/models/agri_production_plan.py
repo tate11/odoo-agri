@@ -6,7 +6,7 @@ from odoo.tools.float_utils import float_round, float_is_zero
 class ProductionPlan(models.Model):
     _name = 'agri.production.plan'
     _description = 'Production Plan'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
     _order = 'name, create_date desc'
     _check_company_auto = True
 
@@ -36,6 +36,13 @@ class ProductionPlan(models.Model):
         states={'draft': [('readonly', False)]},
         readonly=True,
         required=True)
+    user_id = fields.Many2one(
+        'res.users',
+        default=lambda self: self.env.user,
+        string='User',
+        readonly=True,
+        required=True,
+    )
     enterprise_type = fields.Selection([('crop', 'Crop'),
                                         ('permanent_crop', 'Permanent Crop'),
                                         ('livestock', 'Livestock')],
@@ -60,7 +67,7 @@ class ProductionPlan(models.Model):
         string='Fields',
         states={'draft': [('readonly', False)]},
         readonly=True,
-        copy=False)
+        copy=True)
     delivery_ids = fields.One2many(comodel_name='agri.delivery',
                                    inverse_name='production_plan_id',
                                    string='Deliveries',
@@ -236,6 +243,11 @@ class ProductionPlan(models.Model):
                 vals.update({'field_id': field.id, 'planted_area': field.area})
                 crop = self.env['agri.farm.field.crop'].create(vals)
 
+    def _compute_access_url(self):
+        super(ProductionPlan, self)._compute_access_url()
+        for plan in self:
+            plan.access_url = '/my/plans/%s' % (plan.id)
+
     def action_schedule(self):
         for plan in self:
             plan._create_crops()
@@ -257,14 +269,15 @@ class ProductionPlan(models.Model):
     def create(self, vals):
         plan = super(ProductionPlan, self).create(vals)
         plan.message_subscribe([plan.partner_id.id])
-        return farm
+        return plan
 
     def write(self, vals):
+        partner_id = self.partner_id.id
         res = super(ProductionPlan, self).write(vals)
-        if 'partner_id' in vals:
+        if 'partner_id' in vals and partner_id != vals['partner_id']:
             plan = self.browse(self.id)
-            plan.message_unsubscribe([self.partner_id.id])
-            plan.message_subscribe([plan.partner_id.id])
+            plan.message_unsubscribe([partner_id])
+            plan.message_subscribe([self.partner_id.id])
         return res
 
 

@@ -22,14 +22,18 @@
     "Agriculture module for Production management",
     "depends": ['base', 'date_range', 'agri_farm', 'agri_commodity'],
     "data": [
+        'security/agri_production_security.xml',
         'security/ir.model.access.csv',
         'data/res_company_data.xml',
         'views/agri_delivery_views.xml',
         'views/agri_production_plan_views.xml',
+        'views/agri_production_portal_templates.xml',
         'views/agri_production_record_views.xml',
         'views/date_range_views.xml',
         'views/product_views.xml',
         'views/menus.xml',
+        'report/agri_production_report_templates.xml',
+        'report/agri_production_report.xml',
     ],
     "demo": [],
     "application":

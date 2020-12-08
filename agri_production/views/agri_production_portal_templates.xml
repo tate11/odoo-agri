@@ -1,0 +1,163 @@
+<odoo>
+    <template id="portal_my_home_menu_plan" name="Portal layout : plan menu entries" inherit_id="portal.portal_breadcrumbs" priority="33">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'plan'" t-attf-class="breadcrumb-item #{'active ' if not plan else ''}">
+                <a t-if="plan" t-attf-href="/my/plans?{{ keep_query() }}">Production Plans</a>
+                <t t-else="">Production Plans</t>
+            </li>
+            <li t-if="plan" class="breadcrumb-item active">
+                <t t-esc="plan.name" />
+            </li>
+        </xpath>
+    </template>
+
+    <template id="portal_my_home_plan" name="Portal My Home : plan entries" inherit_id="portal.portal_my_home" priority="33">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-if="plan_count" t-call="portal.portal_docs_entry">
+                <t t-set="title">Production Plans</t>
+                <t t-set="url" t-value="'/my/plans'" />
+                <t t-set="count" t-value="plan_count" />
+            </t>
+        </xpath>
+    </template>
+
+    <template id="portal_my_plans" name="My Production Plans">
+      <t t-call="portal.portal_layout">
+        <t t-set="breadcrumbs_searchbar" t-value="True" />
+
+        <t t-call="portal.portal_searchbar">
+            <t t-set="title">Production Plans</t>
+        </t>
+        <t t-if="not plans">
+            <p>There are currently no plans for your account.</p>
+        </t>
+        <t t-if="plans" t-call="portal.portal_table">
+            <thead>
+                <tr class="active">
+                    <th>Production Plan</th>
+                    <th>Type</th>
+                    <th>Season</th>
+                    <th>Gross Yield</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <t t-foreach="plans" t-as="plan">
+                    <tr>
+                        <td>
+                            <a t-att-href="plan.get_portal_url()" t-att-title="plan.name">
+                                <t t-esc="plan.name" />
+                            </a>
+                        </td>
+                        <td>
+                            <span t-field="plan.enterprise_type" />
+                        </td>
+                        <td>
+                            <span t-field="plan.season_id.name" />
+                        </td>
+                        <td>
+                            <span t-field="plan.gross_yield" />
+                        </td>
+                        <td>
+                            <span t-field="plan.state" />
+                        </td>
+                    </tr>
+                </t>
+            </tbody>
+        </t>
+      </t>
+    </template>
+
+    <template id="portal_plan_page" name="Production Plan Portal Template" inherit_id="portal.portal_sidebar" primary="True">
+        <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
+            <t t-set="o_portal_fullwidth_alert" groups="agri.agri_group_user,agri.agri_group_manager">
+                <t t-call="portal.portal_back_in_edit_mode">
+                    <t t-set="backend_url" 
+                       t-value="'/web#model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (plan._name, plan.id, plan.env.ref('agri_production.agri_production_plan_action').id)" />
+                </t>
+            </t>
+
+            <div class="row mt16 o_portal_agri_sidebar">
+                <!-- Sidebar -->
+                <t t-call="portal.portal_record_sidebar">
+                    <t t-set="classes" t-value="'col-lg-auto d-print-none'" />
+                    <t t-set="title">
+                        <h2 class="mb-0">
+                            <b t-field="plan.gross_yield" />
+                        </h2>
+                        <div class="small">
+                            <span class="ml4">Gross Yield</span>
+                        </div>
+                    </t>
+
+                    <t t-set="entries">
+                        <ul class="list-group list-group-flush flex-wrap flex-row flex-lg-column">
+                            <li class="list-group-item flex-grow-1">
+                                <div class="o_download_pdf btn-toolbar flex-sm-nowrap">
+                                    <div class="btn-group  flex-grow-1 mr-1 mb-1">
+                                        <a class="btn btn-secondary btn-block o_download_btn" t-att-href="plan.get_portal_url(report_type='pdf', download=True)" title="Download"><i class="fa fa-download" /> Download</a>
+                                    </div>
+                                    <div class="btn-group flex-grow-1 mb-1">
+                                        <a class="btn btn-secondary btn-block o_print_btn o_portal_agri_print" t-att-href="plan.get_portal_url(report_type='pdf')" id="print_agri_report" title="Print" target="_blank"><i class="fa fa-print" /> Print</a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li t-if="plan.user_id" class="list-group-item flex-grow-1">
+                                <div class="small mb-1"><strong class="text-muted">Representitive</strong></div>
+                                <div class="row">
+                                    <div class="col flex-grow-0 pr-2">
+                                        <img t-if="plan.user_id.image_1024" class="rounded-circle mt-1 o_portal_contact_img" t-att-src="image_data_uri(plan.user_id.image_1024)" alt="Contact" />
+                                        <img t-else="" class="rounded-circle mt-1 o_portal_contact_img" src="/web/static/src/img/user_menu_avatar.png" alt="Contact" />
+                                    </div>
+                                    <div class="col pl-0">
+                                        <span t-field="plan.user_id" t-options='{"widget": "contact", "fields": ["name", "phone"], "no_marker": True}'/>
+                                        <a href="#discussion" class="small"><i class="fa fa-fw fa-comments" /><b>Send message</b></a>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </t>
+                </t>
+
+                <!-- Page Content -->
+                <div id="plan_content" class="col-12 col-lg">
+                    <t t-if="error or warning" t-call="agri_production.portal_plan_error" />
+                    <t t-if="success and (not error and not warning)" t-call="agri_production.portal_plan_success" />
+
+                    <div class="o_portal_html_view shadow p-3">
+                        <div class="o_portal_html_loader text-center">
+                            <i class="fa fa-circle-o-notch fa-spin fa-2x fa-fw text-black-50"></i>
+                        </div>
+                        <iframe id="agri_html" class="mt8 mb8" width="100%" height="100%" frameborder="0" scrolling="no" t-att-src="plan.get_portal_url(report_type='html')" />
+                    </div>
+                    <!-- chatter -->
+                    <div id="plan_communication" class="mt-4">
+                        <h2>History</h2>
+                        <t t-call="portal.message_thread">
+                            <t t-set="object" t-value="plan" />
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="portal_plan_error" name="Production Plan error/warning display">
+        <div class="row mr16">
+            <div t-attf-class="'col-lg-12 mr16 ml16 alert alert-dismissable' #{'alert-danger' if error else 'alert-warning'}" role="alert">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
+                <t t-if="error == 'generic'" name="generic">
+                    There was an error processing this page.
+                </t>
+            </div>
+        </div>
+    </template>
+
+    <template id="portal_plan_success" name="Production Plan success display">
+        <div class="row mr16">
+            <div class="col-lg-12 mr16 ml16 alert alert-dismissable alert-success" role="status">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
+            </div>
+        </div>
+    </template>
+</odoo>
