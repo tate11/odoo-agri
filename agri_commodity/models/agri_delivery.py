@@ -41,7 +41,7 @@ class Delivery(models.Model):
                                   readonly=True,
                                   required=True,
                                   tracking=True)
-    delivered_mass_uom = fields.Many2one(
+    delivered_mass_uom_id = fields.Many2one(
         'uom.uom',
         'Mass Units',
         states={'draft': [('readonly', False)]},
@@ -62,18 +62,28 @@ class Delivery(models.Model):
         states={'draft': [('readonly', False)]},
         readonly=True,
         required=True)
-    grading_id = fields.Many2one(
-        'agri.grading',
-        string='Grading',
-        domain="['|', ('delivery_id', '=', False), ('delivery_id', '=', id)]",
-        states={'done': [('readonly', True)]},
-        readonly=False)
     sale_order_id = fields.Many2one(
         'sale.order',
         ondelete='restrict',
         domain="[('partner_id', '=', destination_partner_id)]",
         states={'draft': [('readonly', False)]},
         readonly=True)
+    product_id = fields.Many2one('product.product',
+                                 string='Product',
+                                 domain="[('is_agri_commodity', '=', True), ('categ_id.is_agri', '=', True)]",
+                                 states={'draft': [('readonly', False)]},
+                                 readonly=True,
+                                 required=True)
+    grading_id = fields.Many2one(
+        'agri.grading',
+        string='Grading',
+        ondelete='set null',
+        states={'done': [('readonly', True)]},
+        readonly=False)
+    grading_product_qty = fields.Float(string='Grading Quantity',
+                                       related='grading_id.product_qty')
+    grading_line_ids = fields.One2many(related='grading_id.grading_line_ids',
+                                       readonly=False)
     transport_partner_id = fields.Many2one(
         'res.partner',
         string='Transport Provider',
@@ -88,6 +98,59 @@ class Delivery(models.Model):
         copy=False,
         tracking=True,
     )
+
+    @api.depends('sale_order_id')
+    @api.onchange('sale_order_id')
+    def _compute_product(self):
+        for line in self:
+            products = line.sale_order_id.order_line.filtered(lambda order_line: order_line.product_id.is_agri)
+            if len(products) > 0:
+                line.product_id = products[0]
+
+    @api.depends('product_id')
+    @api.onchange('product_id')
+    def _compute_delivered_mass_uom(self):
+        for line in self:
+            line.delivered_mass_uom_id = line.product_id.uom_id
+
+    @api.onchange('product_id', 'delivered_mass', 'delivered_mass_uom_id')
+    def _compute_grading(self):
+        for line in self:
+            if line.product_id and line.delivered_mass_uom_id and line.delivered_mass > 0:
+                if (line.grading_id and line.grading_id.product_tmpl_id.id !=
+                        line.product_id.id):
+                    line_data = line.copy_data({'grading_id': False})
+                    line.grading_id.unlink()
+                    line.write(line_data[0])
+                if (not line.grading_id and line.product_id.is_agri_commodity):
+                    vals = {
+                        'product_qty': line.delivered_mass,
+                        'product_uom_id': line.delivered_mass_uom_id.id
+                    }
+                    if line.product_id.default_grading_id:
+                        line.grading_id = line.product_id.default_grading_id.copy(
+                            vals)
+                    else:
+                        vals.update(product_tmpl_id=line.product_id.id)
+                        line.grading_id = self.env['agri.grading'].create(vals)
+
+    @api.depends('delivered_mass', 'delivered_mass_uom_id', 'grading_id')
+    @api.onchange('delivered_mass', 'delivered_mass_uom_id')
+    def _compute_product_qty(self):
+        for line in self:
+            if line.grading_id and line.delivered_mass_uom_id and line.delivered_mass > 0:
+                line.grading_id.product_qty = line.delivered_mass
+                line.grading_id.product_uom_id = line.delivered_mass_uom_id
+                line.grading_product_qty = line.grading_id.product_qty
+                line_commands = []
+                for grading_line in line.grading_line_ids:
+                    grading_line._compute_product_qty(line.grading_id.product_qty)
+                    line_commands += [(1, grading_line.id, {
+                        'product_qty': grading_line.product_qty,
+                        'price': grading_line.price,
+                    })]
+                line.grading_line_ids = line_commands
+                line.grading_id.grading_line_ids = line.grading_line_ids
 
     def action_deliver(self):
         for delivery in self:

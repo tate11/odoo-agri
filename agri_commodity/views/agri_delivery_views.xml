@@ -35,7 +35,7 @@
                 <field name="company_id" groups="base.group_multi_company" />
                 <field name="delivery_date" />
                 <field name="delivered_mass" />
-                <field name="delivered_mass_uom" />
+                <field name="delivered_mass_uom_id" />
                 <field name="destination_partner_id" />                
                 <field name="state" />
             </tree>
@@ -51,7 +51,7 @@
                 <header>
                     <button string="Delivered" type="object" name="action_deliver" groups="agri.agri_group_user" class="oe_highlight" states="draft" />
                     <button string="Done" type="object" name="action_done" 
-                            attrs="{'invisible': ['|', ('state', '!=', 'delivered'), '&amp;', ('state', '=', 'delivered'), ('grading_id', '=', False)]}"/>
+                            attrs="{'invisible': ['|', ('state', '!=', 'delivered'), '&amp;', ('state', '=', 'delivered'), ('grading_id', '=', False)]}" />
                     <button string="Done" type="object" name="action_done" 
                             attrs="{'invisible': ['|', ('state', '!=', 'delivered'), '&amp;', ('state', '=', 'delivered'), ('grading_id', '!=', False)]}" 
                             confirm="Delivery is not yet graded. Are you sure?" />
@@ -68,9 +68,10 @@
                             <field name="partner_id" />
                             <field name="company_id" groups="base.group_multi_company" />
                             <field name="destination_partner_id" />
-                            <field name="sale_order_id" />
+                            <field name="product_id" />
                        </group>
                         <group>
+                            <field name="sale_order_id" />
                             <field name="delivery_date" />
                             <field name="delivery_number"  />
                         </group>
@@ -88,14 +89,35 @@
                                     <div style="display: inline-flex">
                                         <field name="delivered_mass" class="oe_inline" />
                                         <span class="oe_read_only"><![CDATA[&nbsp;]]></span>
-                                        <field name="delivered_mass_uom" class="oe_inline" options="{'no_open': 1}" />
+                                        <field name="delivered_mass_uom_id" class="oe_inline" options="{'no_open': 1}" />
                                     </div>
-                                    <field name="grading_id" context="{
-                                        'default_delivery_id': id, 
-                                        'default_product_qty': delivered_mass, 
-                                        'default_product_uom_id': delivered_mass_uom
-                                    }" />
                                 </group>
+                            </group>
+                        </page>
+                        <page string="Grading" name="grading_tab" attrs="{'invisible': [('grading_id', '=', False)]}">
+                            <group>
+                                <field name="grading_id" invisible="1" />
+                                <field name="grading_product_qty" invisible="1" />
+                                <separator string="Grading Lines" />
+                                <field name="grading_line_ids" nolabel="1" colspan="2" widget="one2many"
+                                    context="{'default_grading_id': grading_id, 'default_grading_product_tmpl_id': product_id, 'default_product_id': False, 'default_company_id': company_id}">
+                                    <tree string="Components" editable="bottom">
+                                        <field name="company_id" invisible="1" />
+                                        <field name="sequence" widget="handle" />
+                                        <field name="product_id" context="{'default_type': 'product'}" />
+                                        <field name="product_tmpl_id" invisible="1" />
+                                        <field name="unit_price" />
+                                        <field name="product_uom_category_id" invisible="1" />
+                                        <field name="grading_product_qty" invisible="1" />
+                                        <field name="grading_product_tmpl_id" invisible="1" />
+                                        <field name="grading_product_tmpl_categ_id" invisible="1" />
+                                        <field name="possible_grading_product_template_attribute_value_ids" invisible="1" />
+                                        <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="uom.group_uom" />
+                                        <field name="percent" />
+                                        <field name="product_qty" />
+                                        <field name="price" />
+                                    </tree>
+                                </field>
                             </group>
                         </page>
                         <page string="Notes" name="nots_tab">

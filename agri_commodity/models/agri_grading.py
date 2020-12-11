@@ -46,9 +46,6 @@ class Grading(models.Model):
         help=
         "If a product variant is defined the Grading is available only for this product."
     )
-    delivery_id = fields.Many2one('agri.delivery',
-                                  string='Delivery',
-                                  copy=False)
     grading_line_ids = fields.One2many('agri.grading.line',
                                        'grading_id',
                                        'Grading Lines',
@@ -109,6 +106,11 @@ class Grading(models.Model):
             if grading.product_id:
                 for line in grading.grading_line_ids:
                     line.grading_product_template_attribute_value_ids = False
+
+    @api.onchange('product_qty')
+    def _compute_product_qty(self):
+        for grading in self:
+            grading.grading_line_ids._compute_product_qty()
 
     @api.constrains('product_id', 'product_tmpl_id', 'grading_line_ids')
     def _check_grading_lines(self):
@@ -274,9 +276,6 @@ class GradingLine(models.Model):
     _description = 'Grading Line'
     _check_company_auto = True
 
-    def _get_default_product_uom_id(self):
-        return self.env['uom.uom'].search([], limit=1, order='id').id
-
     grading_id = fields.Many2one('agri.grading',
                                  'Grading',
                                  index=True,
@@ -314,7 +313,6 @@ class GradingLine(models.Model):
     product_uom_id = fields.Many2one(
         'uom.uom',
         'Unit',
-        default=_get_default_product_uom_id,
         required=True,
         help=
         "Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control",
@@ -428,10 +426,10 @@ class GradingLine(models.Model):
         return res
 
     @api.depends('grading_product_qty', 'product_uom_id', 'percent')
-    def _compute_product_qty(self):
+    def _compute_product_qty(self, grading_product_qty=1.0):
         for line in self:
             line.product_qty = (line.grading_id.product_qty if line.grading_id
-                                else 1.0) * line.percent / 100.0
+                                else grading_product_qty) * line.percent / 100.0
             line.unit_price = line.product_id.uom_id._compute_price(
                     line.product_id.with_context(
                         force_company=line.company_id.id).list_price,
