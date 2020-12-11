@@ -93,7 +93,7 @@ class ProductionPlan(models.Model):
         'uom.uom',
         'Production Unit',
         domain=
-        "[('category_id', 'in', ['agri_category_lsu', 'agri_category_lsu'])]",
+        "[('category_id.measure_type', 'in', ['weight', 'lsu'])]",
         default=lambda self: self.env.ref('uom.product_uom_ton'),
         states={'draft': [('readonly', False)]},
         readonly=True,
