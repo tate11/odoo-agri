@@ -12,7 +12,7 @@
         
         <record id="agri_class_cropland_irrigated" model="agri.land.use">
             <field name="name">Cropland (Irrigated)</field>
-            <field name="irrigated" eval="True"/>
+            <field name="irrigated" eval="True" />
         </record>
         
         <record id="agri_class_cropland_smallholding" model="agri.land.use">
@@ -109,7 +109,7 @@
         
         <record id="agri_class_planted_pastures_irrigated" model="agri.land.use">
             <field name="name">Planted Pastures (Irrigated)</field>
-            <field name="irrigated" eval="True"/>
+            <field name="irrigated" eval="True" />
         </record>
         
         <record id="agri_class_recreational" model="agri.land.use">
@@ -158,7 +158,7 @@
         
         <record id="agri_class_sugarcane_irrigated" model="agri.land.use">
             <field name="name">Sugarcane (Irrigated)</field>
-            <field name="irrigated" eval="True"/>
+            <field name="irrigated" eval="True" />
         </record>
         
         <record id="agri_class_sugarcane_small_scale" model="agri.land.use">
@@ -171,7 +171,7 @@
         
         <record id="agri_class_tea_irrigated" model="agri.land.use">
             <field name="name">Tea (Irrigated)</field>
-            <field name="irrigated" eval="True"/>
+            <field name="irrigated" eval="True" />
         </record>
         
         <record id="agri_class_utilities" model="agri.land.use">

@@ -9,11 +9,11 @@
         </record>
 
         <record id="product_category_crop_cotton" model="product.category">
-            <field name="parent_id" ref="product_category_crop"/>
+            <field name="parent_id" ref="product_category_crop" />
             <field name="name">Cotton</field>
             <field name="is_agri">True</field>
             <field name="cost_type">crop_sale</field>
-            <field name="uom_id" ref="uom.product_uom_ton"/>
+            <field name="uom_id" ref="uom.product_uom_ton" />
             <field name="sale_ok">True</field>
             <field name="purchase_ok">False</field>
         </record>
@@ -25,41 +25,41 @@
         </record>
 
         <record id="product_category_permanent_crop_blueberry" model="product.category">
-            <field name="parent_id" ref="product_category_permanent_crop"/>
+            <field name="parent_id" ref="product_category_permanent_crop" />
             <field name="name">Blueberry</field>
             <field name="is_agri">True</field>
             <field name="cost_type">permanent_crop_sale</field>
-            <field name="uom_id" ref="uom.product_uom_kgm"/>
+            <field name="uom_id" ref="uom.product_uom_kgm" />
             <field name="sale_ok">True</field>
             <field name="purchase_ok">False</field>
         </record>
 
         <record id="product_category_permanent_crop_macadamia_nut" model="product.category">
-            <field name="parent_id" ref="product_category_permanent_crop"/>
+            <field name="parent_id" ref="product_category_permanent_crop" />
             <field name="name">Macadamia Nut</field>
             <field name="is_agri">True</field>
             <field name="cost_type">permanent_crop_sale</field>
-            <field name="uom_id" ref="uom.product_uom_kgm"/>
+            <field name="uom_id" ref="uom.product_uom_kgm" />
             <field name="sale_ok">True</field>
             <field name="purchase_ok">False</field>
         </record>
 
         <record id="product_category_permanent_crop_pomegranate" model="product.category">
-            <field name="parent_id" ref="product_category_permanent_crop"/>
+            <field name="parent_id" ref="product_category_permanent_crop" />
             <field name="name">Pomegranate</field>
             <field name="is_agri">True</field>
             <field name="cost_type">permanent_crop_sale</field>
-            <field name="uom_id" ref="uom.product_uom_kgm"/>
+            <field name="uom_id" ref="uom.product_uom_kgm" />
             <field name="sale_ok">True</field>
             <field name="purchase_ok">False</field>
         </record>
 
         <record id="product_category_permanent_crop_sugarcane" model="product.category">
-            <field name="parent_id" ref="product_category_permanent_crop"/>
+            <field name="parent_id" ref="product_category_permanent_crop" />
             <field name="name">Sugarcane</field>
             <field name="is_agri">True</field>
             <field name="cost_type">permanent_crop_sale</field>
-            <field name="uom_id" ref="uom.product_uom_ton"/>
+            <field name="uom_id" ref="uom.product_uom_ton" />
             <field name="sale_ok">True</field>
             <field name="purchase_ok">False</field>
         </record>
@@ -71,51 +71,51 @@
         </record>
 
         <record id="product_category_crop_establishment_drainage" model="product.category">
-            <field name="parent_id" ref="product_category_crop_establishment"/>
+            <field name="parent_id" ref="product_category_crop_establishment" />
             <field name="name">Drainage</field>
             <field name="is_agri">True</field>
             <field name="cost_type">crop_establishment</field>
-            <field name="uom_id" ref="agri_uom_sum"/>
+            <field name="uom_id" ref="agri_uom_sum" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_crop_establishment_irrigation_equipment" model="product.category">
-            <field name="parent_id" ref="product_category_crop_establishment"/>
+            <field name="parent_id" ref="product_category_crop_establishment" />
             <field name="name">Irrigation equipment</field>
             <field name="is_agri">True</field>
             <field name="cost_type">crop_establishment</field>
-            <field name="uom_id" ref="agri_uom_sum"/>
+            <field name="uom_id" ref="agri_uom_sum" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_crop_establishment_land_preparation" model="product.category">
-            <field name="parent_id" ref="product_category_crop_establishment"/>
+            <field name="parent_id" ref="product_category_crop_establishment" />
             <field name="name">Land preparation</field>
             <field name="is_agri">True</field>
             <field name="cost_type">crop_establishment</field>
-            <field name="uom_id" ref="agri_uom_sum"/>
+            <field name="uom_id" ref="agri_uom_sum" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_crop_establishment_trellising" model="product.category">
-            <field name="parent_id" ref="product_category_crop_establishment"/>
+            <field name="parent_id" ref="product_category_crop_establishment" />
             <field name="name">Trellising</field>
             <field name="is_agri">True</field>
             <field name="cost_type">crop_establishment</field>
-            <field name="uom_id" ref="agri_uom_sum"/>
+            <field name="uom_id" ref="agri_uom_sum" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_crop_establishment_plant_material" model="product.category">
-            <field name="parent_id" ref="product_category_crop_establishment"/>
+            <field name="parent_id" ref="product_category_crop_establishment" />
             <field name="name">Plant material</field>
             <field name="is_agri">True</field>
             <field name="cost_type">crop_establishment</field>
-            <field name="uom_id" ref="agri_uom_each"/>
+            <field name="uom_id" ref="agri_uom_each" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
@@ -127,181 +127,181 @@
         </record>
 
         <record id="product_category_crop_input_seed" model="product.category">
-            <field name="parent_id" ref="product_category_crop_input"/>
+            <field name="parent_id" ref="product_category_crop_input" />
             <field name="name">Seed</field>
             <field name="is_agri">True</field>
             <field name="cost_type">crop_input</field>
-            <field name="uom_id" ref="uom.product_uom_kgm"/>
+            <field name="uom_id" ref="uom.product_uom_kgm" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_crop_input_fertiliser" model="product.category">
-            <field name="parent_id" ref="product_category_crop_input"/>
+            <field name="parent_id" ref="product_category_crop_input" />
             <field name="name">Fertiliser</field>
             <field name="is_agri">True</field>
             <field name="cost_type">crop_input</field>
-            <field name="uom_id" ref="uom.product_uom_ton"/>
+            <field name="uom_id" ref="uom.product_uom_ton" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_crop_input_fuel" model="product.category">
-            <field name="parent_id" ref="product_category_crop_input"/>
+            <field name="parent_id" ref="product_category_crop_input" />
             <field name="name">Fuel</field>
             <field name="is_agri">True</field>
             <field name="cost_type">crop_input</field>
-            <field name="uom_id" ref="uom.product_uom_litre"/>
+            <field name="uom_id" ref="uom.product_uom_litre" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_crop_input_fungicide" model="product.category">
-            <field name="parent_id" ref="product_category_crop_input"/>
+            <field name="parent_id" ref="product_category_crop_input" />
             <field name="name">Fungicide</field>
             <field name="is_agri">True</field>
             <field name="cost_type">crop_input</field>
-            <field name="uom_id" ref="agri_uom_sum"/>
+            <field name="uom_id" ref="agri_uom_sum" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_crop_input_lime" model="product.category">
-            <field name="parent_id" ref="product_category_crop_input"/>
+            <field name="parent_id" ref="product_category_crop_input" />
             <field name="name">Lime</field>
             <field name="is_agri">True</field>
             <field name="cost_type">crop_input</field>
-            <field name="uom_id" ref="uom.product_uom_ton"/>
+            <field name="uom_id" ref="uom.product_uom_ton" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_crop_input_herbicide" model="product.category">
-            <field name="parent_id" ref="product_category_crop_input"/>
+            <field name="parent_id" ref="product_category_crop_input" />
             <field name="name">Herbicide</field>
             <field name="is_agri">True</field>
             <field name="cost_type">crop_input</field>
-            <field name="uom_id" ref="uom.product_uom_litre"/>
+            <field name="uom_id" ref="uom.product_uom_litre" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_crop_input_pesticide" model="product.category">
-            <field name="parent_id" ref="product_category_crop_input"/>
+            <field name="parent_id" ref="product_category_crop_input" />
             <field name="name">Pesticide</field>
             <field name="is_agri">True</field>
             <field name="cost_type">crop_input</field>
-            <field name="uom_id" ref="uom.product_uom_litre"/>
+            <field name="uom_id" ref="uom.product_uom_litre" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_crop_input_growth_regulator" model="product.category">
-            <field name="parent_id" ref="product_category_crop_input"/>
+            <field name="parent_id" ref="product_category_crop_input" />
             <field name="name">Growth regulator</field>
             <field name="is_agri">True</field>
             <field name="cost_type">crop_input</field>
-            <field name="uom_id" ref="agri_uom_sum"/>
+            <field name="uom_id" ref="agri_uom_sum" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_crop_input_pollination" model="product.category">
-            <field name="parent_id" ref="product_category_crop_input"/>
+            <field name="parent_id" ref="product_category_crop_input" />
             <field name="name">Pollination</field>
             <field name="is_agri">True</field>
             <field name="cost_type">crop_input</field>
-            <field name="uom_id" ref="agri_uom_ha"/>
+            <field name="uom_id" ref="agri_uom_ha" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_crop_input_aerial_spraying" model="product.category">
-            <field name="parent_id" ref="product_category_crop_input"/>
+            <field name="parent_id" ref="product_category_crop_input" />
             <field name="name">Aerial spraying</field>
             <field name="is_agri">True</field>
             <field name="cost_type">crop_input</field>
-            <field name="uom_id" ref="agri_uom_ha"/>
+            <field name="uom_id" ref="agri_uom_ha" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_crop_input_credit_interest" model="product.category">
-            <field name="parent_id" ref="product_category_crop_input"/>
+            <field name="parent_id" ref="product_category_crop_input" />
             <field name="name">Credit interest</field>
             <field name="is_agri">True</field>
             <field name="cost_type">crop_input</field>
-            <field name="uom_id" ref="agri_uom_sum"/>
+            <field name="uom_id" ref="agri_uom_sum" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_crop_input_hail_insurance" model="product.category">
-            <field name="parent_id" ref="product_category_crop_input"/>
+            <field name="parent_id" ref="product_category_crop_input" />
             <field name="name">Hail insurance</field>
             <field name="is_agri">True</field>
             <field name="cost_type">crop_input</field>
-            <field name="uom_id" ref="uom.product_uom_ton"/>
+            <field name="uom_id" ref="uom.product_uom_ton" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_crop_input_yield_insurance" model="product.category">
-            <field name="parent_id" ref="product_category_crop_input"/>
+            <field name="parent_id" ref="product_category_crop_input" />
             <field name="name">Yield insurance</field>
             <field name="is_agri">True</field>
             <field name="cost_type">crop_input</field>
-            <field name="uom_id" ref="uom.product_uom_ton"/>
+            <field name="uom_id" ref="uom.product_uom_ton" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_crop_input_hedging" model="product.category">
-            <field name="parent_id" ref="product_category_crop_input"/>
+            <field name="parent_id" ref="product_category_crop_input" />
             <field name="name">Hedging</field>
             <field name="is_agri">True</field>
             <field name="cost_type">crop_input</field>
-            <field name="uom_id" ref="uom.product_uom_ton"/>
+            <field name="uom_id" ref="uom.product_uom_ton" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_crop_input_repairs_maintenance" model="product.category">
-            <field name="parent_id" ref="product_category_crop_input"/>
+            <field name="parent_id" ref="product_category_crop_input" />
             <field name="name">Repairs &amp; maintenance</field>
             <field name="is_agri">True</field>
             <field name="cost_type">crop_input</field>
-            <field name="uom_id" ref="agri_uom_sum"/>
+            <field name="uom_id" ref="agri_uom_sum" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_crop_input_seasonal_labour" model="product.category">
-            <field name="parent_id" ref="product_category_crop_input"/>
+            <field name="parent_id" ref="product_category_crop_input" />
             <field name="name">Seasonal labour</field>
             <field name="is_agri">True</field>
             <field name="cost_type">crop_input</field>
-            <field name="uom_id" ref="agri_uom_ha"/>
+            <field name="uom_id" ref="agri_uom_ha" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_crop_input_consulting" model="product.category">
-            <field name="parent_id" ref="product_category_crop_input"/>
+            <field name="parent_id" ref="product_category_crop_input" />
             <field name="name">Consulting</field>
             <field name="is_agri">True</field>
             <field name="cost_type">crop_input</field>
-            <field name="uom_id" ref="agri_uom_sum"/>
+            <field name="uom_id" ref="agri_uom_sum" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_crop_input_electricity" model="product.category">
-            <field name="parent_id" ref="product_category_crop_input"/>
+            <field name="parent_id" ref="product_category_crop_input" />
             <field name="name">Electricity</field>
             <field name="is_agri">True</field>
             <field name="cost_type">crop_input</field>
-            <field name="uom_id" ref="agri_uom_sum"/>
+            <field name="uom_id" ref="agri_uom_sum" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
@@ -313,111 +313,111 @@
         </record>
 
         <record id="product_category_crop_harvest_fuel" model="product.category">
-            <field name="parent_id" ref="product_category_crop_harvest"/>
+            <field name="parent_id" ref="product_category_crop_harvest" />
             <field name="name">Fuel</field>
             <field name="is_agri">True</field>
             <field name="cost_type">crop_harvest</field>
-            <field name="uom_id" ref="uom.product_uom_litre"/>
+            <field name="uom_id" ref="uom.product_uom_litre" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_crop_harvest_labour" model="product.category">
-            <field name="parent_id" ref="product_category_crop_harvest"/>
+            <field name="parent_id" ref="product_category_crop_harvest" />
             <field name="name">Labour</field>
             <field name="is_agri">True</field>
             <field name="cost_type">crop_harvest</field>
-            <field name="uom_id" ref="agri_uom_ha"/>
+            <field name="uom_id" ref="agri_uom_ha" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_crop_harvest_transport" model="product.category">
-            <field name="parent_id" ref="product_category_crop_harvest"/>
+            <field name="parent_id" ref="product_category_crop_harvest" />
             <field name="name">Transport</field>
             <field name="is_agri">True</field>
             <field name="cost_type">crop_harvest</field>
-            <field name="uom_id" ref="agri_uom_sum"/>
+            <field name="uom_id" ref="agri_uom_sum" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_crop_harvest_harvesting" model="product.category">
-            <field name="parent_id" ref="product_category_crop_harvest"/>
+            <field name="parent_id" ref="product_category_crop_harvest" />
             <field name="name">Harvesting</field>
             <field name="is_agri">True</field>
             <field name="cost_type">crop_harvest</field>
-            <field name="uom_id" ref="agri_uom_sum"/>
+            <field name="uom_id" ref="agri_uom_sum" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_crop_harvest_repairs_maintenance" model="product.category">
-            <field name="parent_id" ref="product_category_crop_harvest"/>
+            <field name="parent_id" ref="product_category_crop_harvest" />
             <field name="name">Repairs &amp; maintenance</field>
             <field name="is_agri">True</field>
             <field name="cost_type">crop_harvest</field>
-            <field name="uom_id" ref="agri_uom_sum"/>
+            <field name="uom_id" ref="agri_uom_sum" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_crop_harvest_storage" model="product.category">
-            <field name="parent_id" ref="product_category_crop_harvest"/>
+            <field name="parent_id" ref="product_category_crop_harvest" />
             <field name="name">Storage</field>
             <field name="is_agri">True</field>
             <field name="cost_type">crop_harvest</field>
-            <field name="uom_id" ref="uom.product_uom_day"/>
+            <field name="uom_id" ref="uom.product_uom_day" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_crop_harvest_packaging_material" model="product.category">
-            <field name="parent_id" ref="product_category_crop_harvest"/>
+            <field name="parent_id" ref="product_category_crop_harvest" />
             <field name="name">Packaging material</field>
             <field name="is_agri">True</field>
             <field name="cost_type">crop_harvest</field>
-            <field name="uom_id" ref="agri_uom_each"/>
+            <field name="uom_id" ref="agri_uom_each" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_crop_harvest_drying_cleaning" model="product.category">
-            <field name="parent_id" ref="product_category_crop_harvest"/>
+            <field name="parent_id" ref="product_category_crop_harvest" />
             <field name="name">Drying &amp; cleaning</field>
             <field name="is_agri">True</field>
             <field name="cost_type">crop_harvest</field>
-            <field name="uom_id" ref="uom.product_uom_ton"/>
+            <field name="uom_id" ref="uom.product_uom_ton" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_crop_harvest_packing" model="product.category">
-            <field name="parent_id" ref="product_category_crop_harvest"/>
+            <field name="parent_id" ref="product_category_crop_harvest" />
             <field name="name">Packing</field>
             <field name="is_agri">True</field>
             <field name="cost_type">crop_harvest</field>
-            <field name="uom_id" ref="agri_uom_each"/>
+            <field name="uom_id" ref="agri_uom_each" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_crop_harvest_grading" model="product.category">
-            <field name="parent_id" ref="product_category_crop_harvest"/>
+            <field name="parent_id" ref="product_category_crop_harvest" />
             <field name="name">Grading</field>
             <field name="is_agri">True</field>
             <field name="cost_type">crop_harvest</field>
-            <field name="uom_id" ref="agri_uom_each"/>
+            <field name="uom_id" ref="agri_uom_each" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_crop_harvest_levy" model="product.category">
-            <field name="parent_id" ref="product_category_crop_harvest"/>
+            <field name="parent_id" ref="product_category_crop_harvest" />
             <field name="name">Levy</field>
             <field name="is_agri">True</field>
             <field name="cost_type">crop_harvest</field>
-            <field name="uom_id" ref="agri_uom_each"/>
+            <field name="uom_id" ref="agri_uom_each" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
@@ -429,241 +429,241 @@
         </record>
 
         <record id="product_category_livestock_cattle" model="product.category">
-            <field name="parent_id" ref="product_category_livestock"/>
+            <field name="parent_id" ref="product_category_livestock" />
             <field name="name">Cattle</field>
         </record>
 
         <record id="product_category_livestock_cattle_bull" model="product.category">
-            <field name="parent_id" ref="product_category_livestock_cattle"/>
+            <field name="parent_id" ref="product_category_livestock_cattle" />
             <field name="name">Bull</field>
             <field name="is_agri">True</field>
             <field name="cost_type">livestock_sale</field>
-            <field name="uom_id" ref="agri_uom_cattle_bull"/>
+            <field name="uom_id" ref="agri_uom_cattle_bull" />
             <field name="sale_ok">True</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_livestock_cattle_ox" model="product.category">
-            <field name="parent_id" ref="product_category_livestock_cattle"/>
+            <field name="parent_id" ref="product_category_livestock_cattle" />
             <field name="name">Ox</field>
             <field name="is_agri">True</field>
             <field name="cost_type">livestock_sale</field>
-            <field name="uom_id" ref="agri_uom_cattle_bull"/>
+            <field name="uom_id" ref="agri_uom_cattle_bull" />
             <field name="sale_ok">True</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_livestock_cattle_steer" model="product.category">
-            <field name="parent_id" ref="product_category_livestock_cattle"/>
+            <field name="parent_id" ref="product_category_livestock_cattle" />
             <field name="name">Steer</field>
             <field name="is_agri">True</field>
             <field name="cost_type">livestock_sale</field>
-            <field name="uom_id" ref="agri_uom_cattle_steer"/>
+            <field name="uom_id" ref="agri_uom_cattle_steer" />
             <field name="sale_ok">True</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_livestock_cattle_cow_dairy" model="product.category">
-            <field name="parent_id" ref="product_category_livestock_cattle"/>
+            <field name="parent_id" ref="product_category_livestock_cattle" />
             <field name="name">Cow (Dairy)</field>
             <field name="is_agri">True</field>
             <field name="cost_type">livestock_sale</field>
-            <field name="uom_id" ref="agri_uom_cattle_cow_dairy"/>
+            <field name="uom_id" ref="agri_uom_cattle_cow_dairy" />
             <field name="sale_ok">True</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_livestock_cattle_cow" model="product.category">
-            <field name="parent_id" ref="product_category_livestock_cattle"/>
+            <field name="parent_id" ref="product_category_livestock_cattle" />
             <field name="name">Cow</field>
             <field name="is_agri">True</field>
             <field name="cost_type">livestock_sale</field>
-            <field name="uom_id" ref="agri_uom_cattle_cow"/>
+            <field name="uom_id" ref="agri_uom_cattle_cow" />
             <field name="sale_ok">True</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_livestock_cattle_heifer" model="product.category">
-            <field name="parent_id" ref="product_category_livestock_cattle"/>
+            <field name="parent_id" ref="product_category_livestock_cattle" />
             <field name="name">Heifer</field>
             <field name="is_agri">True</field>
             <field name="cost_type">livestock_sale</field>
-            <field name="uom_id" ref="agri_uom_cattle_heifer"/>
+            <field name="uom_id" ref="agri_uom_cattle_heifer" />
             <field name="sale_ok">True</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_livestock_cattle_calf" model="product.category">
-            <field name="parent_id" ref="product_category_livestock_cattle"/>
+            <field name="parent_id" ref="product_category_livestock_cattle" />
             <field name="name">Calf</field>
             <field name="is_agri">True</field>
             <field name="cost_type">livestock_sale</field>
-            <field name="uom_id" ref="agri_uom_cattle_calf"/>
+            <field name="uom_id" ref="agri_uom_cattle_calf" />
             <field name="sale_ok">True</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_livestock_sheep" model="product.category">
-            <field name="parent_id" ref="product_category_livestock"/>
+            <field name="parent_id" ref="product_category_livestock" />
             <field name="name">Sheep</field>
         </record>
 
         <record id="product_category_livestock_sheep_ram" model="product.category">
-            <field name="parent_id" ref="product_category_livestock_sheep"/>
+            <field name="parent_id" ref="product_category_livestock_sheep" />
             <field name="name">Ram</field>
             <field name="is_agri">True</field>
             <field name="cost_type">livestock_sale</field>
-            <field name="uom_id" ref="agri_uom_sheep_ram"/>
+            <field name="uom_id" ref="agri_uom_sheep_ram" />
             <field name="sale_ok">True</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_livestock_sheep_ewe" model="product.category">
-            <field name="parent_id" ref="product_category_livestock_sheep"/>
+            <field name="parent_id" ref="product_category_livestock_sheep" />
             <field name="name">Ewe</field>
             <field name="is_agri">True</field>
             <field name="cost_type">livestock_sale</field>
-            <field name="uom_id" ref="agri_uom_sheep_ewe"/>
+            <field name="uom_id" ref="agri_uom_sheep_ewe" />
             <field name="sale_ok">True</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_livestock_sheep_wether" model="product.category">
-            <field name="parent_id" ref="product_category_livestock_sheep"/>
+            <field name="parent_id" ref="product_category_livestock_sheep" />
             <field name="name">Wether</field>
             <field name="is_agri">True</field>
             <field name="cost_type">livestock_sale</field>
-            <field name="uom_id" ref="agri_uom_sheep_wether"/>
+            <field name="uom_id" ref="agri_uom_sheep_wether" />
             <field name="sale_ok">True</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_livestock_sheep_lamb_2tooth" model="product.category">
-            <field name="parent_id" ref="product_category_livestock_sheep"/>
+            <field name="parent_id" ref="product_category_livestock_sheep" />
             <field name="name">Lamb (2 tooth)</field>
             <field name="is_agri">True</field>
             <field name="cost_type">livestock_sale</field>
-            <field name="uom_id" ref="agri_uom_sheep_lamb_2tooth"/>
+            <field name="uom_id" ref="agri_uom_sheep_lamb_2tooth" />
             <field name="sale_ok">True</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_livestock_sheep_lamb" model="product.category">
-            <field name="parent_id" ref="product_category_livestock_sheep"/>
+            <field name="parent_id" ref="product_category_livestock_sheep" />
             <field name="name">Lamb</field>
             <field name="is_agri">True</field>
             <field name="cost_type">livestock_sale</field>
-            <field name="uom_id" ref="agri_uom_sheep_lamb"/>
+            <field name="uom_id" ref="agri_uom_sheep_lamb" />
             <field name="sale_ok">True</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_livestock_goat" model="product.category">
-            <field name="parent_id" ref="product_category_livestock"/>
+            <field name="parent_id" ref="product_category_livestock" />
             <field name="name">Goats</field>
         </record>
 
         <record id="product_category_livestock_goat_ram" model="product.category">
-            <field name="parent_id" ref="product_category_livestock_goat"/>
+            <field name="parent_id" ref="product_category_livestock_goat" />
             <field name="name">Ram</field>
             <field name="is_agri">True</field>
             <field name="cost_type">livestock_sale</field>
-            <field name="uom_id" ref="agri_uom_goat_ram"/>
+            <field name="uom_id" ref="agri_uom_goat_ram" />
             <field name="sale_ok">True</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_livestock_goat_ewe" model="product.category">
-            <field name="parent_id" ref="product_category_livestock_goat"/>
+            <field name="parent_id" ref="product_category_livestock_goat" />
             <field name="name">Ewe</field>
             <field name="is_agri">True</field>
             <field name="cost_type">livestock_sale</field>
-            <field name="uom_id" ref="agri_uom_goat_ewe"/>
+            <field name="uom_id" ref="agri_uom_goat_ewe" />
             <field name="sale_ok">True</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_livestock_goat_castrate" model="product.category">
-            <field name="parent_id" ref="product_category_livestock_goat"/>
+            <field name="parent_id" ref="product_category_livestock_goat" />
             <field name="name">Castrate</field>
             <field name="is_agri">True</field>
             <field name="cost_type">livestock_sale</field>
-            <field name="uom_id" ref="agri_uom_goat_castrate"/>
+            <field name="uom_id" ref="agri_uom_goat_castrate" />
             <field name="sale_ok">True</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_livestock_goat_kid_2tooth" model="product.category">
-            <field name="parent_id" ref="product_category_livestock_goat"/>
+            <field name="parent_id" ref="product_category_livestock_goat" />
             <field name="name">Kid (2 tooth)</field>
             <field name="is_agri">True</field>
             <field name="cost_type">livestock_sale</field>
-            <field name="uom_id" ref="agri_uom_goat_kid_2tooth"/>
+            <field name="uom_id" ref="agri_uom_goat_kid_2tooth" />
             <field name="sale_ok">True</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_livestock_goat_kid" model="product.category">
-            <field name="parent_id" ref="product_category_livestock_goat"/>
+            <field name="parent_id" ref="product_category_livestock_goat" />
             <field name="name">Kid</field>
             <field name="is_agri">True</field>
             <field name="cost_type">livestock_sale</field>
-            <field name="uom_id" ref="agri_uom_goat_kid"/>
+            <field name="uom_id" ref="agri_uom_goat_kid" />
             <field name="sale_ok">True</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_livestock_rabbit" model="product.category">
-            <field name="parent_id" ref="product_category_livestock"/>
+            <field name="parent_id" ref="product_category_livestock" />
             <field name="name">Rabbit</field>
         </record>
 
         <record id="product_category_livestock_rabbit_kit" model="product.category">
-            <field name="parent_id" ref="product_category_livestock_rabbit"/>
+            <field name="parent_id" ref="product_category_livestock_rabbit" />
             <field name="name">Kit</field>
             <field name="is_agri">True</field>
             <field name="cost_type">livestock_sale</field>
-            <field name="uom_id" ref="agri_uom_rabbit"/>
+            <field name="uom_id" ref="agri_uom_rabbit" />
             <field name="sale_ok">True</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_livestock_rabbit_weaner_kit" model="product.category">
-            <field name="parent_id" ref="product_category_livestock_rabbit"/>
+            <field name="parent_id" ref="product_category_livestock_rabbit" />
             <field name="name">Weaner Kit</field>
             <field name="is_agri">True</field>
             <field name="cost_type">livestock_sale</field>
-            <field name="uom_id" ref="agri_uom_rabbit"/>
+            <field name="uom_id" ref="agri_uom_rabbit" />
             <field name="sale_ok">True</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_livestock_rabbit_doe" model="product.category">
-            <field name="parent_id" ref="product_category_livestock_rabbit"/>
+            <field name="parent_id" ref="product_category_livestock_rabbit" />
             <field name="name">Doe</field>
             <field name="is_agri">True</field>
             <field name="cost_type">livestock_sale</field>
-            <field name="uom_id" ref="agri_uom_rabbit"/>
+            <field name="uom_id" ref="agri_uom_rabbit" />
             <field name="sale_ok">True</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_livestock_rabbit_lapin" model="product.category">
-            <field name="parent_id" ref="product_category_livestock_rabbit"/>
+            <field name="parent_id" ref="product_category_livestock_rabbit" />
             <field name="name">Lapin</field>
             <field name="is_agri">True</field>
             <field name="cost_type">livestock_sale</field>
-            <field name="uom_id" ref="agri_uom_rabbit"/>
+            <field name="uom_id" ref="agri_uom_rabbit" />
             <field name="sale_ok">True</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_livestock_antelope" model="product.category">
-            <field name="parent_id" ref="product_category_livestock_rabbit"/>
+            <field name="parent_id" ref="product_category_livestock_rabbit" />
             <field name="name">Antelope</field>
             <field name="is_agri">True</field>
             <field name="cost_type">livestock_sale</field>
-            <field name="uom_id" ref="agri_uom_antelope_antelope"/>
+            <field name="uom_id" ref="agri_uom_antelope_antelope" />
             <field name="sale_ok">True</field>
             <field name="purchase_ok">True</field>
         </record>
@@ -675,31 +675,31 @@
         </record>
 
         <record id="product_category_livestock_product_milk" model="product.category">
-            <field name="parent_id" ref="product_category_livestock_product"/>
+            <field name="parent_id" ref="product_category_livestock_product" />
             <field name="name">Milk</field>
             <field name="is_agri">True</field>
             <field name="cost_type">livestock_product</field>
-            <field name="uom_id" ref="uom.product_uom_litre"/>
+            <field name="uom_id" ref="uom.product_uom_litre" />
             <field name="sale_ok">True</field>
             <field name="purchase_ok">False</field>
         </record>
 
         <record id="product_category_livestock_product_wool" model="product.category">
-            <field name="parent_id" ref="product_category_livestock_product"/>
+            <field name="parent_id" ref="product_category_livestock_product" />
             <field name="name">Wool</field>
             <field name="is_agri">True</field>
             <field name="cost_type">livestock_product</field>
-            <field name="uom_id" ref="uom.product_uom_kgm"/>
+            <field name="uom_id" ref="uom.product_uom_kgm" />
             <field name="sale_ok">True</field>
             <field name="purchase_ok">False</field>
         </record>
 
         <record id="product_category_livestock_product_fur" model="product.category">
-            <field name="parent_id" ref="product_category_livestock_product"/>
+            <field name="parent_id" ref="product_category_livestock_product" />
             <field name="name">Fur</field>
             <field name="is_agri">True</field>
             <field name="cost_type">livestock_product</field>
-            <field name="uom_id" ref="uom.product_uom_kgm"/>
+            <field name="uom_id" ref="uom.product_uom_kgm" />
             <field name="sale_ok">True</field>
             <field name="purchase_ok">False</field>
         </record>
@@ -710,21 +710,21 @@
         </record>
 
         <record id="product_category_animal_feed_crop" model="product.category">
-            <field name="parent_id" ref="product_category_animal_feed"/>
+            <field name="parent_id" ref="product_category_animal_feed" />
             <field name="name">Crop</field>
             <field name="is_agri">True</field>
             <field name="cost_type">animal_feed</field>
-            <field name="uom_id" ref="uom.product_uom_kgm"/>
+            <field name="uom_id" ref="uom.product_uom_kgm" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_animal_feed_lick" model="product.category">
-            <field name="parent_id" ref="product_category_animal_feed"/>
+            <field name="parent_id" ref="product_category_animal_feed" />
             <field name="name">Lick</field>
             <field name="is_agri">True</field>
             <field name="cost_type">animal_feed</field>
-            <field name="uom_id" ref="uom.product_uom_ton"/>
+            <field name="uom_id" ref="uom.product_uom_ton" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
@@ -736,51 +736,51 @@
         </record>
 
         <record id="product_category_husbandry_drenching_vaccination" model="product.category">
-            <field name="parent_id" ref="product_category_husbandry"/>
+            <field name="parent_id" ref="product_category_husbandry" />
             <field name="name">Drenching &amp; vaccination</field>
             <field name="is_agri">True</field>
             <field name="cost_type">husbandry</field>
-            <field name="uom_id" ref="agri.agri_uom_lsu"/>
+            <field name="uom_id" ref="agri.agri_uom_lsu" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_husbandry_dipping_jetting" model="product.category">
-            <field name="parent_id" ref="product_category_husbandry"/>
+            <field name="parent_id" ref="product_category_husbandry" />
             <field name="name">Dipping &amp; jetting</field>
             <field name="is_agri">True</field>
             <field name="cost_type">husbandry</field>
-            <field name="uom_id" ref="agri.agri_uom_lsu"/>
+            <field name="uom_id" ref="agri.agri_uom_lsu" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_husbandry_veterinary" model="product.category">
-            <field name="parent_id" ref="product_category_husbandry"/>
+            <field name="parent_id" ref="product_category_husbandry" />
             <field name="name">Veterinary</field>
             <field name="is_agri">True</field>
             <field name="cost_type">husbandry</field>
-            <field name="uom_id" ref="agri_uom_lsu"/>
+            <field name="uom_id" ref="agri_uom_lsu" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_husbandry_shearing" model="product.category">
-            <field name="parent_id" ref="product_category_husbandry"/>
+            <field name="parent_id" ref="product_category_husbandry" />
             <field name="name">Shearing</field>
             <field name="is_agri">True</field>
             <field name="cost_type">husbandry</field>
-            <field name="uom_id" ref="agri_uom_lsu"/>
+            <field name="uom_id" ref="agri_uom_lsu" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_husbandry_crutching" model="product.category">
-            <field name="parent_id" ref="product_category_husbandry"/>
+            <field name="parent_id" ref="product_category_husbandry" />
             <field name="name">Crutching</field>
             <field name="is_agri">True</field>
             <field name="cost_type">husbandry</field>
-            <field name="uom_id" ref="agri_uom_lsu"/>
+            <field name="uom_id" ref="agri_uom_lsu" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
@@ -792,21 +792,21 @@
         </record>
 
         <record id="product_category_livestock_harvest_marketing" model="product.category">
-            <field name="parent_id" ref="product_category_livestock_harvest"/>
+            <field name="parent_id" ref="product_category_livestock_harvest" />
             <field name="name">Marketing</field>
             <field name="is_agri">True</field>
             <field name="cost_type">livestock_harvest</field>
-            <field name="uom_id" ref="agri_uom_lsu"/>
+            <field name="uom_id" ref="agri_uom_lsu" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_livestock_harvest_transport" model="product.category">
-            <field name="parent_id" ref="product_category_livestock_harvest"/>
+            <field name="parent_id" ref="product_category_livestock_harvest" />
             <field name="name">Transport</field>
             <field name="is_agri">True</field>
             <field name="cost_type">livestock_harvest</field>
-            <field name="uom_id" ref="agri_uom_lsu"/>
+            <field name="uom_id" ref="agri_uom_lsu" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
@@ -818,121 +818,121 @@
         </record>
 
         <record id="product_category_overhead_depreciation" model="product.category">
-            <field name="parent_id" ref="product_category_overhead"/>
+            <field name="parent_id" ref="product_category_overhead" />
             <field name="name">Depreciation</field>
             <field name="is_agri">True</field>
             <field name="cost_type">overhead</field>
-            <field name="uom_id" ref="agri_uom_sum"/>
+            <field name="uom_id" ref="agri_uom_sum" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_overhead_fuel" model="product.category">
-            <field name="parent_id" ref="product_category_overhead"/>
+            <field name="parent_id" ref="product_category_overhead" />
             <field name="name">Fuel</field>
             <field name="is_agri">True</field>
             <field name="cost_type">overhead</field>
-            <field name="uom_id" ref="uom.product_uom_litre"/>
+            <field name="uom_id" ref="uom.product_uom_litre" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_overhead_lubricant" model="product.category">
-            <field name="parent_id" ref="product_category_overhead"/>
+            <field name="parent_id" ref="product_category_overhead" />
             <field name="name">Lubricant</field>
             <field name="is_agri">True</field>
             <field name="cost_type">overhead</field>
-            <field name="uom_id" ref="uom.product_uom_litre"/>
+            <field name="uom_id" ref="uom.product_uom_litre" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_overhead_repairs_maintenance" model="product.category">
-            <field name="parent_id" ref="product_category_overhead"/>
+            <field name="parent_id" ref="product_category_overhead" />
             <field name="name">Repairs &amp; maintenance</field>
             <field name="is_agri">True</field>
             <field name="cost_type">overhead</field>
-            <field name="uom_id" ref="agri_uom_sum"/>
+            <field name="uom_id" ref="agri_uom_sum" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_overhead_electricity" model="product.category">
-            <field name="parent_id" ref="product_category_overhead"/>
+            <field name="parent_id" ref="product_category_overhead" />
             <field name="name">Electricity</field>
             <field name="is_agri">True</field>
             <field name="cost_type">overhead</field>
-            <field name="uom_id" ref="agri_uom_sum"/>
+            <field name="uom_id" ref="agri_uom_sum" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_overhead_loan_interest" model="product.category">
-            <field name="parent_id" ref="product_category_overhead"/>
+            <field name="parent_id" ref="product_category_overhead" />
             <field name="name">Loan interest</field>
             <field name="is_agri">True</field>
             <field name="cost_type">overhead</field>
-            <field name="uom_id" ref="agri_uom_sum"/>
+            <field name="uom_id" ref="agri_uom_sum" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_overhead_water" model="product.category">
-            <field name="parent_id" ref="product_category_overhead"/>
+            <field name="parent_id" ref="product_category_overhead" />
             <field name="name">Water</field>
             <field name="is_agri">True</field>
             <field name="cost_type">overhead</field>
-            <field name="uom_id" ref="agri_uom_sum"/>
+            <field name="uom_id" ref="agri_uom_sum" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_overhead_permanent_labour" model="product.category">
-            <field name="parent_id" ref="product_category_overhead"/>
+            <field name="parent_id" ref="product_category_overhead" />
             <field name="name">Permanent labour</field>
             <field name="is_agri">True</field>
             <field name="cost_type">overhead</field>
-            <field name="uom_id" ref="agri_uom_sum"/>
+            <field name="uom_id" ref="agri_uom_sum" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_overhead_scheduling" model="product.category">
-            <field name="parent_id" ref="product_category_overhead"/>
+            <field name="parent_id" ref="product_category_overhead" />
             <field name="name">Scheduling</field>
             <field name="is_agri">True</field>
             <field name="cost_type">overhead</field>
-            <field name="uom_id" ref="agri_uom_sum"/>
+            <field name="uom_id" ref="agri_uom_sum" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_overhead_license" model="product.category">
-            <field name="parent_id" ref="product_category_overhead"/>
+            <field name="parent_id" ref="product_category_overhead" />
             <field name="name">License</field>
             <field name="is_agri">True</field>
             <field name="cost_type">overhead</field>
-            <field name="uom_id" ref="agri_uom_sum"/>
+            <field name="uom_id" ref="agri_uom_sum" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_overhead_asset_insurance" model="product.category">
-            <field name="parent_id" ref="product_category_overhead"/>
+            <field name="parent_id" ref="product_category_overhead" />
             <field name="name">Asset insurance</field>
             <field name="is_agri">True</field>
             <field name="cost_type">overhead</field>
-            <field name="uom_id" ref="agri_uom_sum"/>
+            <field name="uom_id" ref="agri_uom_sum" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>
 
         <record id="product_category_overhead_other" model="product.category">
-            <field name="parent_id" ref="product_category_overhead"/>
+            <field name="parent_id" ref="product_category_overhead" />
             <field name="name">Other</field>
             <field name="is_agri">True</field>
             <field name="cost_type">overhead</field>
-            <field name="uom_id" ref="agri_uom_sum"/>
+            <field name="uom_id" ref="agri_uom_sum" />
             <field name="sale_ok">False</field>
             <field name="purchase_ok">True</field>
         </record>

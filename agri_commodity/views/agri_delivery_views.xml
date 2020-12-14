@@ -50,11 +50,12 @@
             <form string="Deliveries">
                 <header>
                     <button string="Delivered" type="object" name="action_deliver" groups="agri.agri_group_user" class="oe_highlight" states="draft" />
-                    <button string="Done" type="object" name="action_done" 
+                    <button string="Done" type="object" name="action_done" class="oe_highlight"
                             attrs="{'invisible': ['|', ('state', '!=', 'delivered'), '&amp;', ('state', '=', 'delivered'), ('grading_id', '=', False)]}" />
-                    <button string="Done" type="object" name="action_done" 
+                    <button string="Done" type="object" name="action_done" class="oe_highlight"
                             attrs="{'invisible': ['|', ('state', '!=', 'delivered'), '&amp;', ('state', '=', 'delivered'), ('grading_id', '!=', False)]}" 
                             confirm="Delivery is not yet graded. Are you sure?" />
+                    <button string="Reset" type="object" name="action_reset" states="delivered" />
                     <field name="state" widget="statusbar" />
                 </header>
                 <sheet>
@@ -103,6 +104,7 @@
                                     context="{'default_grading_id': grading_id, 'default_grading_product_tmpl_id': product_id, 'default_product_id': False, 'default_company_id': company_id}">
                                     <tree string="Components" editable="bottom">
                                         <field name="company_id" invisible="1" />
+                                        <field name="currency_id" invisible="1" />
                                         <field name="sequence" widget="handle" />
                                         <field name="product_id" context="{'default_type': 'product'}" />
                                         <field name="product_tmpl_id" invisible="1" />
@@ -113,9 +115,9 @@
                                         <field name="grading_product_tmpl_categ_id" invisible="1" />
                                         <field name="possible_grading_product_template_attribute_value_ids" invisible="1" />
                                         <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="uom.group_uom" />
-                                        <field name="percent" />
-                                        <field name="product_qty" />
-                                        <field name="price" />
+                                        <field name="percent" sum="Percent" />
+                                        <field name="product_qty" sum="Quantity" />
+                                        <field name="price" sum="Price" />
                                     </tree>
                                 </field>
                             </group>

@@ -14,6 +14,6 @@
         parent="agri_configuration_menu" 
         sequence="0" 
         action="agri_settings_action" 
-        groups="base.group_system"/>
+        groups="base.group_system" />
 
 </odoo>

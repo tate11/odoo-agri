@@ -7,11 +7,11 @@
         <record id="product_category_search_view" model="ir.ui.view">
             <field name="name">product.category.search.inherit.agri</field>
             <field name="model">product.category</field>
-            <field name="inherit_id" ref="product.product_category_search_view"/>
+            <field name="inherit_id" ref="product.product_category_search_view" />
             <field name="arch" type="xml">
                 <field name="parent_id" position="after">
                     <separator/>
-                    <filter string="Is Agri" name="filter_is_agri" domain="[('is_agri', '=', True)]"/>
+                    <filter string="Is Agri" name="filter_is_agri" domain="[('is_agri', '=', True)]" />
                 </field>
             </field>
         </record>
@@ -19,15 +19,15 @@
         <record id="product_category_form_view" model="ir.ui.view">
             <field name="name">product.category.form.inherit.agri</field>
             <field name="model">product.category</field>
-            <field name="inherit_id" ref="product.product_category_form_view"/>
+            <field name="inherit_id" ref="product.product_category_form_view" />
             <field name="arch" type="xml">
                 <group name="first" position="after">
                     <group string="Agri" groups="agri.agri_group_manager">
-                        <field name="is_agri"/>
-                        <field name="cost_type"/>
-                        <field name="uom_id" attrs="{'required': [('is_agri', '=', True)]}"/>
-                        <field name="sale_ok"/>
-                        <field name="purchase_ok"/>
+                        <field name="is_agri" />
+                        <field name="cost_type" />
+                        <field name="uom_id" attrs="{'required': [('is_agri', '=', True)]}" />
+                        <field name="sale_ok" />
+                        <field name="purchase_ok" />
                     </group>
                 </group>
             </field>
@@ -36,14 +36,14 @@
         <record id="product_category_list_view" model="ir.ui.view">
             <field name="name">product.category.list.inherit.agri</field>
             <field name="model">product.category</field>
-            <field name="inherit_id" ref="product.product_category_list_view"/>
+            <field name="inherit_id" ref="product.product_category_list_view" />
             <field name="arch" type="xml">
                 <field name="display_name" position="after">
-                    <field name="is_agri"/>
-                    <field name="cost_type"/>
-                    <field name="uom_id" attrs="{'required': [('is_agri', '=', True)]}"/>
-                    <field name="sale_ok"/>
-                    <field name="purchase_ok"/>
+                    <field name="is_agri" />
+                    <field name="cost_type" />
+                    <field name="uom_id" attrs="{'required': [('is_agri', '=', True)]}" />
+                    <field name="sale_ok" />
+                    <field name="purchase_ok" />
                 </field>
             </field>
         </record>
@@ -73,7 +73,7 @@
             parent="agri_configuration_menu"
             sequence="10"
             action="agri_product_category_action"
-            groups="agri.agri_group_manager"/>
+            groups="agri.agri_group_manager" />
 
     </data>
 </odoo>

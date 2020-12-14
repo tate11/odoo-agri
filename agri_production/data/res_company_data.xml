@@ -2,8 +2,8 @@
 <odoo>
     <data noupdate="0">
         
-        <function model="res.company" name="create_missing_sequences"/>
-        <function model="res.company" name="create_missing_date_range_types"/>
+        <function model="res.company" name="create_missing_sequences" />
+        <function model="res.company" name="create_missing_date_range_types" />
 
     </data>
 </odoo>

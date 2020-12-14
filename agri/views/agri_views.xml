@@ -3,11 +3,11 @@
 
     <menuitem id="agri_menu_root" name="Agri"
         web_icon="agri,static/description/icon.png"
-        groups="agri_group_user"/>
+        groups="agri_group_user" />
 
     <menuitem id="agri_configuration_menu" name="Configuration"
         parent="agri_menu_root"
         sequence="100"
-        groups="agri_group_manager"/>
+        groups="agri_group_manager" />
 
 </odoo>

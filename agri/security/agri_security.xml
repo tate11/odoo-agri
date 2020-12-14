@@ -6,20 +6,20 @@
 
     <record id="agri_group_user" model="res.groups">
         <field name="name">Agri User</field>
-        <field name="category_id" ref="agri_category_agri"/>
-        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="category_id" ref="agri_category_agri" />
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
     </record>
 
     <record id="agri_group_manager" model="res.groups">
         <field name="name">Agri Admin</field>
-        <field name="category_id" ref="agri_category_agri"/>
-        <field name="implied_ids" eval="[(4, ref('agri_group_user'))]"/>
-        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        <field name="category_id" ref="agri_category_agri" />
+        <field name="implied_ids" eval="[(4, ref('agri_group_user'))]" />
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]" />
     </record>
 
     <data noupdate="1">
         <record id="base.default_user" model="res.users">
-            <field name="groups_id" eval="[(4,ref('agri.agri_group_user'))]"/>
+            <field name="groups_id" eval="[(4,ref('agri.agri_group_user'))]" />
         </record>
     </data>
 </odoo>

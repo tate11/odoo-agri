@@ -9,12 +9,12 @@
             <field name="arch" type="xml">
                 <form string="Byproduct">
                     <group>
-                        <field name="company_id"/>
-                        <field name="product_id"/>
-                        <label for="product_qty"/>
+                        <field name="company_id" />
+                        <field name="product_id" />
+                        <label for="product_qty" />
                         <div class="o_row">
-                            <field name="product_qty"/>
-                            <field name="product_uom_id" groups="uom.group_uom"/>
+                            <field name="product_qty" />
+                            <field name="product_uom_id" groups="uom.group_uom" />
                         </div>
                     </group>
                 </form>
@@ -29,27 +29,27 @@
                 <form string="Grading">
                     <sheet>
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger"
-                                attrs="{'invisible': [('active', '=', True)]}"/>
+                                attrs="{'invisible': [('active', '=', True)]}" />
                         <group>
                             <group>
-                                <field name="active" invisible="1"/>
-                                <field name="product_tmpl_id" context="{'default_type': 'product'}"/>
-                                <field name="product_uom_category_id" invisible="1"/>
+                                <field name="active" invisible="1" />
+                                <field name="product_tmpl_id" context="{'default_type': 'product'}" />
+                                <field name="product_uom_category_id" invisible="1" />
                                 <field name="product_id" groups="product.group_product_variant"
-                                       context="{'default_type': 'product'}"/>
-                                <label for="product_qty" string="Quantity"/>
+                                       context="{'default_type': 'product'}" />
+                                <label for="product_qty" string="Quantity" />
                                 <div class="o_row">
-                                    <field name="product_qty"/>
+                                    <field name="product_qty" />
                                     <field name="product_uom_id" options="{'no_open':True,'no_create':True}"
-                                           groups="uom.group_uom"/>
+                                           groups="uom.group_uom" />
                                 </div>
-                                <field name="currency_id" invisible="1"/>
-                                <field name="price"/>
+                                <field name="currency_id" invisible="1" />
+                                <field name="price" />
                             </group>
                             <group>
-                                <field name="code"/>
+                                <field name="code" />
                                 <field name="company_id" groups="base.group_multi_company"
-                                       options="{'no_create': True}"/>
+                                       options="{'no_create': True}" />
                             </group>
                         </group>
                         <notebook>
@@ -57,26 +57,27 @@
                                 <field name="grading_line_ids" widget="one2many"
                                        context="{'default_grading_id': id, 'default_grading_product_tmpl_id': product_tmpl_id, 'default_product_id': False, 'default_company_id': company_id}">
                                     <tree string="Components" editable="bottom">
-                                        <field name="company_id" invisible="1"/>
-                                        <field name="sequence" widget="handle"/>
-                                        <field name="product_id" context="{'default_type': 'product'}"/>
-                                        <field name="product_tmpl_id" invisible="1"/>
-                                        <field name="unit_price"/>
-                                        <field name="product_uom_category_id" invisible="1"/>
-                                        <field name="grading_product_tmpl_id" invisible="1"/>
-                                        <field name="grading_product_tmpl_categ_id" invisible="1"/>
+                                        <field name="company_id" invisible="1" />
+                                        <field name="currency_id" invisible="1" />
+                                        <field name="sequence" widget="handle" />
+                                        <field name="product_id" context="{'default_type': 'product'}" />
+                                        <field name="product_tmpl_id" invisible="1" />
+                                        <field name="unit_price" />
+                                        <field name="product_uom_category_id" invisible="1" />
+                                        <field name="grading_product_tmpl_id" invisible="1" />
+                                        <field name="grading_product_tmpl_categ_id" invisible="1" />
                                         <field name="possible_grading_product_template_attribute_value_ids"
-                                               invisible="1"/>
+                                               invisible="1" />
                                         <field name="product_uom_id" options="{'no_open':True,'no_create':True}"
-                                               groups="uom.group_uom"/>
+                                               groups="uom.group_uom" />
                                         <field name="grading_product_template_attribute_value_ids"
                                                widget="many2many_tags"
                                                options="{'no_create': True}"
                                                attrs="{'column_invisible': [('parent.product_id', '!=', False)]}"
-                                               groups="product.group_product_variant"/>
-                                        <field name="percent"/>
-                                        <field name="product_qty"/>
-                                        <field name="price"/>
+                                               groups="product.group_product_variant" />
+                                        <field name="percent" sun="Percent" />
+                                        <field name="product_qty" sum="Quantity" />
+                                        <field name="price" sum="Price" />
                                     </tree>
                                 </field>
                             </page>
@@ -84,18 +85,18 @@
                                 <field name="byproduct_ids" 
                                        context="{'default_grading_id': id, 'default_company_id': company_id}">
                                     <tree string="By-products" editable="top">
-                                        <field name="company_id" invisible="1"/>
-                                        <field name="product_id" context="{'default_type': 'product'}"/>
-                                        <field name="product_qty"/>
-                                        <field name="product_uom_id" groups="uom.group_uom"/>
+                                        <field name="company_id" invisible="1" />
+                                        <field name="product_id" context="{'default_type': 'product'}" />
+                                        <field name="product_qty" />
+                                        <field name="product_uom_id" groups="uom.group_uom" />
                                     </tree>
                                 </field>
                             </page>
                         </notebook>
                     </sheet>
                     <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers"/>
-                        <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
+                        <field name="message_follower_ids" widget="mail_followers" />
+                        <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1" />
                     </div>
                 </form>
             </field>
@@ -106,14 +107,14 @@
             <field name="model">agri.grading</field>
             <field name="arch" type="xml">
                 <tree string="Grading">
-                    <field name="active" invisible="1"/>
-                    <field name="sequence" widget="handle"/>
-                    <field name="product_tmpl_id"/>
-                    <field name="code" optional="show"/>
-                    <field name="product_id" groups="product.group_product_variant" optional="show"/>
-                    <field name="company_id" groups="base.group_multi_company" optional="show"/>
-                    <field name="product_qty" optional="show"/>
-                    <field name="product_uom_id" groups="uom.group_uom" optional="show" string="Unit of Measure"/>
+                    <field name="active" invisible="1" />
+                    <field name="sequence" widget="handle" />
+                    <field name="product_tmpl_id" />
+                    <field name="code" optional="show" />
+                    <field name="product_id" groups="product.group_product_variant" optional="show" />
+                    <field name="company_id" groups="base.group_multi_company" optional="show" />
+                    <field name="product_qty" optional="show" />
+                    <field name="product_uom_id" groups="uom.group_uom" optional="show" string="Unit of Measure" />
                 </tree>
             </field>
         </record>
@@ -123,20 +124,20 @@
             <field name="model">agri.grading</field>
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile">
-                    <field name="product_tmpl_id"/>
-                    <field name="product_qty"/>
-                    <field name="product_uom_id"/>
+                    <field name="product_tmpl_id" />
+                    <field name="product_qty" />
+                    <field name="product_uom_id" />
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_global_click">
                                 <div class="o_kanban_record_top">
                                     <div class="o_kanban_record_headings mt4">
                                         <strong class="o_kanban_record_title"><span clatt="mt4"><field
-                                            name="product_tmpl_id"/></span></strong>
+                                            name="product_tmpl_id" /></span></strong>
                                     </div>
                                     <span class="float-right badge badge-pill"><t
-                                        t-esc="record.product_qty.value"/> <small><t
-                                        t-esc="record.product_uom_id.value"/></small></span>
+                                        t-esc="record.product_qty.value" /> <small><t
+                                        t-esc="record.product_uom_id.value" /></small></span>
                                 </div>
                             </div>
                         </t>
@@ -151,15 +152,15 @@
             <field name="arch" type="xml">
                 <search string="Search Grading">
                     <field name="code" string="Gradings"
-                           filter_domain="['|', ('code', 'ilike', self), ('product_tmpl_id', 'ilike', self)]"/>
-                    <field name="product_tmpl_id" string="Product"/>
-                    <field name="grading_line_ids" string="Component"/>
+                           filter_domain="['|', ('code', 'ilike', self), ('product_tmpl_id', 'ilike', self)]" />
+                    <field name="product_tmpl_id" string="Product" />
+                    <field name="grading_line_ids" string="Component" />
                     <separator/>
-                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]" />
                     <group expand="0" string="Group By...">
-                        <filter string="Product" name="product" domain="[]" context="{'group_by': 'product_tmpl_id'}"/>
+                        <filter string="Product" name="product" domain="[]" context="{'group_by': 'product_tmpl_id'}" />
                         <filter string='Unit of Measure' name="default_unit_of_measure" domain="[]"
-                                context="{'group_by' : 'product_uom_id'}"/>
+                                context="{'group_by' : 'product_uom_id'}" />
                     </group>
                 </search>
             </field>
@@ -171,7 +172,7 @@
             <field name="res_model">agri.grading</field>
             <field name="domain">[]</field> <!-- force empty -->
             <field name="view_mode">tree,kanban,form</field>
-            <field name="search_view_id" ref="agri_grading_view_search"/>
+            <field name="search_view_id" ref="agri_grading_view_search" />
             <field name="context">{'search_default_group_by_type': True,
                                    'default_company_id': allowed_company_ids[0]}</field>
             <field name="help" type="html">
@@ -188,7 +189,7 @@
         <!--        <menuitem id="menu_agri_grading_form_action"
                           action="agri_grading_action"
                           parent="menu_agri_commodity"
-                          sequence="13"/>-->
+                          sequence="13" />-->
 
         <!-- BOM Line -->
         <record id="agri_grading_line_view_form" model="ir.ui.view">
@@ -198,23 +199,23 @@
                 <form string="Grading line">
                     <group>
                         <group string="Product">
-                            <field name="product_id"/>
-                            <field name="grading_product_tmpl_id" invisible="1"/>
-                            <field name="grading_product_tmpl_categ_id" invisible="1"/>
-                            <label for="product_qty" string="Quantity"/>
+                            <field name="product_id" />
+                            <field name="grading_product_tmpl_id" invisible="1" />
+                            <field name="grading_product_tmpl_categ_id" invisible="1" />
+                            <label for="product_qty" string="Quantity" />
                             <div class="o_row">
-                                <field name="product_qty"/>
-                                <field name="product_uom_category_id" invisible="1"/>
+                                <field name="product_qty" />
+                                <field name="product_uom_category_id" invisible="1" />
                                 <field name="product_uom_id" options="{'no_open':True,'no_create':True}"
-                                       groups="uom.group_uom"/>
+                                       groups="uom.group_uom" />
                             </div>
-                            <field name="possible_grading_product_template_attribute_value_ids" invisible="1"/>
+                            <field name="possible_grading_product_template_attribute_value_ids" invisible="1" />
                             <field name="grading_product_template_attribute_value_ids" widget="many2many_tags"
-                                   options="{'no_create': True}" groups="product.group_product_variant"/>
+                                   options="{'no_create': True}" groups="product.group_product_variant" />
                         </group>
                         <group string="Grading details">
-                            <field name="company_id" invisible="1"/>
-                            <field name="sequence"/>
+                            <field name="company_id" invisible="1" />
+                            <field name="sequence" />
                         </group>
                     </group>
                 </form>
