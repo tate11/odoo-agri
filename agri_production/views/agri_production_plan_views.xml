@@ -82,7 +82,7 @@
                                 <field name="product_tmpl_id" invisible="1" />
                                 <field name="unit_price" />
                                 <field name="product_uom_category_id" invisible="1" />
-                                <field name="grading_product_qty" invisible="1" />
+                                <field name="grading_gross_product_qty" invisible="1" />
                                 <field name="grading_product_tmpl_id" invisible="1" />
                                 <field name="grading_product_tmpl_categ_id" invisible="1" />
                                 <field name="possible_grading_product_template_attribute_value_ids" invisible="1" />

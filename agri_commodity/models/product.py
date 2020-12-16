@@ -8,10 +8,24 @@ class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
     is_agri_commodity = fields.Boolean('Is Agri Commodity')
-    delivery_loss_perc = fields.Float('Delivery Loss Percent',
-                                      default=0.0,
-                                      digits=(3, 2))
-    default_grading_id = fields.Many2one('agri.grading', string='Default Grading')
+    default_grading_id = fields.Many2one('agri.grading',
+                                         string='Default Grading')
+    default_grading_currency_id = fields.Many2one(
+        related='default_grading_id.currency_id')
+    default_grading_product_uom_id = fields.Many2one(
+        related='default_grading_id.product_uom_id')
+    default_grading_gross_product_qty = fields.Float(
+        related='default_grading_id.gross_product_qty')
+    default_grading_moisture_loss_perc = fields.Float(
+        related='default_grading_id.moisture_loss_perc', readonly=False)
+    default_grading_dry_product_qty = fields.Float(
+        related='default_grading_id.dry_product_qty')
+    default_grading_processing_loss_perc = fields.Float(
+        related='default_grading_id.processing_loss_perc', readonly=False)
+    default_grading_grading_loss_perc = fields.Float(
+        related='default_grading_id.grading_loss_perc', readonly=False)
+    default_grading_net_product_qty = fields.Float(
+        related='default_grading_id.net_product_qty')
     default_grading_line_ids = fields.One2many(
         related='default_grading_id.grading_line_ids', readonly=False)
     default_grading_byproduct_ids = fields.One2many(
@@ -27,13 +41,6 @@ class ProductTemplate(models.Model):
         compute='_compute_used_in_grading_count',
         compute_sudo=False)
 
-    @api.constrains('delivery_loss_perc')
-    def _check_delivery_loss_perc(self):
-        for product in self:
-            if product.delivery_loss_perc < 0 or product.delivery_loss_perc > 100:
-                raise ValidationError(
-                    _('Delivery Loss Percent must be from 0 to 100'))
-
     def _compute_grading_count(self):
         for product in self:
             product.grading_count = self.env['agri.grading'].search_count([
@@ -47,6 +54,36 @@ class ProductTemplate(models.Model):
                     ('grading_line_ids.product_id', 'in',
                      template.product_variant_ids.ids)
                 ])
+
+    @api.depends('default_grading_moisture_loss_perc', 'default_grading_processing_loss_perc',
+                 'default_grading_grading_loss_perc', 'default_grading_id', 'default_grading_line_ids')
+    @api.onchange('default_grading_moisture_loss_perc',
+                  'default_grading_processing_loss_perc',
+                  'default_grading_grading_loss_perc')
+    def _compute_grading_product_qty(self):
+        for template in self:
+            if (template.default_grading_id):
+                template.default_grading_id.moisture_loss_perc = template.default_grading_moisture_loss_perc
+                template.default_grading_id.processing_loss_perc = template.default_grading_processing_loss_perc
+                template.default_grading_id.grading_loss_perc = template.default_grading_grading_loss_perc
+                template.default_grading_id._compute_product_qty()
+                template.default_grading_gross_product_qty = template.default_grading_id.gross_product_qty
+                template.default_grading_dry_product_qty = template.default_grading_id.dry_product_qty
+                template.default_grading_net_product_qty = template.default_grading_id.net_product_qty
+                line_commands = []
+                for grading_line in template.default_grading_line_ids:
+                    product_qty = template.default_grading_net_product_qty * grading_line.percent / 100.0
+                    unit_price = grading_line._calc_unit_price(
+                        product_qty=product_qty)
+                    price = unit_price * product_qty
+                    line_commands += [(1, grading_line.id, {
+                        'product_qty': product_qty,
+                        'unit_price': unit_price,
+                        'price': price,
+                    })]
+                template.default_grading_line_ids = line_commands
+                template.default_grading_id.grading_line_ids = template.default_grading_line_ids
+                template.default_grading_id._compute_grading_lines()
 
     def action_used_in_grading(self):
         self.ensure_one()
@@ -71,6 +108,15 @@ class ProductTemplate(models.Model):
                 'byproduct_ids':
                 vals['default_grading_byproduct_ids']
                 if 'default_grading_byproduct_ids' in vals else [],
+                'moisture_loss_perc':
+                vals['default_grading_moisture_loss_perc']
+                if 'default_grading_moisture_loss_perc' in vals else 0.0,
+                'processing_loss_perc':
+                vals['default_grading_processing_loss_perc']
+                if 'default_grading_processing_loss_perc' in vals else 0.0,
+                'grading_loss_perc':
+                vals['default_grading_grading_loss_perc']
+                if 'default_grading_grading_loss_perc' in vals else 0.0,
             })
             product.write({'default_grading_id': grading.id})
         return product
@@ -92,6 +138,15 @@ class ProductTemplate(models.Model):
                     'byproduct_ids':
                     vals['default_grading_byproduct_ids']
                     if 'default_grading_byproduct_ids' in vals else [],
+                    'moisture_loss_perc':
+                    vals['default_grading_moisture_loss_perc']
+                    if 'default_grading_moisture_loss_perc' in vals else 0.0,
+                    'processing_loss_perc':
+                    vals['default_grading_processing_loss_perc']
+                    if 'default_grading_processing_loss_perc' in vals else 0.0,
+                    'grading_loss_perc':
+                    vals['default_grading_grading_loss_perc']
+                    if 'default_grading_grading_loss_perc' in vals else 0.0,
                 })
                 vals.update({'default_grading_id': grading.id})
         return super(ProductTemplate, self).write(vals)

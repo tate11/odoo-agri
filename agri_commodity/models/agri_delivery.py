@@ -86,8 +86,25 @@ class Delivery(models.Model):
                                  ondelete='set null',
                                  states={'done': [('readonly', True)]},
                                  readonly=False)
-    grading_product_qty = fields.Float(string='Grading Quantity',
-                                       related='grading_id.product_qty')
+    grading_currency_id = fields.Many2one(related='grading_id.currency_id')
+    grading_gross_product_qty = fields.Float(
+        related='grading_id.gross_product_qty')
+    grading_moisture_loss_perc = fields.Float(
+        related='grading_id.moisture_loss_perc',
+        states={'done': [('readonly', True)]},
+        readonly=False)
+    grading_dry_product_qty = fields.Float(
+        related='grading_id.dry_product_qty')
+    grading_processing_loss_perc = fields.Float(
+        related='grading_id.processing_loss_perc',
+        states={'done': [('readonly', True)]},
+        readonly=False)
+    grading_grading_loss_perc = fields.Float(
+        related='grading_id.grading_loss_perc',
+        states={'done': [('readonly', True)]},
+        readonly=False)
+    grading_net_product_qty = fields.Float(
+        related='grading_id.net_product_qty')
     grading_line_ids = fields.One2many(related='grading_id.grading_line_ids',
                                        states={'done': [('readonly', True)]},
                                        readonly=False)
@@ -145,7 +162,7 @@ class Delivery(models.Model):
                 if (not delivery.grading_id
                         and delivery.product_id.is_agri_commodity):
                     vals = {
-                        'product_qty': delivery.delivered_mass,
+                        'gross_product_qty': delivery.delivered_mass,
                         'product_uom_id': delivery.delivered_mass_uom_id.id
                     }
                     if delivery.product_id.default_grading_id:
@@ -156,25 +173,41 @@ class Delivery(models.Model):
                         delivery.grading_id = self.env['agri.grading'].create(
                             vals)
 
-    @api.depends('delivered_mass', 'delivered_mass_uom_id', 'grading_id')
-    @api.onchange('delivered_mass', 'delivered_mass_uom_id')
+    @api.depends('delivered_mass', 'delivered_mass_uom_id',
+                 'grading_moisture_loss_perc', 'grading_processing_loss_perc',
+                 'grading_grading_loss_perc', 'grading_id', 'grading_line_ids')
+    @api.onchange('delivered_mass', 'delivered_mass_uom_id',
+                  'grading_moisture_loss_perc', 'grading_processing_loss_perc',
+                  'grading_grading_loss_perc')
     def _compute_product_qty(self):
         for delivery in self:
             if (delivery.grading_id and delivery.delivered_mass_uom_id
                     and delivery.delivered_mass > 0):
-                delivery.grading_id.product_qty = delivery.delivered_mass
+                delivery.grading_id.gross_product_qty = delivery.delivered_mass
+                delivery.grading_id.moisture_loss_perc = delivery.grading_moisture_loss_perc
+                delivery.grading_id.processing_loss_perc = delivery.grading_processing_loss_perc
+                delivery.grading_id.grading_loss_perc = delivery.grading_grading_loss_perc
                 delivery.grading_id.product_uom_id = delivery.delivered_mass_uom_id
-                delivery.grading_product_qty = delivery.grading_id.product_qty
+                delivery.grading_id._compute_product_qty()
+                delivery.grading_gross_product_qty = delivery.grading_id.gross_product_qty
+                delivery.grading_dry_product_qty = delivery.grading_id.dry_product_qty
+                delivery.grading_net_product_qty = delivery.grading_id.net_product_qty
                 line_commands = []
                 for grading_line in delivery.grading_line_ids:
-                    grading_line._compute_product_qty(
-                        delivery.grading_id.product_qty)
+                    product_qty = delivery.grading_net_product_qty * grading_line.percent / 100.0
+                    unit_price = grading_line._calc_unit_price(
+                        partner_id=delivery.destination_partner_id,
+                        product_qty=product_qty,
+                        date=delivery.delivery_date)
+                    price = unit_price * product_qty
                     line_commands += [(1, grading_line.id, {
-                        'product_qty': grading_line.product_qty,
-                        'price': grading_line.price,
+                        'product_qty': product_qty,
+                        'unit_price': unit_price,
+                        'price': price,
                     })]
                 delivery.grading_line_ids = line_commands
                 delivery.grading_id.grading_line_ids = delivery.grading_line_ids
+                delivery.grading_id._compute_grading_lines()
 
     def action_deliver(self):
         for delivery in self:

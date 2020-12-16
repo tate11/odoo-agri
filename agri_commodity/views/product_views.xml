@@ -64,13 +64,18 @@
                         <group>
                             <group>
                                 <field name="default_grading_id" invisible="1" />
-                                <field name="delivery_loss_perc" attrs="{'required': [('is_agri_commodity', '=', True)]}" />
+                                <field name="default_grading_currency_id" invisible="1" />
+                                <field name="default_grading_gross_product_qty" invisible="1" />
+                                <field name="default_grading_moisture_loss_perc" />
+                                <field name="default_grading_dry_product_qty" invisible="1" />
+                                <field name="default_grading_processing_loss_perc" />
+                                <field name="default_grading_grading_loss_perc" />
+                                <field name="default_grading_net_product_qty" invisible="1" />
                             </group>
                         </group>
                         <group>
-                            <separator string="Grading Lines" />
                             <field name="default_grading_line_ids" nolabel="1" colspan="2" widget="one2many"
-                                   context="{'default_grading_id': default_grading_id, 'default_grading_product_tmpl_id': id, 'default_grading_product_qty': 1.0, 'default_product_id': False, 'default_company_id': company_id}">
+                                   context="{'default_grading_id': default_grading_id, 'default_grading_product_tmpl_id': id, 'default_grading_gross_product_qty': 1.0, 'default_product_id': False, 'default_company_id': company_id, 'default_currency_id': default_grading_currency_id}">
                                 <tree string="Components" editable="bottom">
                                     <field name="company_id" invisible="1" />
                                     <field name="currency_id" invisible="1" />
@@ -79,6 +84,7 @@
                                     <field name="product_tmpl_id" invisible="1" />
                                     <field name="unit_price" />
                                     <field name="product_uom_category_id" invisible="1" />
+                                    <field name="grading_gross_product_qty" invisible="1" />
                                     <field name="grading_product_tmpl_id" invisible="1" />
                                     <field name="grading_product_tmpl_categ_id" invisible="1" />
                                     <field name="possible_grading_product_template_attribute_value_ids" invisible="1" />

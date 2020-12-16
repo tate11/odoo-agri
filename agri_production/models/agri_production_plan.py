@@ -443,7 +443,7 @@ class ProductionPlanLine(models.Model):
                         and line.application_type
                         in ('sum', 'per_consumption_unit')):
                     vals = {
-                        'product_qty': line.quantity,
+                        'gross_product_qty': line.quantity,
                         'product_uom_id': line.product_uom_id.id
                     }
                     if line.product_id.default_grading_id:
@@ -480,9 +480,9 @@ class ProductionPlanLine(models.Model):
                                 and not line.product_category_id.sale_ok
                                 ) if line.product_category_id else False
 
-    @api.onchange('price', 'quantity', 'application_type', 'application_rate',
+    @api.onchange('price', 'quantity', 'date_range_id', 'application_type', 'application_rate',
                   'application_rate_type', 'grading_id', 'grading_id.price')
-    @api.depends('price', 'quantity', 'application_rate', 'grading_id',
+    @api.depends('price', 'quantity', 'date_range_id', 'application_rate', 'grading_id',
                  'grading_id.price', 'production_plan_id.total_land_area',
                  'production_plan_id.total_production',
                  'production_plan_id.gross_production_value')
@@ -520,7 +520,23 @@ class ProductionPlanLine(models.Model):
             else:
                 amount_total = value
             if line.grading_id:
-                line.grading_id.product_qty = line_production
+                line.grading_id.gross_product_qty = line_production
+                line.grading_id._compute_product_qty()
+                line_commands = []
+                for grading_line in line.grading_line_ids:
+                    product_qty = line.grading_id.net_product_qty * grading_line.percent / 100.0
+                    unit_price = grading_line._calc_unit_price(
+                        product_qty=product_qty,
+                        date=line.date_range_id.date_start if line.date_range_id else None)
+                    price = unit_price * product_qty
+                    line_commands += [(1, grading_line.id, {
+                        'product_qty': product_qty,
+                        'unit_price': unit_price,
+                        'price': price,
+                    })]
+                line.grading_line_ids = line_commands
+                line.grading_id.grading_line_ids = line.grading_line_ids
+                line.grading_id._compute_grading_lines()
                 amount_total = line.grading_id.price
             line.amount_total = amount_total
             # mock

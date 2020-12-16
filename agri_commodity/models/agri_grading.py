@@ -4,6 +4,10 @@ from odoo.tools import float_round, float_compare
 
 from itertools import groupby
 
+PERCENT_FIELDS = (('moisture_loss_perc', 'Moisture Loss Percent'),
+                  ('processing_loss_perc', 'Processing Loss Percent'),
+                  ('grading_loss_perc', 'Grading Loss Percent'))
+
 
 class Grading(models.Model):
     """ Defines grading for a product or a product template """
@@ -14,9 +18,6 @@ class Grading(models.Model):
     _order = "sequence"
     _check_company_auto = True
 
-    def _get_default_product_uom_id(self):
-        return self.env['uom.uom'].search([], limit=1, order='id').id
-
     code = fields.Char('Reference')
     active = fields.Boolean(
         'Active',
@@ -24,6 +25,19 @@ class Grading(models.Model):
         help=
         "If the active field is set to False, it will allow you to hide the gradings without removing it."
     )
+    sequence = fields.Integer(
+        'Sequence',
+        help="Gives the sequence order when displaying a list of gradings.")
+    company_id = fields.Many2one('res.company',
+                                 'Company',
+                                 index=True,
+                                 default=lambda self: self.env.company)
+    currency_id = fields.Many2one(
+        'res.currency',
+        string='Currency',
+        required=True,
+        readonly=True,
+        default=lambda self: self.env.user.company_id.currency_id)
     product_tmpl_id = fields.Many2one(
         'product.template',
         'Product',
@@ -46,6 +60,15 @@ class Grading(models.Model):
         help=
         "If a product variant is defined the Grading is available only for this product."
     )
+    product_uom_id = fields.Many2one(
+        'uom.uom',
+        'Unit of Measure',
+        required=True,
+        help=
+        "Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control",
+        domain="[('category_id', '=', product_uom_category_id)]")
+    product_uom_category_id = fields.Many2one(
+        related='product_id.uom_id.category_id')
     grading_line_ids = fields.One2many('agri.grading.line',
                                        'grading_id',
                                        'Grading Lines',
@@ -54,52 +77,71 @@ class Grading(models.Model):
                                     'grading_id',
                                     'By-products',
                                     copy=True)
-    product_qty = fields.Float('Quantity',
-                               default=1.0,
-                               digits='Unit of Measure',
-                               required=True)
-    currency_id = fields.Many2one(
-        'res.currency',
-        string='Currency',
-        required=True,
-        readonly=True,
-        default=lambda self: self.env.user.company_id.currency_id)
-    price = fields.Monetary('Price',
-                            compute='_compute_grading_lines',
-                            digits='Product Price')
-    product_uom_id = fields.Many2one(
-        'uom.uom',
-        'Unit of Measure',
-        default=_get_default_product_uom_id,
-        required=True,
-        help=
-        "Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control",
-        domain="[('category_id', '=', product_uom_category_id)]")
-    product_uom_category_id = fields.Many2one(
-        related='product_id.uom_id.category_id')
-    sequence = fields.Integer(
-        'Sequence',
-        help="Gives the sequence order when displaying a list of gradings.")
-    company_id = fields.Many2one('res.company',
-                                 'Company',
-                                 index=True,
-                                 default=lambda self: self.env.company)
     consumption = fields.Selection(
         [('strict', 'Strict'), ('flexible', 'Flexible')],
         help=
         "Defines if you can consume more or less components than the quantity defined on the grading.",
         default='strict',
         string='Consumption')
+    price = fields.Monetary('Price',
+                            compute='_compute_grading_lines',
+                            digits='Product Price',
+                            store=True)
+    gross_product_qty = fields.Float('Gross Mass',
+                                     default=1.0,
+                                     digits='Unit of Measure',
+                                     required=True)
+    dry_product_qty = fields.Float('Dry Mass',
+                                   default=1.0,
+                                   digits='Unit of Measure',
+                                   required=True)
+    moisture_loss_perc = fields.Float('Moisture Loss Percent',
+                                      default=0.0,
+                                      digits=(3, 2))
+    moisture_loss_qty = fields.Float('Moisture Loss Mass',
+                                     compute='_compute_product_qty',
+                                     digits='Unit of Measure',
+                                     store=True)
+    processing_loss_perc = fields.Float('Processing Loss Percent',
+                                        default=0.0,
+                                        digits=(3, 2))
+    processing_loss_qty = fields.Float('Processing Loss Mass',
+                                       compute='_compute_product_qty',
+                                       digits='Unit of Measure',
+                                       store=True)
+    grading_loss_perc = fields.Float('Grading Loss Percent',
+                                     default=0.0,
+                                     digits=(3, 2))
+    grading_loss_qty = fields.Float('Grading Loss Mass',
+                                    compute='_compute_product_qty',
+                                    digits='Unit of Measure',
+                                    store=True)
+    net_product_qty = fields.Float('Net Mass',
+                                   compute='_compute_product_qty',
+                                   digits='Unit of Measure',
+                                   store=True)
 
-    @api.constrains('product_qty')
+    @api.constrains('gross_product_qty')
     def _check_product_qty(self):
         for grading in self:
             total_percent = 0.0
             for line in grading.grading_line_ids:
                 total_percent += line.percent
             if total_percent < 0 or total_percent > 100:
-                raise ValidationError(_('Total percent must not exceed 100'))
+                raise ValidationError(
+                    _('Total Grading Line percent must not exceed 100.'))
 
+    @api.constrains('moisture_loss_perc', 'processing_loss_perc',
+                    'grading_loss_perc')
+    def _check_percent(self):
+        for grading in self:
+            for percent_field in PERCENT_FIELDS:
+                percent = getattr(grading, percent_field[0], 0)
+                if percent < 0 or percent > 100:
+                    raise ValidationError(
+                        _('%s must be from 0 to 100.') % (percent_field[1], ))
+
+    @api.depends('product_id', 'grading_line_ids')
     @api.onchange('product_id')
     def _compute_product_id(self):
         for grading in self:
@@ -107,9 +149,21 @@ class Grading(models.Model):
                 for line in grading.grading_line_ids:
                     line.grading_product_template_attribute_value_ids = False
 
-    @api.onchange('product_qty')
+    @api.depends('gross_product_qty', 'grading_line_ids')
+    @api.onchange('gross_product_qty', 'moisture_loss_perc',
+                  'processing_loss_perc', 'grading_loss_perc')
     def _compute_product_qty(self):
         for grading in self:
+            grading.moisture_loss_qty = grading.gross_product_qty * (
+                grading.moisture_loss_perc / 100)
+            grading.dry_product_qty = (grading.gross_product_qty -
+                                       grading.moisture_loss_qty)
+            grading.processing_loss_qty = grading.dry_product_qty * (
+                grading.processing_loss_perc / 100)
+            grading.grading_loss_qty = grading.dry_product_qty * (
+                grading.grading_loss_perc / 100)
+            grading.net_product_qty = (grading.dry_product_qty -
+                                       grading.processing_loss_qty)
             grading.grading_line_ids._compute_product_qty()
 
     @api.constrains('product_id', 'product_tmpl_id', 'grading_line_ids')
@@ -179,7 +233,7 @@ class Grading(models.Model):
         res = super().create(vals_list)
         for grading in res:
             if float_compare(
-                    grading.product_qty,
+                    grading.gross_product_qty,
                     0,
                     precision_rounding=grading.product_uom_id.rounding) <= 0:
                 raise UserError(_('The quantity to produce must be positive!'))
@@ -189,7 +243,7 @@ class Grading(models.Model):
         res = super().write(values)
         for grading in self:
             if float_compare(
-                    grading.product_qty,
+                    grading.gross_product_qty,
                     0,
                     precision_rounding=grading.product_uom_id.rounding) <= 0:
                 raise UserError(_('The quantity to produce must be positive!'))
@@ -285,8 +339,10 @@ class GradingLine(models.Model):
         'product.template',
         'Grading Product Template',
         related='grading_id.product_tmpl_id')
-    grading_product_qty = fields.Float('Grading Quantity',
-                                       related='grading_id.product_qty')
+    grading_gross_product_qty = fields.Float(
+        'Grading Quantity', related='grading_id.gross_product_qty')
+    grading_net_product_qty = fields.Float(
+        'Grading Quantity', related='grading_id.net_product_qty')
     grading_product_tmpl_categ_id = fields.Many2one(
         related='grading_product_tmpl_id.categ_id',
         string='Grading Product Template Category')
@@ -306,7 +362,7 @@ class GradingLine(models.Model):
                                  store=True,
                                  index=True,
                                  readonly=True)
-    product_qty = fields.Float('Quantity',
+    product_qty = fields.Float('Mass',
                                compute='_compute_product_qty',
                                digits='Product Unit of Measure',
                                store=True)
@@ -360,9 +416,7 @@ class GradingLine(models.Model):
     _sql_constraints = [
         ('grading_qty_zero', 'CHECK (product_qty>=0)',
          'All product quantities must be greater or equal to 0.\n'
-         'Lines with 0 quantities can be used as optional lines. \n'
-         'You should install the mrp_byproduct module if you want to manage extra products on gradings !'
-         ),
+         'Lines with 0 quantities can be used as optional lines.'),
     ]
 
     @api.constrains('percent')
@@ -425,17 +479,42 @@ class GradingLine(models.Model):
                 }
         return res
 
-    @api.depends('grading_product_qty', 'product_uom_id', 'percent')
-    def _compute_product_qty(self, grading_product_qty=1.0):
+    @api.depends('grading_net_product_qty', 'product_uom_id', 'percent')
+    def _compute_product_qty(self, grading_net_product_qty=1.0):
         for line in self:
-            line.product_qty = (line.grading_id.product_qty if line.grading_id
-                                else grading_product_qty) * line.percent / 100.0
+            line.product_qty = (line.grading_id.net_product_qty
+                                if line.grading_id else
+                                grading_net_product_qty) * line.percent / 100.0
             line.unit_price = line.product_id.uom_id._compute_price(
-                    line.product_id.with_context(
-                        force_company=line.company_id.id).list_price,
-                    line.product_uom_id) if line.product_id else 0.0
+                line.product_id.with_context(
+                    force_company=line.company_id.id).list_price,
+                line.product_uom_id) if line.product_id else 0.0
             line.price = line.unit_price * line.product_qty
         self.grading_id._compute_grading_lines()
+
+    @api.model
+    def _calc_unit_price(self,
+                         partner_id=False,
+                         product_qty=None,
+                         date=None,
+                         params=False):
+        self.ensure_one()
+        unit_price = 0.0
+        if self.product_id:
+            seller = self.product_id._select_seller(partner_id=partner_id,
+                                                    quantity=product_qty
+                                                    or self.product_qty,
+                                                    date=date,
+                                                    uom_id=self.product_uom_id,
+                                                    params=params)
+            unit_price = seller.price if seller else self.product_id.uom_id._compute_price(
+                self.product_id.with_context(
+                    force_company=self.company_id.id).list_price,
+                self.product_uom_id)
+            if seller and self.product_uom_id and seller.product_uom != self.product_uom_id:
+                unit_price = seller.product_uom._compute_price(
+                    unit_price, self.product_uom_id)
+        return unit_price
 
     @api.model_create_multi
     def create(self, vals_list):
