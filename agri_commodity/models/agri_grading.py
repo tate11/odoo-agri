@@ -28,6 +28,8 @@ class Grading(models.Model):
     sequence = fields.Integer(
         'Sequence',
         help="Gives the sequence order when displaying a list of gradings.")
+    partner_id = fields.Many2one('res.partner',
+                                 string='Grader')
     company_id = fields.Many2one('res.company',
                                  'Company',
                                  index=True,
@@ -38,6 +40,7 @@ class Grading(models.Model):
         required=True,
         readonly=True,
         default=lambda self: self.env.user.company_id.currency_id)
+    date = fields.Date(string='Graded Date')
     product_tmpl_id = fields.Many2one(
         'product.template',
         'Product',
@@ -485,10 +488,10 @@ class GradingLine(models.Model):
             line.product_qty = (line.grading_id.net_product_qty
                                 if line.grading_id else
                                 grading_net_product_qty) * line.percent / 100.0
-            line.unit_price = line.product_id.uom_id._compute_price(
-                line.product_id.with_context(
-                    force_company=line.company_id.id).list_price,
-                line.product_uom_id) if line.product_id else 0.0
+            line.unit_price = line._calc_unit_price(
+                        partner_id=line.grading_id.partner_id,
+                        product_qty=line.product_qty,
+                        date=line.grading_id.date)
             line.price = line.unit_price * line.product_qty
         self.grading_id._compute_grading_lines()
 

@@ -148,6 +148,15 @@ class Delivery(models.Model):
         for delivery in self:
             delivery.delivered_mass_uom_id = delivery.product_id.uom_id
 
+    @api.depends('destination_partner_id', 'delivery_date')
+    @api.onchange('destination_partner_id', 'delivery_date')
+    def _compute_delivery(self):
+        for delivery in self:
+            if delivery.grading_id:
+                delivery.grading_id.partner_id = delivery.destination_partner_id
+                delivery.grading_id.date = delivery.delivery_date
+                delivery._compute_grading_lines()
+
     @api.onchange('product_id', 'delivered_mass', 'delivered_mass_uom_id')
     def _compute_grading(self):
         for delivery in self:
@@ -162,7 +171,9 @@ class Delivery(models.Model):
                 if (not delivery.grading_id
                         and delivery.product_id.is_agri_commodity):
                     vals = {
+                        'date': delivery.delivery_date,
                         'gross_product_qty': delivery.delivered_mass,
+                        'partner_id': delivery.destination_partner_id.id,
                         'product_uom_id': delivery.delivered_mass_uom_id.id
                     }
                     if delivery.product_id.default_grading_id:
@@ -192,22 +203,26 @@ class Delivery(models.Model):
                 delivery.grading_gross_product_qty = delivery.grading_id.gross_product_qty
                 delivery.grading_dry_product_qty = delivery.grading_id.dry_product_qty
                 delivery.grading_net_product_qty = delivery.grading_id.net_product_qty
-                line_commands = []
-                for grading_line in delivery.grading_line_ids:
-                    product_qty = delivery.grading_net_product_qty * grading_line.percent / 100.0
-                    unit_price = grading_line._calc_unit_price(
-                        partner_id=delivery.destination_partner_id,
+                delivery._compute_grading_lines()
+
+    def _compute_grading_lines(self):
+        for delivery in self:
+            line_commands = []
+            for grading_line in delivery.grading_line_ids:
+                product_qty = delivery.grading_net_product_qty * grading_line.percent / 100.0
+                unit_price = grading_line._calc_unit_price(
+                        partner_id=delivery.grading_id.partner_id,
                         product_qty=product_qty,
-                        date=delivery.delivery_date)
-                    price = unit_price * product_qty
-                    line_commands += [(1, grading_line.id, {
+                        date=delivery.grading_id.date)
+                price = unit_price * product_qty
+                line_commands += [(1, grading_line.id, {
                         'product_qty': product_qty,
                         'unit_price': unit_price,
                         'price': price,
                     })]
-                delivery.grading_line_ids = line_commands
-                delivery.grading_id.grading_line_ids = delivery.grading_line_ids
-                delivery.grading_id._compute_grading_lines()
+            delivery.grading_line_ids = line_commands
+            delivery.grading_id.grading_line_ids = delivery.grading_line_ids
+            delivery.grading_id._compute_grading_lines()
 
     def action_deliver(self):
         for delivery in self:

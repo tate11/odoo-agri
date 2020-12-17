@@ -443,6 +443,7 @@ class ProductionPlanLine(models.Model):
                         and line.application_type
                         in ('sum', 'per_consumption_unit')):
                     vals = {
+                        'date': line.date_range_id.date_start if line.date_range_id else None,
                         'gross_product_qty': line.quantity,
                         'product_uom_id': line.product_uom_id.id
                     }
@@ -472,6 +473,14 @@ class ProductionPlanLine(models.Model):
             if line.period_id:
                 domain += [('type_id', '=', line.period_id.id)]
             line.calendar_period_ids = self.env['date.range'].search(domain)
+
+    @api.depends('date_range_id', 'grading')
+    @api.onchange('date_range_id')
+    def _compute_grading_date(self):
+        for line in self:
+            if line.grading_id and line.date_range_id:
+                line.grading_id.date = line.date_range_id.date_start
+                line._compute_subtotal()
 
     @api.onchange('product_category_id')
     def _compute_is_purchase(self):
@@ -527,7 +536,7 @@ class ProductionPlanLine(models.Model):
                     product_qty = line.grading_id.net_product_qty * grading_line.percent / 100.0
                     unit_price = grading_line._calc_unit_price(
                         product_qty=product_qty,
-                        date=line.date_range_id.date_start if line.date_range_id else None)
+                        date=line.grading_id.date)
                     price = unit_price * product_qty
                     line_commands += [(1, grading_line.id, {
                         'product_qty': product_qty,
