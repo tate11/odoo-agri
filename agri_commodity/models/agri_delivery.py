@@ -23,6 +23,12 @@ class Delivery(models.Model):
                                  'Company',
                                  index=True,
                                  default=lambda self: self.env.company)
+    currency_id = fields.Many2one(
+        'res.currency',
+        string='Currency',
+        required=True,
+        readonly=True,
+        default=lambda self: self.env.user.company_id.currency_id)
     advance_payment_date = fields.Date(string='Advance Payment Date',
                                        states={'draft': [('readonly', False)]},
                                        readonly=True,
@@ -113,6 +119,23 @@ class Delivery(models.Model):
         string='Transport Provider',
         states={'draft': [('readonly', False)]},
         readonly=True)
+    adjustment_ids = fields.One2many(comodel_name='agri.delivery.adjustment',
+                                     inverse_name='delivery_id',
+                                     string='Adjustments',
+                                     readonly=True,
+                                     copy=False)
+    deduction_ids = fields.One2many(
+        related='adjustment_ids',
+        domain="[('adjustment_type', '=', 'deduction')]",
+        string='Deductions',
+        readonly=True,
+        copy=False)
+    incentive_ids = fields.One2many(
+        related='adjustment_ids',
+        domain="[('adjustment_type', '=', 'incentive')]",
+        string='Incentives',
+        readonly=True,
+        copy=False)
     state = fields.Selection(
         selection=[('draft', 'Draft'), ('delivered', 'Delivered'),
                    ('done', 'Done')],
@@ -211,18 +234,63 @@ class Delivery(models.Model):
             for grading_line in delivery.grading_line_ids:
                 product_qty = delivery.grading_net_product_qty * grading_line.percent / 100.0
                 unit_price = grading_line._calc_unit_price(
-                        partner_id=delivery.grading_id.partner_id,
-                        product_qty=product_qty,
-                        date=delivery.grading_id.date)
+                    partner_id=delivery.grading_id.partner_id,
+                    product_qty=product_qty,
+                    date=delivery.grading_id.date)
                 price = unit_price * product_qty
                 line_commands += [(1, grading_line.id, {
-                        'product_qty': product_qty,
-                        'unit_price': unit_price,
-                        'price': price,
-                    })]
+                    'product_qty': product_qty,
+                    'unit_price': unit_price,
+                    'price': price,
+                })]
             delivery.grading_line_ids = line_commands
             delivery.grading_id.grading_line_ids = delivery.grading_line_ids
             delivery.grading_id._compute_grading_lines()
+
+    def _update_adjustments(self):
+        model_id = self.env['ir.model'].sudo().search(
+            [('model', '=', self._name)], limit=1).id
+        for delivery in self:
+            found_adjustments = self.env['agri.adjustment'].search([
+                ('model_id', '=', model_id),
+                # Check partner
+                '|',
+                ('partner_id', '=', False),
+                ('partner_id', '=', delivery.destination_partner_id.id),
+                # Check product
+                '|',
+                ('product_tmpl_id', '=', False),
+                ('product_tmpl_id', '=', delivery.product_id.id),
+                # Check start date
+                '|',
+                ('start_date', '=', False),
+                ('start_date', '<=', delivery.delivery_date),
+                # Check end date
+                '|',
+                ('end_date', '=', False),
+                ('end_date', '>=', delivery.delivery_date)
+            ])
+            matched_adjustments = found_adjustments.filtered(
+                lambda adjustment: adjustment._eval_conditions(delivery))
+            delivery_adjustments_to_remove = delivery.adjustment_ids.filtered(
+                lambda delivery_adjustment: delivery_adjustment.adjustment_id.
+                id not in matched_adjustments.ids)
+            delivery_adjustments_to_update = delivery.adjustment_ids - delivery_adjustments_to_remove
+            adjustments_to_update = delivery_adjustments_to_update.mapped(
+                'adjustment_id')
+            delivery_adjustments_to_remove.unlink()
+            adjustments_to_add = matched_adjustments.filtered(
+                lambda adjustment: adjustment.id not in adjustments_to_update.
+                ids)
+            for delivery_adjustment in delivery_adjustments_to_update:
+                delivery_adjustment._compute_amount()
+            delivery_adjustment_commands = []
+            for adjustment in adjustments_to_add:
+                delivery_adjustment_commands += [(0, 0, {
+                    'adjustment_id': adjustment.id,
+                    'delivery_id': delivery.id
+                })]
+            delivery.write({'adjustment_ids': delivery_adjustment_commands})
 
     def action_deliver(self):
         for delivery in self:
@@ -236,3 +304,45 @@ class Delivery(models.Model):
     def action_reset(self):
         for delivery in self:
             delivery.state = 'draft'
+
+    @api.model
+    def create(self, vals):
+        delivery = super(Delivery, self).create(vals)
+        if 'adjustment_ids' not in vals:
+            delivery._update_adjustments()
+        return delivery
+
+    def write(self, vals):
+        res = super(Delivery, self).write(vals)
+        if 'adjustment_ids' not in vals:
+            self._update_adjustments()
+        return res
+
+
+class DeliveryAdjustment(models.Model):
+    _name = 'agri.delivery.adjustment'
+    _description = 'Delivery Adjustment'
+    _order = 'name asc, create_date asc'
+
+    adjustment_id = fields.Many2one('agri.adjustment',
+                                    string='Adjustment',
+                                    required=True)
+    adjustment_type = fields.Selection(related='adjustment_id.adjustment_type',
+                                       store=True)
+    name = fields.Char(related='adjustment_id.name', store=True)
+    delivery_id = fields.Many2one('agri.delivery',
+                                  string='Delivery',
+                                  required=True)
+    company_id = fields.Many2one(related='delivery_id.company_id', store=True)
+    currency_id = fields.Many2one(related='delivery_id.currency_id',
+                                  store=True)
+    amount = fields.Monetary(string='Adjustment Amount',
+                             compute='_compute_amount',
+                             store=True)
+
+    @api.depends('adjustment_id', 'delivery_id')
+    @api.onchange('adjustment_id', 'delivery_id')
+    def _compute_amount(self):
+        for delivery_adjustment in self:
+            delivery_adjustment.amount = delivery_adjustment.adjustment_id._compute_amount(
+                delivery_adjustment.delivery_id)

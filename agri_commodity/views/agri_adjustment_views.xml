@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- agri.adjustment.condition views -->
+
+     <record id="agri_adjustment_condition_view_search" model="ir.ui.view">
+        <field name="name">agri.adjustment.condition.view.search</field>
+        <field name="model">agri.adjustment.condition</field>
+        <field name="arch" type="xml">
+            <search string="Adjustment Conditions">
+                <field name="name" />
+                <field name="adjustment_id" />
+                <field name="model_id" />
+                <field name="model_field" />
+                <field name="related_model_id" />
+                <field name="related_model_field" />
+                <separator />
+                <group expand="0" string="Group By">
+                    <filter string="Adjustment" name="group_adjustment" context="{'group_by': 'adjustment_id'}" />
+                    <filter string="Model" name="group_model" context="{'group_by': 'model_id'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="agri_adjustment_condition_view_tree" model="ir.ui.view">
+        <field name="name">agri.adjustment.condition.view.tree</field>
+        <field name="model">agri.adjustment.condition</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <tree string="Adjustment Conditions">
+                <field name="name" />
+                <field name="adjustment_id" />
+                <field name="model_id" />
+                <field name="model_field" />
+                <field name="related_model_id" />
+                <field name="related_model_field" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="agri_adjustment_condition_view_form" model="ir.ui.view">
+        <field name="name">agri.adjustment.condition.view.form</field>
+        <field name="model">agri.adjustment.condition</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <form string="Adjustment Condition">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="model_id" />
+                            <field name="model_field" />
+                            <field name="model_field_ttype" invisible="1" />
+                            <field name="related_model_id" 
+                                   attrs="{'invisible': [('model_field_ttype', 'not in', ['many2one', 'one2many', 'many2many'])]}" />
+                            <field name="related_model_field" 
+                                   attrs="{
+                                       'invisible': [('model_field_ttype', 'not in', ['many2one', 'one2many', 'many2many'])], 
+                                       'readonly': [('related_model_id' ,'=', False)], 
+                                       'required': [('related_model_id', '!=', False)]}" />
+                        </group>
+                        <group>
+                            <field name="operator_id" options="{'no_create': 1, 'no_open': 1}" />
+                            <field name="operator_symbol" invisible="1" />
+                            <field name="field_type" invisible="1" />
+                            <field name="boolean_value" 
+                                  attrs="{
+                                      'invisible': [('field_type', '!=', 'boolean')], 
+                                      'required': [('field_type', '=', 'boolean')]}" />
+                            <field name="char_value" 
+                                  attrs="{
+                                      'invisible': [('field_type', '!=', 'char')], 
+                                      'required': [('field_type', '=', 'char')]}" />
+                            <field name="date_value" 
+                                   attrs="{
+                                       'invisible': ['|', ('field_type', '!=', 'date'), ('operator_symbol' ,'=', 'in')], 
+                                       'required': [('field_type', '=', 'date'), ('operator_symbol' ,'!=', 'in')]}" />
+                            <field name="date_from_value" 
+                                   attrs="{
+                                       'invisible': ['|', ('field_type', '!=', 'date'), ('operator_symbol' ,'!=', 'in')], 
+                                       'required': [('field_type', '=', 'date'), ('operator_symbol' ,'=', 'in')]}" />
+                            <field name="date_to_value" 
+                                   attrs="{
+                                       'invisible': ['|', ('field_type', '!=', 'date'), ('operator_symbol' ,'!=', 'in')], 
+                                       'required': [('field_type', '=', 'date'), ('operator_symbol' ,'=', 'in')]}" />
+                            <field name="number_value" 
+                                   attrs="{
+                                       'invisible': ['|', ('field_type', 'not in', ['float', 'integer', 'monetary']), ('operator_symbol' ,'=', 'in')], 
+                                       'required': [('field_type', 'in', ['float', 'integer', 'monetary']), ('operator_symbol' ,'!=', 'in')]}" />
+                            <field name="number_from_value" 
+                                   attrs="{
+                                       'invisible': ['|', ('field_type', 'not in', ['float', 'integer', 'monetary']), ('operator_symbol' ,'!=', 'in')], 
+                                       'required': [('field_type', 'in', ['float', 'integer', 'monetary']), ('operator_symbol' ,'=', 'in')]}" />
+                            <field name="number_to_value" 
+                                   attrs="{
+                                       'invisible': ['|', ('field_type', 'not in', ['float', 'integer', 'monetary']), ('operator_symbol' ,'!=', 'in')], 
+                                       'required': [('field_type', 'in', ['float', 'integer', 'monetary']), ('operator_symbol' ,'=', 'in')]}" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- agri.adjustment.modifier views -->
+
+     <record id="agri_adjustment_modifier_view_search" model="ir.ui.view">
+        <field name="name">agri.adjustment.modifier.view.search</field>
+        <field name="model">agri.adjustment.modifier</field>
+        <field name="arch" type="xml">
+            <search string="Adjustment Modifiers">
+                <field name="name" />
+                <field name="adjustment_id" />
+                <field name="value_source" />
+                <field name="model_id" />
+                <field name="model_field" />
+                <field name="related_model_id" />
+                <field name="related_model_field" />
+                <separator />
+                <group expand="0" string="Group By">
+                    <filter string="Adjustment" name="group_adjustment" context="{'group_by': 'adjustment_id'}" />
+                    <filter string="Model" name="group_model" context="{'group_by': 'model_id'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="agri_adjustment_modifier_view_tree" model="ir.ui.view">
+        <field name="name">agri.adjustment.modifier.view.tree</field>
+        <field name="model">agri.adjustment.modifier</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <tree string="Adjustment Modifiers">
+                <field name="sequence" widget="handle" />
+                <field name="name" />
+                <field name="adjustment_id" />
+                <field name="arithmetic_operator" />
+                <field name="value_source" />
+                <field name="model_id" />
+                <field name="model_field" />
+                <field name="related_model_id" />
+                <field name="related_model_field" />
+                <field name="value" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="agri_adjustment_modifier_view_form" model="ir.ui.view">
+        <field name="name">agri.adjustment.modifier.view.form</field>
+        <field name="model">agri.adjustment.modifier</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <form string="Adjustment Modifier">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="arithmetic_operator" />
+                            <field name="value_source" />
+                            <field name="value" 
+                                  attrs="{
+                                      'invisible': [('value_source', '!=', 'variable')], 
+                                      'required': [('value_source', '=', 'variable')]}" />
+                            <field name="model_id" attrs="{'invisible': [('value_source', '!=', 'model')]}" />
+                            <field name="model_field"
+                                   attrs="{
+                                       'invisible': [('value_source', '!=', 'model')], 
+                                       'required': [('value_source', '=', 'model')]}" />
+                            <field name="model_field_ttype" invisible="1" />
+                            <field name="related_model_id" 
+                                   attrs="{'invisible': [('model_field_ttype', 'not in', ['many2one', 'one2many', 'many2many'])]}" />
+                            <field name="related_model_field" 
+                                   attrs="{
+                                       'invisible': [('model_field_ttype', 'not in', ['many2one', 'one2many', 'many2many'])], 
+                                       'readonly': [('related_model_id' ,'=', False)], 
+                                       'required': [('related_model_id', '!=', False)]}" />
+                            <field name="math_operator" attrs="{'invisible': [('value_source', '!=', 'model')]}" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- agri.adjustment views -->
+
+    <record id="agri_adjustment_view_search" model="ir.ui.view">
+        <field name="name">agri.adjustment.view.search</field>
+        <field name="model">agri.adjustment</field>
+        <field name="arch" type="xml">
+            <search string="Adjustments">
+                <field name="name" />
+                <field name="adjustment_type" />
+                <field name="model_name" />
+                <field name="partner_id" />
+                <field name="product_tmpl_id" />
+                <field name="start_date" />
+                <field name="end_date" />
+                <separator />
+                <filter string="Deduction" name="filter_deduction" domain="[('adjustment_type', '=', 'deduction')]" />
+                <filter string="Incentive" name="filter_incentive" domain="[('adjustment_type', '=', 'incentive')]" />
+                <group expand="0" string="Group By">
+                    <filter string="Partner" name="group_partner" context="{'group_by': 'partner_id'}" />
+                    <filter string="Product" name="group_product" context="{'group_by': 'product_tmpl_id'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="agri_adjustment_view_tree" model="ir.ui.view">
+        <field name="name">agri.adjustment.view.tree</field>
+        <field name="model">agri.adjustment</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <tree string="Adjustments">
+                <field name="name" />
+                <field name="adjustment_type" />
+                <field name="model_name" />
+                <field name="partner_id" />
+                <field name="company_id" groups="base.group_multi_company" />
+                <field name="product_tmpl_id" />
+                <field name="start_date" />
+                <field name="end_date" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="agri_adjustment_view_form" model="ir.ui.view">
+        <field name="name">agri.adjustment.view.form</field>
+        <field name="model">agri.adjustment</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <form string="Adjustment">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="model_id" />
+                            <field name="adjustment_type" />
+                            <field name="partner_id" />
+                            <field name="product_tmpl_id" />
+                        </group>
+                        <group>
+                            <field name="company_id" groups="base.group_multi_company" />
+                            <field name="start_date" />
+                            <field name="end_date" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Conditions" name="conditions_tab">
+                            <field name="condition_ids" nolabel="1" widget="one2many"
+                                   context="{
+                                       'default_adjustment_id': active_id,
+                                       'default_model_id': model_id
+                                   }">
+                                <tree string="Conditions">
+                                    <field name="name" />
+                                    <field name="model_field" />
+                                    <field name="related_model_id" />
+                                    <field name="related_model_field" />
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Modifiers" name="modifiers_tab">
+                            <field name="modifier_ids" nolabel="1" widget="one2many"
+                                   context="{
+                                       'default_adjustment_id': active_id,
+                                       'default_model_id': model_id
+                                   }">
+                                <tree string="Modifiers">
+                                    <field name="sequence" widget="handle" />
+                                    <field name="name" />
+                                    <field name="arithmetic_operator" />
+                                    <field name="value_source" />
+                                    <field name="model_field" />
+                                    <field name="related_model_id" />
+                                    <field name="related_model_field" />
+                                    <field name="value" />
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- actions -->
+
+    <record id="agri_adjustment_action" model="ir.actions.act_window">
+        <field name="name">Adjustments</field>
+        <field name="res_model">agri.adjustment</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create an adjustment
+            </p>
+        </field>
+    </record>
+
+</odoo>
