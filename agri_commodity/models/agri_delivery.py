@@ -93,6 +93,7 @@ class Delivery(models.Model):
                                  states={'done': [('readonly', True)]},
                                  readonly=False)
     grading_currency_id = fields.Many2one(related='grading_id.currency_id')
+    grading_product_uom_id = fields.Many2one(related='grading_id.product_uom_id')
     grading_gross_product_qty = fields.Float(
         related='grading_id.gross_product_qty')
     grading_moisture_loss_perc = fields.Float(

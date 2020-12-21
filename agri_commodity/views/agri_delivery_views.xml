@@ -160,7 +160,7 @@
                                     <div style="display: inline-flex">
                                         <field name="grading_gross_product_qty" readonly="1" class="oe_inline" />
                                         <![CDATA[&nbsp;]]>
-                                        <field name="delivered_mass_uom_id" readonly="1" class="oe_inline" options="{'no_open': 1}" />
+                                        <field name="grading_product_uom_id" class="oe_inline" options="{'no_open': 1}" />
                                     </div>
                                     <field name="grading_currency_id" invisible="1" />
                                     <field name="grading_moisture_loss_perc" />
@@ -168,7 +168,7 @@
                                     <div style="display: inline-flex">
                                         <field name="grading_dry_product_qty" readonly="1" class="oe_inline" />
                                         <![CDATA[&nbsp;]]>
-                                        <field name="delivered_mass_uom_id" readonly="1" class="oe_inline" options="{'no_open': 1}" />
+                                        <field name="grading_product_uom_id" class="oe_inline" options="{'no_open': 1}" />
                                     </div>
                                     <field name="grading_processing_loss_perc" />
                                     <field name="grading_grading_loss_perc" />
@@ -176,7 +176,7 @@
                                     <div style="display: inline-flex">
                                         <field name="grading_net_product_qty" readonly="1" class="oe_inline" />
                                         <![CDATA[&nbsp;]]>
-                                        <field name="delivered_mass_uom_id" readonly="1" class="oe_inline" options="{'no_open': 1}" />
+                                        <field name="grading_product_uom_id" class="oe_inline" options="{'no_open': 1}" />
                                     </div>
                                 </group>
                             </group>
