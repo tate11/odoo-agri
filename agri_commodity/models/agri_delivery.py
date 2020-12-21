@@ -283,7 +283,7 @@ class Delivery(models.Model):
                 # Check product
                 '|',
                 ('product_tmpl_id', '=', False),
-                ('product_tmpl_id', '=', delivery.product_id.id),
+                ('product_tmpl_id', '=', delivery.product_id.product_tmpl_id.id),
                 # Check start date
                 '|',
                 ('start_date', '=', False),
