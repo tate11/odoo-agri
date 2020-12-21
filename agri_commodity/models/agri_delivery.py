@@ -164,10 +164,10 @@ class Delivery(models.Model):
     @api.onchange('sale_order_id')
     def _compute_product(self):
         for delivery in self:
-            products = delivery.sale_order_id.order_line.filtered(
-                lambda order_line: order_line.product_id.is_agri)
-            if len(products) > 0:
-                delivery.product_id = products[0]
+            sale_order_lines = delivery.sale_order_id.order_line.filtered(
+                lambda order_line: order_line.product_id.categ_id.is_agri)
+            if len(sale_order_lines) > 0:
+                delivery.product_id = sale_order_lines[0].product_id
 
     @api.depends('product_id')
     @api.onchange('product_id')
