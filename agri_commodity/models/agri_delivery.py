@@ -124,18 +124,22 @@ class Delivery(models.Model):
                                      string='Adjustments',
                                      readonly=True,
                                      copy=False)
-    deduction_ids = fields.One2many(
-        related='adjustment_ids',
-        domain="[('adjustment_type', '=', 'deduction')]",
-        string='Deductions',
-        readonly=True,
-        copy=False)
-    incentive_ids = fields.One2many(
-        related='adjustment_ids',
-        domain="[('adjustment_type', '=', 'incentive')]",
-        string='Incentives',
-        readonly=True,
-        copy=False)
+    deductions_amount = fields.Monetary('Deductions Amount',
+                                        compute='_compute_price',
+                                        digits='Product Price',
+                                        store=True)
+    incentives_amount = fields.Monetary('Incentives Amount',
+                                        compute='_compute_price',
+                                        digits='Product Price',
+                                        store=True)
+    price_subtotal = fields.Monetary('Price Subtotal',
+                                     compute='_compute_price',
+                                     digits='Product Price',
+                                     store=True)
+    price_total = fields.Monetary('Price Total',
+                                  compute='_compute_price',
+                                  digits='Product Price',
+                                  store=True)
     state = fields.Selection(
         selection=[('draft', 'Draft'), ('delivered', 'Delivered'),
                    ('done', 'Done')],
@@ -227,6 +231,24 @@ class Delivery(models.Model):
                 delivery.grading_dry_product_qty = delivery.grading_id.dry_product_qty
                 delivery.grading_net_product_qty = delivery.grading_id.net_product_qty
                 delivery._compute_grading_lines()
+
+    @api.depends('adjustment_ids', 'adjustment_ids.amount', 'grading_id',
+                 'grading_id.price')
+    def _compute_price(self):
+        for delivery in self:
+            delivery.deductions_amount = sum(
+                delivery.adjustment_ids.filtered(
+                    lambda adjustment: adjustment.adjustment_type ==
+                    'deduction').mapped('amount'))
+            delivery.incentives_amount = sum(
+                delivery.adjustment_ids.filtered(
+                    lambda adjustment: adjustment.adjustment_type ==
+                    'incentive').mapped('amount'))
+            delivery.price_subtotal = (delivery.grading_id.price
+                                       if delivery.grading_id else 0.0)
+            delivery.price_total = (delivery.price_subtotal -
+                                    delivery.deductions_amount +
+                                    delivery.incentives_amount)
 
     def _compute_grading_lines(self):
         for delivery in self:
@@ -336,7 +358,7 @@ class DeliveryAdjustment(models.Model):
     company_id = fields.Many2one(related='delivery_id.company_id', store=True)
     currency_id = fields.Many2one(related='delivery_id.currency_id',
                                   store=True)
-    amount = fields.Monetary(string='Adjustment Amount',
+    amount = fields.Monetary(string='Amount',
                              compute='_compute_amount',
                              store=True)
 

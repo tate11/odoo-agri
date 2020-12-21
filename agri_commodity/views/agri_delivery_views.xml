@@ -1,6 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <!-- agri.delivery.adjustment views -->
+
+    <record id="agri_delivery_adjustment_view_tree" model="ir.ui.view">
+        <field name="name">agri.delivery.adjustment.view.tree</field>
+        <field name="model">agri.delivery.adjustment</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <tree string="Adjustments" create="false" edit="false" delete="false">
+                <field name="adjustment_id" />
+                <field name="currency_id" invisible="1" />
+                <field name="amount" sum="Total" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="agri_delivery_adjustment_view_action_deductions" model="ir.actions.act_window">
+        <field name="name">Deductions</field>
+        <field name="res_model">agri.delivery.adjustment</field>
+        <field name="view_mode">tree</field>
+        <field name="domain">[('delivery_id', '=', active_id), ('adjustment_type', '=', 'deduction')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No deductions on delivery
+            </p>
+        </field>
+    </record>
+
+    <record id="agri_delivery_adjustment_view_action_incentives" model="ir.actions.act_window">
+        <field name="name">Incentives</field>
+        <field name="res_model">agri.delivery.adjustment</field>
+        <field name="view_mode">tree</field>
+        <field name="domain">[('delivery_id', '=', active_id), ('adjustment_type', '=', 'incentive')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No incentives on delivery
+            </p>
+        </field>
+    </record>
+
     <!-- agri.delivery views -->
 
     <record id="agri_delivery_view_search" model="ir.ui.view">
@@ -49,7 +88,8 @@
         <field name="arch" type="xml">
             <form string="Deliveries">
                 <header>
-                    <button string="Delivered" type="object" name="action_deliver" groups="agri.agri_group_user" class="oe_highlight" states="draft" />
+                    <button string="Delivered" type="object" name="action_deliver" groups="agri.agri_group_user" 
+                            class="oe_highlight" states="draft" />
                     <button string="Done" type="object" name="action_done" class="oe_highlight"
                             attrs="{'invisible': ['|', ('state', '!=', 'delivered'), '&amp;', ('state', '=', 'delivered'), ('grading_id', '=', False)]}" />
                     <button string="Done" type="object" name="action_done" class="oe_highlight"
@@ -59,15 +99,26 @@
                     <field name="state" widget="statusbar" />
                 </header>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button type="action" name="%(agri_delivery_adjustment_view_action_deductions)d" 
+                                class="oe_stat_button" icon="fa-folder-minus">
+                            <field name="deductions_amount" widget="statinfo" string="Deductions" />
+                        </button>
+                        <button type="action" name="%(agri_delivery_adjustment_view_action_incentives)d" 
+                                class="oe_stat_button" icon="fa-folder-plus">
+                            <field name="incentives_amount" widget="statinfo" string="Incentives" />
+                        </button>
+                    </div>
                     <div class="oe_title">
                         <h1>
-                                <field name="name" />
+                            <field name="name" />
                         </h1>
                     </div>
                     <group>
                         <group>
                             <field name="partner_id" />
                             <field name="company_id" groups="base.group_multi_company" />
+                            <field name="currency_id" invisible="1" />
                             <field name="destination_partner_id" />
                             <field name="product_id" />
                        </group>
@@ -92,6 +143,12 @@
                                         <span class="oe_read_only"><![CDATA[&nbsp;]]></span>
                                         <field name="delivered_mass_uom_id" class="oe_inline" options="{'no_open': 1}" />
                                     </div>
+                                </group>
+                            </group>
+                            <group>
+                                <group>
+                                    <field name="price_subtotal" />
+                                    <field name="price_total"  />
                                 </group>
                             </group>
                         </page>
