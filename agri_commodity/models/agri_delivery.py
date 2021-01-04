@@ -93,7 +93,8 @@ class Delivery(models.Model):
                                  states={'done': [('readonly', True)]},
                                  readonly=False)
     grading_currency_id = fields.Many2one(related='grading_id.currency_id')
-    grading_product_uom_id = fields.Many2one(related='grading_id.product_uom_id')
+    grading_product_uom_id = fields.Many2one(
+        related='grading_id.product_uom_id')
     grading_gross_product_qty = fields.Float(
         related='grading_id.gross_product_qty')
     grading_moisture_loss_perc = fields.Float(
@@ -125,14 +126,14 @@ class Delivery(models.Model):
                                      string='Adjustments',
                                      readonly=True,
                                      copy=False)
-    deductions_amount = fields.Monetary('Deductions Amount',
-                                        compute='_compute_price',
-                                        digits='Product Price',
-                                        store=True)
-    incentives_amount = fields.Monetary('Incentives Amount',
-                                        compute='_compute_price',
-                                        digits='Product Price',
-                                        store=True)
+    deductions_amount = fields.Float('Deductions Amount',
+                                     compute='_compute_price',
+                                     digits='Product Price',
+                                     store=True)
+    incentives_amount = fields.Float('Incentives Amount',
+                                     compute='_compute_price',
+                                     digits='Product Price',
+                                     store=True)
     price_subtotal = fields.Monetary('Price Subtotal',
                                      compute='_compute_price',
                                      digits='Product Price',
@@ -283,7 +284,8 @@ class Delivery(models.Model):
                 # Check product
                 '|',
                 ('product_tmpl_id', '=', False),
-                ('product_tmpl_id', '=', delivery.product_id.product_tmpl_id.id),
+                ('product_tmpl_id', '=',
+                 delivery.product_id.product_tmpl_id.id),
                 # Check start date
                 '|',
                 ('start_date', '=', False),
