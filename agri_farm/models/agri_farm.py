@@ -214,7 +214,7 @@ class FarmFieldCrop(models.Model):
     name = fields.Char('Name',
                        compute='_compute_name',
                        readonly=True,
-                       stored=True)
+                       store=True)
     field_id = fields.Many2one('agri.farm.field',
                                string='Field',
                                states={'draft': [('readonly', False)]},
@@ -394,7 +394,7 @@ class FarmFieldCropProblem(models.Model):
     name = fields.Char('Name',
                        compute='_compute_name',
                        readonly=True,
-                       stored=True)
+                       store=True)
     crop_id = fields.Many2one('agri.farm.field.crop',
                               string='Crop',
                               states={'draft': [('readonly', False)]},
@@ -495,7 +495,7 @@ class FarmFieldCropZone(models.Model):
     name = fields.Char('Name',
                        compute='_compute_name',
                        readonly=True,
-                       stored=True)
+                       store=True)
     crop_id = fields.Many2one('agri.farm.field.crop',
                               string='Crop',
                               states={'draft': [('readonly', False)]},
@@ -703,7 +703,7 @@ class FarmVersion(models.Model):
     name = fields.Char('Name',
                        compute='_compute_name',
                        readonly=True,
-                       stored=True)
+                       store=True)
     date = fields.Date('Date',
                        default=fields.Date.context_today,
                        required=True)
