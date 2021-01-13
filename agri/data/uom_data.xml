@@ -4,290 +4,409 @@
 
         <!-- Area Units -->
 
-        <record id="agri_category_area" model="uom.category">
+        <record id="agri_category_area"
+            model="uom.category">
             <field name="name">Area</field>
-            <field name="measure_type">area</field>
         </record>
 
-        <record id="agri_uom_ha" model="uom.uom">
-            <field name="category_id" ref="agri_category_area" />
+        <record id="agri_uom_ha"
+            model="uom.uom">
+            <field name="category_id"
+                ref="agri_category_area" />
             <field name="name">ha</field>
-            <field name="factor" eval="1" />
-            <field name="rounding" eval="0.001" />
+            <field name="factor"
+                eval="1" />
+            <field name="rounding"
+                eval="0.001" />
         </record>
 
-        <record id="agri_uom_acre" model="uom.uom">
-            <field name="category_id" ref="agri_category_area" />
+        <record id="agri_uom_acre"
+            model="uom.uom">
+            <field name="category_id"
+                ref="agri_category_area" />
             <field name="name">ac</field>
-            <field name="factor" eval="2471" />
+            <field name="factor"
+                eval="2471" />
             <field name="uom_type">smaller</field>
         </record>
 
-        <record id="agri_uom_sq_mi" model="uom.uom">
-            <field name="category_id" ref="agri_category_area" />
+        <record id="agri_uom_sq_mi"
+            model="uom.uom">
+            <field name="category_id"
+                ref="agri_category_area" />
             <field name="name">sq mi</field>
-            <field name="factor_inv" eval="259" />
+            <field name="factor_inv"
+                eval="259" />
             <field name="uom_type">bigger</field>
         </record>
 
-        <record id="agri_uom_sq_km" model="uom.uom">
-            <field name="category_id" ref="agri_category_area" />
+        <record id="agri_uom_sq_km"
+            model="uom.uom">
+            <field name="category_id"
+                ref="agri_category_area" />
             <field name="name">sq km</field>
-            <field name="factor_inv" eval="100" />
+            <field name="factor_inv"
+                eval="100" />
             <field name="uom_type">bigger</field>
         </record>
 
-        <record id="agri_uom_sq_m" model="uom.uom">
-            <field name="category_id" ref="agri_category_area" />
+        <record id="agri_uom_sq_m"
+            model="uom.uom">
+            <field name="category_id"
+                ref="agri_category_area" />
             <field name="name">sq m</field>
-            <field name="factor" eval="10000" />
+            <field name="factor"
+                eval="10000" />
             <field name="uom_type">smaller</field>
         </record>
 
-        <record id="agri_uom_sq_yd" model="uom.uom">
-            <field name="category_id" ref="agri_category_area" />
+        <record id="agri_uom_sq_yd"
+            model="uom.uom">
+            <field name="category_id"
+                ref="agri_category_area" />
             <field name="name">sq yd</field>
-            <field name="factor" eval="11960" />
+            <field name="factor"
+                eval="11960" />
             <field name="uom_type">smaller</field>
         </record>
 
-        <record id="agri_uom_sq_ft" model="uom.uom">
-            <field name="category_id" ref="agri_category_area" />
+        <record id="agri_uom_sq_ft"
+            model="uom.uom">
+            <field name="category_id"
+                ref="agri_category_area" />
             <field name="name">sq ft</field>
-            <field name="factor" eval="107639" />
+            <field name="factor"
+                eval="107639" />
             <field name="uom_type">smaller</field>
         </record>
 
         <!-- Livestock Units (LSU) -->
 
-        <record id="agri_category_lsu" model="uom.category">
+        <record id="agri_category_lsu"
+            model="uom.category">
             <field name="name">LSU</field>
-            <field name="measure_type">lsu</field>
         </record>
 
-        <record id="agri_uom_lsu" model="uom.uom">
-            <field name="category_id" ref="agri_category_lsu" />
+        <record id="agri_uom_lsu"
+            model="uom.uom">
+            <field name="category_id"
+                ref="agri_category_lsu" />
             <field name="name">LSU</field>
-            <field name="factor" eval="1" />
-            <field name="rounding" eval="0.001" />
+            <field name="factor"
+                eval="1" />
+            <field name="rounding"
+                eval="0.001" />
         </record>
 
-        <record id="agri_uom_cattle_bull" model="uom.uom">
-            <field name="category_id" ref="agri_category_lsu" />
+        <record id="agri_uom_cattle_bull"
+            model="uom.uom">
+            <field name="category_id"
+                ref="agri_category_lsu" />
             <field name="name">Bull</field>
-            <field name="factor" eval="1.8" />
+            <field name="factor"
+                eval="1.8" />
             <field name="uom_type">bigger</field>
         </record>
 
-        <record id="agri_uom_cattle_steer" model="uom.uom">
-            <field name="category_id" ref="agri_category_lsu" />
+        <record id="agri_uom_cattle_steer"
+            model="uom.uom">
+            <field name="category_id"
+                ref="agri_category_lsu" />
             <field name="name">Steer</field>
-            <field name="factor" eval="1.666666667" />
+            <field name="factor"
+                eval="1.666666667" />
             <field name="uom_type">smaller</field>
         </record>
 
-        <record id="agri_uom_cattle_cow_dairy" model="uom.uom">
-            <field name="category_id" ref="agri_category_lsu" />
+        <record id="agri_uom_cattle_cow_dairy"
+            model="uom.uom">
+            <field name="category_id"
+                ref="agri_category_lsu" />
             <field name="name">Cow (Dairy)</field>
-            <field name="factor" eval="1" />
+            <field name="factor"
+                eval="1" />
             <field name="uom_type">smaller</field>
         </record>
 
-        <record id="agri_uom_cattle_cow" model="uom.uom">
-            <field name="category_id" ref="agri_category_lsu" />
+        <record id="agri_uom_cattle_cow"
+            model="uom.uom">
+            <field name="category_id"
+                ref="agri_category_lsu" />
             <field name="name">Cow</field>
-            <field name="factor" eval="1.25" />
+            <field name="factor"
+                eval="1.25" />
             <field name="uom_type">smaller</field>
         </record>
 
-        <record id="agri_uom_cattle_heifer" model="uom.uom">
-            <field name="category_id" ref="agri_category_lsu" />
+        <record id="agri_uom_cattle_heifer"
+            model="uom.uom">
+            <field name="category_id"
+                ref="agri_category_lsu" />
             <field name="name">Heifer</field>
-            <field name="factor" eval="1.818181818" />
+            <field name="factor"
+                eval="1.818181818" />
             <field name="uom_type">smaller</field>
         </record>
 
-        <record id="agri_uom_cattle_calf" model="uom.uom">
-            <field name="category_id" ref="agri_category_lsu" />
+        <record id="agri_uom_cattle_calf"
+            model="uom.uom">
+            <field name="category_id"
+                ref="agri_category_lsu" />
             <field name="name">Calf (&lt; 1 yr)</field>
-            <field name="factor" eval="6.666666667" />
+            <field name="factor"
+                eval="6.666666667" />
             <field name="uom_type">smaller</field>
         </record>
 
-        <record id="agri_uom_sheep_ram" model="uom.uom">
-            <field name="category_id" ref="agri_category_lsu" />
+        <record id="agri_uom_sheep_ram"
+            model="uom.uom">
+            <field name="category_id"
+                ref="agri_category_lsu" />
             <field name="name">Ram</field>
-            <field name="factor" eval="2.857142857" />
+            <field name="factor"
+                eval="2.857142857" />
             <field name="uom_type">smaller</field>
         </record>
 
-        <record id="agri_uom_sheep_ewe" model="uom.uom">
-            <field name="category_id" ref="agri_category_lsu" />
+        <record id="agri_uom_sheep_ewe"
+            model="uom.uom">
+            <field name="category_id"
+                ref="agri_category_lsu" />
             <field name="name">Ewe</field>
-            <field name="factor" eval="5.882352941" />
+            <field name="factor"
+                eval="5.882352941" />
             <field name="uom_type">smaller</field>
         </record>
 
-        <record id="agri_uom_sheep_wether" model="uom.uom">
-            <field name="category_id" ref="agri_category_lsu" />
+        <record id="agri_uom_sheep_wether"
+            model="uom.uom">
+            <field name="category_id"
+                ref="agri_category_lsu" />
             <field name="name">Wether</field>
-            <field name="factor" eval="7.692307692" />
+            <field name="factor"
+                eval="7.692307692" />
             <field name="uom_type">smaller</field>
         </record>
 
-        <record id="agri_uom_sheep_lamb_2tooth" model="uom.uom">
-            <field name="category_id" ref="agri_category_lsu" />
+        <record id="agri_uom_sheep_lamb_2tooth"
+            model="uom.uom">
+            <field name="category_id"
+                ref="agri_category_lsu" />
             <field name="name">Lamb (2 tooth)</field>
-            <field name="factor" eval="7.692307692" />
+            <field name="factor"
+                eval="7.692307692" />
             <field name="uom_type">smaller</field>
         </record>
 
-        <record id="agri_uom_sheep_lamb" model="uom.uom">
-            <field name="category_id" ref="agri_category_lsu" />
+        <record id="agri_uom_sheep_lamb"
+            model="uom.uom">
+            <field name="category_id"
+                ref="agri_category_lsu" />
             <field name="name">Lamb</field>
-            <field name="factor" eval="10" />
+            <field name="factor"
+                eval="10" />
             <field name="uom_type">smaller</field>
         </record>
 
-        <record id="agri_uom_goat_ram" model="uom.uom">
-            <field name="category_id" ref="agri_category_lsu" />
+        <record id="agri_uom_goat_ram"
+            model="uom.uom">
+            <field name="category_id"
+                ref="agri_category_lsu" />
             <field name="name">Ram (Goat)</field>
-            <field name="factor" eval="3.333333333" />
+            <field name="factor"
+                eval="3.333333333" />
             <field name="uom_type">smaller</field>
         </record>
 
-        <record id="agri_uom_goat_ewe" model="uom.uom">
-            <field name="category_id" ref="agri_category_lsu" />
+        <record id="agri_uom_goat_ewe"
+            model="uom.uom">
+            <field name="category_id"
+                ref="agri_category_lsu" />
             <field name="name">Ewe (Goat)</field>
-            <field name="factor" eval="6.25" />
+            <field name="factor"
+                eval="6.25" />
             <field name="uom_type">smaller</field>
         </record>
 
-        <record id="agri_uom_goat_castrate" model="uom.uom">
-            <field name="category_id" ref="agri_category_lsu" />
+        <record id="agri_uom_goat_castrate"
+            model="uom.uom">
+            <field name="category_id"
+                ref="agri_category_lsu" />
             <field name="name">Castrate (Goat)</field>
-            <field name="factor" eval="7.692307692" />
+            <field name="factor"
+                eval="7.692307692" />
             <field name="uom_type">smaller</field>
         </record>
 
-        <record id="agri_uom_goat_kid_2tooth" model="uom.uom">
-            <field name="category_id" ref="agri_category_lsu" />
+        <record id="agri_uom_goat_kid_2tooth"
+            model="uom.uom">
+            <field name="category_id"
+                ref="agri_category_lsu" />
             <field name="name">Kid (2 tooth)</field>
-            <field name="factor" eval="10" />
+            <field name="factor"
+                eval="10" />
             <field name="uom_type">smaller</field>
         </record>
 
-        <record id="agri_uom_goat_kid" model="uom.uom">
-            <field name="category_id" ref="agri_category_lsu" />
+        <record id="agri_uom_goat_kid"
+            model="uom.uom">
+            <field name="category_id"
+                ref="agri_category_lsu" />
             <field name="name">Kid</field>
-            <field name="factor" eval="25" />
+            <field name="factor"
+                eval="25" />
             <field name="uom_type">smaller</field>
         </record>
 
-        <record id="agri_uom_equidae_horse" model="uom.uom">
-            <field name="category_id" ref="agri_category_lsu" />
+        <record id="agri_uom_equidae_horse"
+            model="uom.uom">
+            <field name="category_id"
+                ref="agri_category_lsu" />
             <field name="name">Horse</field>
-            <field name="factor" eval="1.25" />
+            <field name="factor"
+                eval="1.25" />
             <field name="uom_type">smaller</field>
         </record>
 
-        <record id="agri_uom_antelope_antelope" model="uom.uom">
-            <field name="category_id" ref="agri_category_lsu" />
+        <record id="agri_uom_antelope_antelope"
+            model="uom.uom">
+            <field name="category_id"
+                ref="agri_category_lsu" />
             <field name="name">Antelope</field>
-            <field name="factor" eval="2" />
+            <field name="factor"
+                eval="2" />
             <field name="uom_type">smaller</field>
         </record>
 
-        <record id="agri_uom_pig_boar" model="uom.uom">
-            <field name="category_id" ref="agri_category_lsu" />
+        <record id="agri_uom_pig_boar"
+            model="uom.uom">
+            <field name="category_id"
+                ref="agri_category_lsu" />
             <field name="name">Pig</field>
-            <field name="factor" eval="3.333333333" />
+            <field name="factor"
+                eval="3.333333333" />
             <field name="uom_type">smaller</field>
         </record>
 
-        <record id="agri_uom_pig_sow" model="uom.uom">
-            <field name="category_id" ref="agri_category_lsu" />
+        <record id="agri_uom_pig_sow"
+            model="uom.uom">
+            <field name="category_id"
+                ref="agri_category_lsu" />
             <field name="name">Sow</field>
-            <field name="factor" eval="2" />
+            <field name="factor"
+                eval="2" />
             <field name="uom_type">smaller</field>
         </record>
 
-        <record id="agri_uom_pig_piglet" model="uom.uom">
-            <field name="category_id" ref="agri_category_lsu" />
+        <record id="agri_uom_pig_piglet"
+            model="uom.uom">
+            <field name="category_id"
+                ref="agri_category_lsu" />
             <field name="name">Piglet</field>
-            <field name="factor" eval="37.03703704" />
+            <field name="factor"
+                eval="37.03703704" />
             <field name="uom_type">smaller</field>
         </record>
 
-        <record id="agri_uom_chicken_rooster" model="uom.uom">
-            <field name="category_id" ref="agri_category_lsu" />
+        <record id="agri_uom_chicken_rooster"
+            model="uom.uom">
+            <field name="category_id"
+                ref="agri_category_lsu" />
             <field name="name">Rooster</field>
-            <field name="factor" eval="71.42857143" />
+            <field name="factor"
+                eval="71.42857143" />
             <field name="uom_type">smaller</field>
         </record>
 
-        <record id="agri_uom_chicken_hen" model="uom.uom">
-            <field name="category_id" ref="agri_category_lsu" />
+        <record id="agri_uom_chicken_hen"
+            model="uom.uom">
+            <field name="category_id"
+                ref="agri_category_lsu" />
             <field name="name">Hen</field>
-            <field name="factor" eval="71.42857143" />
+            <field name="factor"
+                eval="71.42857143" />
             <field name="uom_type">smaller</field>
         </record>
 
-        <record id="agri_uom_chicken_broiler" model="uom.uom">
-            <field name="category_id" ref="agri_category_lsu" />
+        <record id="agri_uom_chicken_broiler"
+            model="uom.uom">
+            <field name="category_id"
+                ref="agri_category_lsu" />
             <field name="name">Broiler</field>
-            <field name="factor" eval="142.8571429" />
+            <field name="factor"
+                eval="142.8571429" />
             <field name="uom_type">smaller</field>
         </record>
 
-        <record id="agri_uom_ostrich" model="uom.uom">
-            <field name="category_id" ref="agri_category_lsu" />
+        <record id="agri_uom_ostrich"
+            model="uom.uom">
+            <field name="category_id"
+                ref="agri_category_lsu" />
             <field name="name">Ostrich</field>
-            <field name="factor" eval="2.857142857" />
+            <field name="factor"
+                eval="2.857142857" />
             <field name="uom_type">smaller</field>
         </record>
 
-        <record id="agri_uom_turkey" model="uom.uom">
-            <field name="category_id" ref="agri_category_lsu" />
+        <record id="agri_uom_turkey"
+            model="uom.uom">
+            <field name="category_id"
+                ref="agri_category_lsu" />
             <field name="name">Turkey</field>
-            <field name="factor" eval="33.33333333" />
+            <field name="factor"
+                eval="33.33333333" />
             <field name="uom_type">smaller</field>
         </record>
 
-        <record id="agri_uom_duck" model="uom.uom">
-            <field name="category_id" ref="agri_category_lsu" />
+        <record id="agri_uom_duck"
+            model="uom.uom">
+            <field name="category_id"
+                ref="agri_category_lsu" />
             <field name="name">Duck</field>
-            <field name="factor" eval="33.33333333" />
+            <field name="factor"
+                eval="33.33333333" />
             <field name="uom_type">smaller</field>
         </record>
 
-        <record id="agri_uom_goose" model="uom.uom">
-            <field name="category_id" ref="agri_category_lsu" />
+        <record id="agri_uom_goose"
+            model="uom.uom">
+            <field name="category_id"
+                ref="agri_category_lsu" />
             <field name="name">Goose</field>
-            <field name="factor" eval="33.33333333" />
+            <field name="factor"
+                eval="33.33333333" />
             <field name="uom_type">smaller</field>
         </record>
 
-        <record id="agri_uom_rabbit" model="uom.uom">
-            <field name="category_id" ref="agri_category_lsu" />
+        <record id="agri_uom_rabbit"
+            model="uom.uom">
+            <field name="category_id"
+                ref="agri_category_lsu" />
             <field name="name">Rabbit</field>
-            <field name="factor" eval="50" />
+            <field name="factor"
+                eval="50" />
             <field name="uom_type">smaller</field>
         </record>
 
         <!-- Additional agricultural units -->
 
-        <record id="agri_uom_sum" model="uom.uom">
-            <field name="category_id" ref="uom.product_uom_categ_unit" />
+        <record id="agri_uom_sum"
+            model="uom.uom">
+            <field name="category_id"
+                ref="uom.product_uom_categ_unit" />
             <field name="name">sum</field>
-            <field name="factor" eval="1.0" />
+            <field name="factor"
+                eval="1.0" />
             <field name="uom_type">bigger</field>
         </record>
 
-        <record id="agri_uom_each" model="uom.uom">
-            <field name="category_id" ref="uom.product_uom_categ_unit" />
+        <record id="agri_uom_each"
+            model="uom.uom">
+            <field name="category_id"
+                ref="uom.product_uom_categ_unit" />
             <field name="name">each</field>
-            <field name="factor" eval="1.0" />
+            <field name="factor"
+                eval="1.0" />
             <field name="uom_type">bigger</field>
         </record>
 

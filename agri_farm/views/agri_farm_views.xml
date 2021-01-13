@@ -3,68 +3,47 @@
 
     <!-- agri.farm views -->
 
-    <record id="agri_farm_view_search" model="ir.ui.view">
+    <record id="agri_farm_view_search"
+        model="ir.ui.view">
         <field name="name">agri.farm.view.search</field>
         <field name="model">agri.farm</field>
-        <field name="arch" type="xml">
+        <field name="arch"
+            type="xml">
             <search string="Farms">
                 <field name="name" />
                 <field name="farm_field_ids" />
                 <field name="farm_parcel_ids" />
                 <field name="farm_version_id" />
                 <separator />
-                <filter string="Active" name="filter_active" domain="[('active', '=', True)]" />
-                <filter string="Not located" name="filter_not_located" domain="[('boundary', '=', False)]" />
-                <group expand="0" string="Group By">
-                    <filter string="Partner" name="group_partner" context="{'group_by': 'partner_id'}" />
-                    <filter string="Farm Version" name="group_farm_version" context="{'group_by': 'farm_version_id'}" />
+                <filter string="Active"
+                    name="filter_active"
+                    domain="[('active', '=', True)]" />
+                <group expand="0"
+                    string="Group By">
+                    <filter string="Partner"
+                        name="group_partner"
+                        context="{'group_by': 'partner_id'}" />
+                    <filter string="Farm Version"
+                        name="group_farm_version"
+                        context="{'group_by': 'farm_version_id'}" />
                 </group>
             </search>
         </field>
     </record>
 
-    <record id="agri_farm_view_geoengine" model="ir.ui.view">
-        <field name="name">agri.farm.view.geoengine</field>
-        <field name="model">agri.farm</field>
-        <field eval="16" name="priority" />
-        <field name="arch" type="xml">
-            <geoengine>
-                <field name="name" select="1" />
-                <field name="partner_id" />
-                <field name="area" />
-                <field name="area_uom_id" />
-                <field name="boundary" />
-            </geoengine>
-        </field>
-    </record>
-
-    <record id="agri_farm_view_geoengine_vector_layer" model="geoengine.vector.layer">
-        <field name="geo_field_id" ref="agri_farm.field_agri_farm__boundary" />
-        <field name="name">Boundary</field>
-        <field eval="6" name="sequence" />
-        <field name="view_id" ref="agri_farm_view_geoengine" />
-        <field name="geo_repr">basic</field>
-        <field eval="1" name="nb_class" />
-        <field name="begin_color">#FF680A</field>
-    </record>
-
-    <record id="agri_farm_geoengine_raster_layer_osm" model="geoengine.raster.layer">
-        <field name="raster_type">osm</field>
-        <field name="name">Background</field>
-        <field name="view_id" ref="agri_farm_view_geoengine" />
-        <field eval="0" name="overlay" />
-    </record>
-
-    <record id="agri_farm_view_tree" model="ir.ui.view">
+    <record id="agri_farm_view_tree"
+        model="ir.ui.view">
         <field name="name">agri.farm.view.tree</field>
         <field name="model">agri.farm</field>
         <field name="priority">10</field>
-        <field name="arch" type="xml">
+        <field name="arch"
+            type="xml">
             <tree string="Farms">
                 <field name="name" />
                 <field name="area" />
                 <field name="area_uom_id" />
-                <field name="company_id" groups="base.group_multi_company" />
+                <field name="company_id"
+                    groups="base.group_multi_company" />
                 <field name="partner_id" />
                 <field name="farm_version_id" />
                 <field name="active" />
@@ -72,51 +51,63 @@
         </field>
     </record>
 
-    <record id="agri_farm_view_form" model="ir.ui.view">
+    <record id="agri_farm_view_form"
+        model="ir.ui.view">
         <field name="name">agri.farm.view.form</field>
         <field name="model">agri.farm</field>
         <field name="priority">10</field>
-        <field name="arch" type="xml">
+        <field name="arch"
+            type="xml">
             <form string="Farms">
                 <sheet>
                     <div class="oe_title">
-                        <label for="name" class="oe_edit_only" />
+                        <label for="name"
+                            class="oe_edit_only" />
                         <h1>
                             <field name="name" />
                         </h1>
                     </div>
                     <group>
                         <group>
-                            <field name="farm_version_id" invisible="1" />
+                            <field name="farm_version_id"
+                                invisible="1" />
                             <field name="partner_id" />
-                            <field name="company_id" groups="base.group_multi_company" />
+                            <field name="company_id"
+                                groups="base.group_multi_company" />
                             <label for="area" />
                             <div style="display: inline-flex">
-                                <field name="area" attrs="{'readonly': [('has_boundary', '!=', False)]}" class="oe_inline" />
+                                <field name="area"
+                                    class="oe_inline" />
                                 <span class="oe_read_only"><![CDATA[&nbsp;]]></span>
-                                <field name="area_uom_id" class="oe_inline" options="{'no_open': 1}" />
+                                <field name="area_uom_id"
+                                    class="oe_inline"
+                                    options="{'no_open': 1}" />
                             </div>
                         </group>
                         <group>
-                            <field name="has_boundary" invisible="1" />
                             <field name="active" />
                         </group>
                     </group>
                     <notebook>
-                        <page string="Parcels" name="parcels_tab">
-                            <field name="farm_parcel_ids" nolabel="1" context="{'default_farm_id': id, 'tree_view_ref': 'agri_farm.agri_farm_parcel_view_tree', 'form_view_ref': 'agri_farm.agri_farm_parcel_inline_view_form'}" />
+                        <page string="Parcels"
+                            name="parcels_tab">
+                            <field name="farm_parcel_ids"
+                                nolabel="1"
+                                context="{'default_farm_id': id, 'tree_view_ref': 'agri_farm.agri_farm_parcel_view_tree', 'form_view_ref': 'agri_farm.agri_farm_parcel_inline_view_form'}" />
                         </page>
-                        <page string="Fields" name="fields_tab">
-                            <field name="farm_field_ids" nolabel="1" context="{'default_farm_id': id, 'tree_view_ref': 'agri_farm.agri_farm_field_view_tree', 'form_view_ref': 'agri_farm.agri_farm_field_inline_view_form'}" />
-                        </page>
-                        <page string="Boundary" name="map_tab">
-                            <field name="boundary" nolabel="1" widget="geo_edit_map" />
+                        <page string="Fields"
+                            name="fields_tab">
+                            <field name="farm_field_ids"
+                                nolabel="1"
+                                context="{'default_farm_id': id, 'tree_view_ref': 'agri_farm.agri_farm_field_view_tree', 'form_view_ref': 'agri_farm.agri_farm_field_inline_view_form'}" />
                         </page>
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers" />
-                    <field name="message_ids" widget="mail_thread" />
+                    <field name="message_follower_ids"
+                        widget="mail_followers" />
+                    <field name="message_ids"
+                        widget="mail_thread" />
                 </div>
             </form>
         </field>
@@ -124,10 +115,12 @@
 
     <!-- agri.farm.field.crop.problem views -->
 
-    <record id="agri_farm_field_crop_problem_view_search" model="ir.ui.view">
+    <record id="agri_farm_field_crop_problem_view_search"
+        model="ir.ui.view">
         <field name="name">agri.farm.field.crop.problem.view.search</field>
         <field name="model">agri.farm.field.crop.problem</field>
-        <field name="arch" type="xml">
+        <field name="arch"
+            type="xml">
             <search string="Problems">
                 <field name="crop_id" />
                 <field name="field_id" />
@@ -137,20 +130,29 @@
                 <field name="description" />
                 <field name="state" />
                 <separator />
-                <group expand="0" string="Group By">
-                    <filter string="Field" name="group_field" context="{'group_by': 'field_id'}" />
-                    <filter string="Farm" name="group_farm" context="{'group_by': 'farm_id'}" />
-                    <filter string="Type" name="group_type" context="{'group_by': 'type'}" />
+                <group expand="0"
+                    string="Group By">
+                    <filter string="Field"
+                        name="group_field"
+                        context="{'group_by': 'field_id'}" />
+                    <filter string="Farm"
+                        name="group_farm"
+                        context="{'group_by': 'farm_id'}" />
+                    <filter string="Type"
+                        name="group_type"
+                        context="{'group_by': 'type'}" />
                 </group>
             </search>
         </field>
     </record>
 
-    <record id="agri_farm_field_crop_problem_view_tree" model="ir.ui.view">
+    <record id="agri_farm_field_crop_problem_view_tree"
+        model="ir.ui.view">
         <field name="name">agri.farm.field.crop.problem.view.tree</field>
         <field name="model">agri.farm.field.crop.problem</field>
         <field name="priority">10</field>
-        <field name="arch" type="xml">
+        <field name="arch"
+            type="xml">
             <tree string="Problems">
                 <field name="crop_id" />
                 <field name="farm_id" />
@@ -164,19 +166,29 @@
         </field>
     </record>
 
-    <record id="agri_farm_field_crop_problem_view_form" model="ir.ui.view">
+    <record id="agri_farm_field_crop_problem_view_form"
+        model="ir.ui.view">
         <field name="name">agri.farm.field.crop.problem.view.form</field>
         <field name="model">agri.farm.field.crop.problem</field>
         <field name="priority">10</field>
-        <field name="arch" type="xml">
+        <field name="arch"
+            type="xml">
             <form string="Problems">
                 <header>
-                    <button string="Post" type="object" name="action_post" groups="agri.agri_group_user" class="oe_highlight" states="draft" />
-                    <field name="state" colspan="2" widget="statusbar" />
+                    <button string="Post"
+                        type="object"
+                        name="action_post"
+                        groups="agri.agri_group_user"
+                        class="oe_highlight"
+                        states="draft" />
+                    <field name="state"
+                        colspan="2"
+                        widget="statusbar" />
                 </header>
                 <sheet>
                     <div class="oe_title">
-                        <label for="name" class="oe_edit_only" />
+                        <label for="name"
+                            class="oe_edit_only" />
                         <h1>
                             <field name="name" />
                         </h1>
@@ -191,28 +203,37 @@
                             <field name="date" />
                             <label for="area" />
                             <div>
-                                <field name="area" class="oe_inline" />
+                                <field name="area"
+                                    class="oe_inline" />
                                 <![CDATA[&nbsp;]]>
-                                <field name="area_uom_id" class="oe_inline" options="{'no_open': 1}" />
+                                <field name="area_uom_id"
+                                    class="oe_inline"
+                                    options="{'no_open': 1}" />
                             </div>
                         </group>
                     </group>
                     <group>
                         <field name="type" />
                         <field name="description" />
-                        <field name="attachment_ids" widget="many2many_binary" string="Attach a file" nolabel="1" colspan="2" />
+                        <field name="attachment_ids"
+                            widget="many2many_binary"
+                            string="Attach a file"
+                            nolabel="1"
+                            colspan="2" />
                     </group>
                 </sheet>
             </form>
         </field>
     </record>
 
-    <record id="agri_farm_field_crop_problem_action" model="ir.actions.act_window">
+    <record id="agri_farm_field_crop_problem_action"
+        model="ir.actions.act_window">
         <field name="name">Problems</field>
         <field name="res_model">agri.farm.field.crop.problem</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('crop_id', '=', active_id)]</field>
-        <field name="help" type="html">
+        <field name="help"
+            type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a field crop problem
             </p>
@@ -221,10 +242,12 @@
 
     <!-- agri.farm.field.crop.zone views -->
 
-    <record id="agri_farm_field_crop_zone_view_search" model="ir.ui.view">
+    <record id="agri_farm_field_crop_zone_view_search"
+        model="ir.ui.view">
         <field name="name">agri.farm.field.crop.zone.view.search</field>
         <field name="model">agri.farm.field.crop.zone</field>
-        <field name="arch" type="xml">
+        <field name="arch"
+            type="xml">
             <search string="Zones">
                 <field name="crop_id" />
                 <field name="field_id" />
@@ -232,23 +255,38 @@
                 <field name="product_id" />
                 <field name="state" />
                 <separator />
-                <filter string="Planted" name="filter_planted" domain="[('state', '!=', 'draft')]" />
-                <filter string="Emerged" name="filter_emerged" domain="[('state', 'in', ['emerged', 'harvested'])]" />
-                <filter string="Harvested" name="filter_harvested" domain="[('state', '=', 'harvested')]" />
-                <group expand="0" string="Group By">
-                    <filter string="Field" name="group_field" context="{'group_by': 'field_id'}" />
-                    <filter string="Farm" name="group_farm" context="{'group_by': 'farm_id'}" />
-                    <filter string="Cultivar" name="group_product" context="{'group_by': 'product_id'}" />
+                <filter string="Planted"
+                    name="filter_planted"
+                    domain="[('state', '!=', 'draft')]" />
+                <filter string="Emerged"
+                    name="filter_emerged"
+                    domain="[('state', 'in', ['emerged', 'harvested'])]" />
+                <filter string="Harvested"
+                    name="filter_harvested"
+                    domain="[('state', '=', 'harvested')]" />
+                <group expand="0"
+                    string="Group By">
+                    <filter string="Field"
+                        name="group_field"
+                        context="{'group_by': 'field_id'}" />
+                    <filter string="Farm"
+                        name="group_farm"
+                        context="{'group_by': 'farm_id'}" />
+                    <filter string="Cultivar"
+                        name="group_product"
+                        context="{'group_by': 'product_id'}" />
                 </group>
             </search>
         </field>
     </record>
 
-    <record id="agri_farm_field_crop_zone_view_tree" model="ir.ui.view">
+    <record id="agri_farm_field_crop_zone_view_tree"
+        model="ir.ui.view">
         <field name="name">agri.farm.field.crop.zone.view.tree</field>
         <field name="model">agri.farm.field.crop.zone</field>
         <field name="priority">10</field>
-        <field name="arch" type="xml">
+        <field name="arch"
+            type="xml">
             <tree string="Zones">
                 <field name="crop_id" />
                 <field name="farm_id" />
@@ -261,21 +299,41 @@
         </field>
     </record>
 
-    <record id="agri_farm_field_crop_zone_view_form" model="ir.ui.view">
+    <record id="agri_farm_field_crop_zone_view_form"
+        model="ir.ui.view">
         <field name="name">agri.farm.field.crop.zone.view.form</field>
         <field name="model">agri.farm.field.crop.zone</field>
         <field name="priority">10</field>
-        <field name="arch" type="xml">
+        <field name="arch"
+            type="xml">
             <form string="Zones">
                 <header>
-                    <button string="Planted" type="object" name="action_plant" groups="agri.agri_group_user" class="oe_highlight" states="draft" />
-                    <button string="Emerged" type="object" name="action_emerge" groups="agri.agri_group_user" class="oe_highlight" states="planted" />
-                    <button string="Harvest" type="object" name="action_harvest" groups="agri.agri_group_user" class="oe_highlight" states="emerged" />
-                    <field name="state" colspan="2" widget="statusbar" />
+                    <button string="Planted"
+                        type="object"
+                        name="action_plant"
+                        groups="agri.agri_group_user"
+                        class="oe_highlight"
+                        states="draft" />
+                    <button string="Emerged"
+                        type="object"
+                        name="action_emerge"
+                        groups="agri.agri_group_user"
+                        class="oe_highlight"
+                        states="planted" />
+                    <button string="Harvest"
+                        type="object"
+                        name="action_harvest"
+                        groups="agri.agri_group_user"
+                        class="oe_highlight"
+                        states="emerged" />
+                    <field name="state"
+                        colspan="2"
+                        widget="statusbar" />
                 </header>
                 <sheet>
                     <div class="oe_title">
-                        <label for="name" class="oe_edit_only" />
+                        <label for="name"
+                            class="oe_edit_only" />
                         <h1>
                             <field name="name" />
                         </h1>
@@ -283,8 +341,10 @@
                     <group>
                         <group>
                             <field name="crop_id" />
-                            <field name="product_category_id" invisible="1" />
-                            <field name="product_id" options="{'no_open': 1}" />
+                            <field name="product_category_id"
+                                invisible="1" />
+                            <field name="product_id"
+                                options="{'no_open': 1}" />
                             <field name="field_id" />
                             <field name="farm_id" />
                         </group>
@@ -294,18 +354,24 @@
                             <field name="planted_date" />
                             <label for="planted_area" />
                             <div>
-                                <field name="planted_area" class="oe_inline" />
+                                <field name="planted_area"
+                                    class="oe_inline" />
                                 <![CDATA[&nbsp;]]>
-                                <field name="area_uom_id" class="oe_inline" options="{'no_open': 1}" />
+                                <field name="area_uom_id"
+                                    class="oe_inline"
+                                    options="{'no_open': 1}" />
                             </div>
                         </group>
                         <group>
                             <field name="emerged_date" />
                             <label for="emerged_area" />
                             <div>
-                                <field name="emerged_area" class="oe_inline" />
+                                <field name="emerged_area"
+                                    class="oe_inline" />
                                 <![CDATA[&nbsp;]]>
-                                <field name="area_uom_id" class="oe_inline" options="{'no_open': 1}" />
+                                <field name="area_uom_id"
+                                    class="oe_inline"
+                                    options="{'no_open': 1}" />
                             </div>
                         </group>
                         <group>
@@ -313,23 +379,31 @@
                         </group>
                     </group>
                     <group>
-                        <field name="attachment_ids" widget="many2many_binary" string="Attach a file" nolabel="1" colspan="2" />
+                        <field name="attachment_ids"
+                            widget="many2many_binary"
+                            string="Attach a file"
+                            nolabel="1"
+                            colspan="2" />
                     </group>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers" />
-                    <field name="message_ids" widget="mail_thread" />
+                    <field name="message_follower_ids"
+                        widget="mail_followers" />
+                    <field name="message_ids"
+                        widget="mail_thread" />
                 </div>
             </form>
         </field>
     </record>
 
-    <record id="agri_farm_field_crop_zone_action" model="ir.actions.act_window">
+    <record id="agri_farm_field_crop_zone_action"
+        model="ir.actions.act_window">
         <field name="name">Zones</field>
         <field name="res_model">agri.farm.field.crop.zone</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('crop_id', '=', active_id)]</field>
-        <field name="help" type="html">
+        <field name="help"
+            type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a field crop zone
             </p>
@@ -338,10 +412,12 @@
 
     <!-- agri.farm.field.crop views -->
 
-    <record id="agri_farm_field_crop_view_search" model="ir.ui.view">
+    <record id="agri_farm_field_crop_view_search"
+        model="ir.ui.view">
         <field name="name">agri.farm.field.crop.view.search</field>
         <field name="model">agri.farm.field.crop</field>
-        <field name="arch" type="xml">
+        <field name="arch"
+            type="xml">
             <search string="Crops">
                 <field name="field_id" />
                 <field name="farm_id" />
@@ -350,85 +426,119 @@
                 <field name="zone_ids" />
                 <field name="state" />
                 <separator />
-                <filter string="Emerged" name="filter_emerged" domain="[('state', 'in', ['emerged', 'harvested'])]" />
-                <filter string="Harvested" name="filter_harvested" domain="[('state', '=', 'harvested')]" />
-                <group expand="0" string="Group By">
-                    <filter string="Field" name="group_field" context="{'group_by': 'field_id'}" />
-                    <filter string="Farm" name="group_farm" context="{'group_by': 'farm_id'}" />
-                    <filter string="Crop Category" name="group_product_category" context="{'group_by': 'product_category_id'}" />
+                <filter string="Emerged"
+                    name="filter_emerged"
+                    domain="[('state', 'in', ['emerged', 'harvested'])]" />
+                <filter string="Harvested"
+                    name="filter_harvested"
+                    domain="[('state', '=', 'harvested')]" />
+                <group expand="0"
+                    string="Group By">
+                    <filter string="Field"
+                        name="group_field"
+                        context="{'group_by': 'field_id'}" />
+                    <filter string="Farm"
+                        name="group_farm"
+                        context="{'group_by': 'farm_id'}" />
+                    <filter string="Crop Category"
+                        name="group_product_category"
+                        context="{'group_by': 'product_category_id'}" />
                 </group>
             </search>
         </field>
     </record>
 
-    <record id="agri_farm_field_crop_view_tree" model="ir.ui.view">
+    <record id="agri_farm_field_crop_view_tree"
+        model="ir.ui.view">
         <field name="name">agri.farm.field.crop.view.tree</field>
         <field name="model">agri.farm.field.crop</field>
         <field name="priority">10</field>
-        <field name="arch" type="xml">
+        <field name="arch"
+            type="xml">
             <tree string="Crops">
                 <field name="field_id" />
                 <field name="farm_id" />
                 <field name="product_category_id" />
                 <field name="established_date" />
                 <field name="cleared_date" />
-                <field name="problem_count" string="Problems" />
-                <field name="zone_count" string="Zones" />
+                <field name="problem_count"
+                    string="Problems" />
+                <field name="zone_count"
+                    string="Zones" />
                 <field name="state" />
             </tree>
         </field>
     </record>
 
-    <record id="agri_farm_field_crop_view_form" model="ir.ui.view">
+    <record id="agri_farm_field_crop_view_form"
+        model="ir.ui.view">
         <field name="name">agri.farm.field.crop.view.form</field>
         <field name="model">agri.farm.field.crop</field>
         <field name="priority">10</field>
-        <field name="arch" type="xml">
+        <field name="arch"
+            type="xml">
             <form string="Crops">
                 <header>
-                    <field name="state" colspan="2" widget="statusbar" />
+                    <field name="state"
+                        colspan="2"
+                        widget="statusbar" />
                 </header>
                 <sheet>
-                    <div class="oe_button_box" name="button_box">
-                        <button name="%(agri_farm_field_crop_zone_action)d" type="action"
-                                context="{'default_crop_id': id}"
-                                class="oe_stat_button" icon="fa-layer-group">
-                            <field name="zone_count" widget="statinfo" string="Zones" />
+                    <div class="oe_button_box"
+                        name="button_box">
+                        <button name="%(agri_farm_field_crop_zone_action)d"
+                            type="action"
+                            context="{'default_crop_id': id}"
+                            class="oe_stat_button"
+                            icon="fa-layer-group">
+                            <field name="zone_count"
+                                widget="statinfo"
+                                string="Zones" />
                         </button>
-                        <button name="%(agri_farm_field_crop_problem_action)d" type="action"
-                                context="{'default_crop_id': id}"
-                                class="oe_stat_button" icon="fa-exclamation-triangle">
-                            <field name="problem_count" widget="statinfo" string="Problems" />
+                        <button name="%(agri_farm_field_crop_problem_action)d"
+                            type="action"
+                            context="{'default_crop_id': id}"
+                            class="oe_stat_button"
+                            icon="fa-exclamation-triangle">
+                            <field name="problem_count"
+                                widget="statinfo"
+                                string="Problems" />
                         </button>
                     </div>
                     <div class="oe_title">
-                        <label for="name" class="oe_edit_only" />
+                        <label for="name"
+                            class="oe_edit_only" />
                         <h1>
                             <field name="name" />
                         </h1>
                     </div>
                     <group>
                         <group>
-                            <field name="product_category_id" options="{'no_open': 1}" />
+                            <field name="product_category_id"
+                                options="{'no_open': 1}" />
                             <field name="field_id" />
                             <field name="farm_id" />
                         </group>
                     </group>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers" />
-                    <field name="message_ids" widget="mail_thread" />
+                    <field name="message_follower_ids"
+                        widget="mail_followers" />
+                    <field name="message_ids"
+                        widget="mail_thread" />
                 </div>
             </form>
         </field>
     </record>
 
-    <record id="agri_farm_field_crop_action" model="ir.actions.act_window">
+    <record id="agri_farm_field_crop_action"
+        model="ir.actions.act_window">
         <field name="name">Crops</field>
         <field name="res_model">agri.farm.field.crop</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('field_id', '=', active_id)]</field>
-        <field name="help" type="html">
+        <field name="help"
+            type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a field crop
             </p>
@@ -437,10 +547,12 @@
 
     <!-- agri.farm.field views -->
 
-    <record id="agri_farm_field_view_search" model="ir.ui.view">
+    <record id="agri_farm_field_view_search"
+        model="ir.ui.view">
         <field name="name">agri.farm.field.view.search</field>
         <field name="model">agri.farm.field</field>
-        <field name="arch" type="xml">
+        <field name="arch"
+            type="xml">
             <search string="Fields">
                 <field name="name" />
                 <field name="farm_id" />
@@ -454,61 +566,53 @@
                 <field name="terrain_id" />
                 <field name="water_source_id" />
                 <separator />
-                <filter string="Active" name="filter_active" domain="[('active', '=', True)]" />
-                <filter string="Irrigated" name="filter_irrigated" domain="[('irrigated', '=', True)]" />
-                <filter string="Not located" name="filter_not_located" domain="[('boundary', '=', False)]" />
-                <group expand="0" string="Group By">
-                    <filter string="Farm" name="group_farm" context="{'group_by': 'farm_id'}" />
-                    <filter string="Farm Version" name="group_farm_version" context="{'group_by': 'farm_version_id'}" />
-                    <filter string="Land Class" name="group_land_class" context="{'group_by': 'land_use_id'}" />
-                    <filter string="Cropping Potential" name="group_crop_potential" context="{'group_by': 'crop_potential_id'}" />
-                    <filter string="Effective Depth" name="group_effective_depth" context="{'group_by': 'soil_effective_depth_id'}" />
-                    <filter string="Irrigation Type" name="group_irrigation_type" context="{'group_by': 'irrigation_type_id'}" />
-                    <filter string="Soil Texture" name="group_soil_texture" context="{'group_by': 'soil_texture_id'}" />
-                    <filter string="Terrain" name="group_terrain" context="{'group_by': 'terrain_id'}" />
-                    <filter string="Water Source" name="group_swater_source" context="{'group_by': 'water_source_id'}" />
+                <filter string="Active"
+                    name="filter_active"
+                    domain="[('active', '=', True)]" />
+                <filter string="Irrigated"
+                    name="filter_irrigated"
+                    domain="[('irrigated', '=', True)]" />
+                <group expand="0"
+                    string="Group By">
+                    <filter string="Farm"
+                        name="group_farm"
+                        context="{'group_by': 'farm_id'}" />
+                    <filter string="Farm Version"
+                        name="group_farm_version"
+                        context="{'group_by': 'farm_version_id'}" />
+                    <filter string="Land Class"
+                        name="group_land_class"
+                        context="{'group_by': 'land_use_id'}" />
+                    <filter string="Cropping Potential"
+                        name="group_crop_potential"
+                        context="{'group_by': 'crop_potential_id'}" />
+                    <filter string="Effective Depth"
+                        name="group_effective_depth"
+                        context="{'group_by': 'soil_effective_depth_id'}" />
+                    <filter string="Irrigation Type"
+                        name="group_irrigation_type"
+                        context="{'group_by': 'irrigation_type_id'}" />
+                    <filter string="Soil Texture"
+                        name="group_soil_texture"
+                        context="{'group_by': 'soil_texture_id'}" />
+                    <filter string="Terrain"
+                        name="group_terrain"
+                        context="{'group_by': 'terrain_id'}" />
+                    <filter string="Water Source"
+                        name="group_swater_source"
+                        context="{'group_by': 'water_source_id'}" />
                 </group>
             </search>
         </field>
     </record>
 
-    <record id="agri_farm_field_view_geoengine" model="ir.ui.view">
-        <field name="name">agri.farm.field.view.geoengine</field>
-        <field name="model">agri.farm.field</field>
-        <field eval="16" name="priority" />
-        <field name="arch" type="xml">
-            <geoengine>
-                <field name="name" select="1" />
-                <field name="farm_id" />
-                <field name="area" />
-                <field name="area_uom_id" />
-                <field name="boundary" />
-            </geoengine>
-        </field>
-    </record>
-
-    <record id="agri_farm_field_view_geoengine_vector_layer" model="geoengine.vector.layer">
-        <field name="geo_field_id" ref="agri_farm.field_agri_farm_field__boundary" />
-        <field name="name">Boundary</field>
-        <field eval="6" name="sequence" />
-        <field name="view_id" ref="agri_farm_field_view_geoengine" />
-        <field name="geo_repr">basic</field>
-        <field eval="1" name="nb_class" />
-        <field name="begin_color">#FF680A</field>
-    </record>
-
-    <record id="agri_farm_field_geoengine_raster_layer_osm" model="geoengine.raster.layer">
-        <field name="raster_type">osm</field>
-        <field name="name">Background</field>
-        <field name="view_id" ref="agri_farm_field_view_geoengine" />
-        <field eval="0" name="overlay" />
-    </record>
-
-    <record id="agri_farm_field_view_tree" model="ir.ui.view">
+    <record id="agri_farm_field_view_tree"
+        model="ir.ui.view">
         <field name="name">agri.farm.field.view.tree</field>
         <field name="model">agri.farm.field</field>
         <field name="priority">10</field>
-        <field name="arch" type="xml">
+        <field name="arch"
+            type="xml">
             <tree string="Fields">
                 <field name="name" />
                 <field name="area" />
@@ -521,22 +625,30 @@
         </field>
     </record>
 
-    <record id="agri_farm_field_view_form" model="ir.ui.view">
+    <record id="agri_farm_field_view_form"
+        model="ir.ui.view">
         <field name="name">agri.farm.field.view.form</field>
         <field name="model">agri.farm.field</field>
         <field name="priority">10</field>
-        <field name="arch" type="xml">
+        <field name="arch"
+            type="xml">
             <form string="Fields">
                 <sheet>
-                    <div class="oe_button_box" name="button_box">
-                        <button name="%(agri_farm_field_crop_action)d" type="action"
-                                context="{'default_field_id': id}"
-                                class="oe_stat_button" icon="fa-seedling">
-                            <field name="crop_count" widget="statinfo" string="Crops" />
+                    <div class="oe_button_box"
+                        name="button_box">
+                        <button name="%(agri_farm_field_crop_action)d"
+                            type="action"
+                            context="{'default_field_id': id}"
+                            class="oe_stat_button"
+                            icon="fa-seedling">
+                            <field name="crop_count"
+                                widget="statinfo"
+                                string="Crops" />
                         </button>
                     </div>
                     <div class="oe_title">
-                        <label for="name" class="oe_edit_only" />
+                        <label for="name"
+                            class="oe_edit_only" />
                         <h1>
                             <field name="name" />
                         </h1>
@@ -546,26 +658,31 @@
                             <field name="farm_id" />
                             <label for="area" />
                             <div>
-                                <field name="area" class="oe_inline" />
+                                <field name="area"
+                                    class="oe_inline" />
                                 <![CDATA[&nbsp;]]>
-                                <field name="area_uom_id" class="oe_inline" options="{'no_open': 1}" />
+                                <field name="area_uom_id"
+                                    class="oe_inline"
+                                    options="{'no_open': 1}" />
                             </div>
-                            <field name="has_boundary" invisible="1" />
                         </group>
                         <group>
-                            <field name="create_date" readonly="1" />
+                            <field name="create_date"
+                                readonly="1" />
                             <field name="active" />
                         </group>
                     </group>
                     <notebook>
-                        <page string="Details" name="details_tab">
+                        <page string="Details"
+                            name="details_tab">
                             <group>
                                 <group>
                                     <field name="land_use_id" />
                                     <field name="crop_potential_id" />
                                     <field name="soil_effective_depth_id" />
                                     <field name="irrigation_type_id" />
-                                    <field name="irrigated" invisible="1" />
+                                    <field name="irrigated"
+                                        invisible="1" />
                                 </group>
                                 <group>
                                     <field name="soil_texture_id" />
@@ -574,36 +691,42 @@
                                 </group>
                             </group>
                         </page>
-                        <page string="Boundary" name="map_tab">
-                            <field name="boundary" nolabel="1" widget="geo_edit_map" />
-                        </page>
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers" />
-                    <field name="message_ids" widget="mail_thread" />
+                    <field name="message_follower_ids"
+                        widget="mail_followers" />
+                    <field name="message_ids"
+                        widget="mail_thread" />
                 </div>
             </form>
         </field>
     </record>
 
-    <record id="agri_farm_field_inline_view_form" model="ir.ui.view">
+    <record id="agri_farm_field_inline_view_form"
+        model="ir.ui.view">
         <field name="name">agri.farm.field.view.form.inherit.inline</field>
         <field name="model">agri.farm.field</field>
         <field name="mode">primary</field>
-        <field name="inherit_id" ref="agri_farm_field_view_form" />
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='farm_id']" position="replace" />
-            <xpath expr="//div[hasclass('oe_chatter')]" position="replace" />
+        <field name="inherit_id"
+            ref="agri_farm_field_view_form" />
+        <field name="arch"
+            type="xml">
+            <xpath expr="//field[@name='farm_id']"
+                position="replace" />
+            <xpath expr="//div[hasclass('oe_chatter')]"
+                position="replace" />
         </field>
     </record>
 
     <!-- agri.farm.parcel views -->
 
-    <record id="agri_farm_parcel_view_search" model="ir.ui.view">
+    <record id="agri_farm_parcel_view_search"
+        model="ir.ui.view">
         <field name="name">agri.farm.parcel.view.search</field>
         <field name="model">agri.farm.parcel</field>
-        <field name="arch" type="xml">
+        <field name="arch"
+            type="xml">
             <search string="Parcels">
                 <field name="name" />
                 <field name="farm_id" />
@@ -613,51 +736,26 @@
                 <field name="short_name" />
                 <field name="land_cover_ids" />
                 <separator />
-                <group expand="0" string="Group By">
-                    <filter string="Farm" name="group_farm" context="{'group_by': 'farm_id'}" />
-                    <filter string="Farm Version" name="group_farm_version" context="{'group_by': 'farm_version_id'}" />
+                <group expand="0"
+                    string="Group By">
+                    <filter string="Farm"
+                        name="group_farm"
+                        context="{'group_by': 'farm_id'}" />
+                    <filter string="Farm Version"
+                        name="group_farm_version"
+                        context="{'group_by': 'farm_version_id'}" />
                 </group>
             </search>
         </field>
     </record>
 
-    <record id="agri_farm_parcel_view_geoengine" model="ir.ui.view">
-        <field name="name">agri.farm.parcel.view.geoengine</field>
-        <field name="model">agri.farm.parcel</field>
-        <field eval="16" name="priority" />
-        <field name="arch" type="xml">
-            <geoengine>
-                <field name="name" select="1" />
-                <field name="farm_id" />
-                <field name="area" />
-                <field name="area_uom_id" />
-                <field name="boundary" />
-            </geoengine>
-        </field>
-    </record>
-
-    <record id="agri_farm_parcel_view_geoengine_vector_layer" model="geoengine.vector.layer">
-        <field name="geo_field_id" ref="agri_farm.field_agri_farm_parcel__boundary" />
-        <field name="name">Boundary</field>
-        <field eval="6" name="sequence" />
-        <field name="view_id" ref="agri_farm_parcel_view_geoengine" />
-        <field name="geo_repr">basic</field>
-        <field eval="1" name="nb_class" />
-        <field name="begin_color">#FF680A</field>
-    </record>
-
-    <record id="agri_farm_parcel_geoengine_raster_layer_osm" model="geoengine.raster.layer">
-        <field name="raster_type">osm</field>
-        <field name="name">Background</field>
-        <field name="view_id" ref="agri_farm_parcel_view_geoengine" />
-        <field eval="0" name="overlay" />
-    </record>
-
-    <record id="agri_farm_parcel_view_tree" model="ir.ui.view">
+    <record id="agri_farm_parcel_view_tree"
+        model="ir.ui.view">
         <field name="name">agri.farm.parcel.view.tree</field>
         <field name="model">agri.farm.parcel</field>
         <field name="priority">10</field>
-        <field name="arch" type="xml">
+        <field name="arch"
+            type="xml">
             <tree string="Parcels">
                 <field name="name" />
                 <field name="short_name" />
@@ -670,15 +768,18 @@
         </field>
     </record>
 
-    <record id="agri_farm_parcel_view_form" model="ir.ui.view">
+    <record id="agri_farm_parcel_view_form"
+        model="ir.ui.view">
         <field name="name">agri.farm.parcel.view.form</field>
         <field name="model">agri.farm.parcel</field>
         <field name="priority">10</field>
-        <field name="arch" type="xml">
+        <field name="arch"
+            type="xml">
             <form string="Parcels">
                 <sheet>
                     <div class="oe_title">
-                        <label for="name" class="oe_edit_only" />
+                        <label for="name"
+                            class="oe_edit_only" />
                         <h1>
                             <field name="name" />
                         </h1>
@@ -691,57 +792,70 @@
                             <field name="country_id" />
                         </group>
                         <group>
-                            <field name="create_date" readonly="1" />
+                            <field name="create_date"
+                                readonly="1" />
                             <label for="area" />
                             <div>
-                                <field name="area" attrs="{'readonly': [('has_boundary', '!=', False)]}" class="oe_inline" />
+                                <field name="area"
+                                    class="oe_inline" />
                                 <![CDATA[&nbsp;]]>
-                                <field name="area_uom_id" class="oe_inline" options="{'no_open': 1}" />
+                                <field name="area_uom_id"
+                                    class="oe_inline"
+                                    options="{'no_open': 1}" />
                             </div>
-                            <field name="has_boundary" invisible="1" />
                         </group>
                     </group>
                     <notebook>
-                        <page string="Land Cover" name="land_cover_tab" groups="agri.agri_group_manager">
-                            <field name="land_cover_ids" nolabel="1">
-                                <tree editable="bottom" context="{'default_parcel_id': id}">
+                        <page string="Land Cover"
+                            name="land_cover_tab"
+                            groups="agri.agri_group_manager">
+                            <field name="land_cover_ids"
+                                nolabel="1">
+                                <tree editable="bottom"
+                                    context="{'default_parcel_id': id}">
                                     <field name="land_use_id" />
                                     <field name="area" />
                                     <field name="area_uom_id" />
                                 </tree>
                             </field>
                         </page>
-                        <page string="Boundary" name="map_tab">
-                            <field name="boundary" nolabel="1" widget="geo_edit_map" />
-                        </page>
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers" />
-                    <field name="message_ids" widget="mail_thread" />
+                    <field name="message_follower_ids"
+                        widget="mail_followers" />
+                    <field name="message_ids"
+                        widget="mail_thread" />
                 </div>
             </form>
         </field>
     </record>
 
-    <record id="agri_farm_parcel_inline_view_form" model="ir.ui.view">
+    <record id="agri_farm_parcel_inline_view_form"
+        model="ir.ui.view">
         <field name="name">agri.farm.parcel.view.form.inherit.inline</field>
         <field name="model">agri.farm.parcel</field>
         <field name="mode">primary</field>
-        <field name="inherit_id" ref="agri_farm_parcel_view_form" />
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='farm_id']" position="replace" />
-            <xpath expr="//div[hasclass('oe_chatter')]" position="replace" />
+        <field name="inherit_id"
+            ref="agri_farm_parcel_view_form" />
+        <field name="arch"
+            type="xml">
+            <xpath expr="//field[@name='farm_id']"
+                position="replace" />
+            <xpath expr="//div[hasclass('oe_chatter')]"
+                position="replace" />
         </field>
     </record>
 
     <!-- agri.farm.version views -->
 
-    <record id="agri_farm_version_view_tree" model="ir.ui.view">
+    <record id="agri_farm_version_view_tree"
+        model="ir.ui.view">
         <field name="name">agri.farm.version.view.tree</field>
         <field name="model">agri.farm.version</field>
         <field name="priority">10</field>
-        <field name="arch" type="xml">
+        <field name="arch"
+            type="xml">
             <tree string="Farm Versions">
                 <field name="partner_id" />
                 <field name="name" />
@@ -750,25 +864,31 @@
         </field>
     </record>
 
-    <record id="agri_farm_version_view_form" model="ir.ui.view">
+    <record id="agri_farm_version_view_form"
+        model="ir.ui.view">
         <field name="name">agri.farm.version.view.form</field>
         <field name="model">agri.farm.version</field>
         <field name="priority">10</field>
-        <field name="arch" type="xml">
+        <field name="arch"
+            type="xml">
             <form string="Farm Version">
                 <sheet>
                     <group>
                         <group>
                             <field name="partner_id" />
                             <field name="date" />
-                            <field name="parent_farm_version_id" required="1" />
+                            <field name="parent_farm_version_id"
+                                required="1" />
                         </group>
                         <group>
-                            <field name="company_id" groups="base.group_multi_company" />
+                            <field name="company_id"
+                                groups="base.group_multi_company" />
                         </group>
                     </group>
                     <group>
-                        <field name="child_farm_version_ids" readonly="1" colspan="2">
+                        <field name="child_farm_version_ids"
+                            readonly="1"
+                            colspan="2">
                             <tree>
                                 <field name="name" />
                                 <field name="parent_farm_version_id" />
@@ -782,39 +902,45 @@
 
     <!-- actions -->
 
-    <record id="agri_farm_action" model="ir.actions.act_window">
+    <record id="agri_farm_action"
+        model="ir.actions.act_window">
         <field name="name">Farms</field>
         <field name="res_model">agri.farm</field>
-        <field name="view_mode">tree,form,geoengine</field>
+        <field name="view_mode">tree,form</field>
         <field name="domain">[]</field>
         <field name="context">{'search_default_filter_active': 1}</field>
-        <field name="help" type="html">
+        <field name="help"
+            type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a farm
             </p>
         </field>
     </record>
 
-    <record id="agri_farm_field_action" model="ir.actions.act_window">
+    <record id="agri_farm_field_action"
+        model="ir.actions.act_window">
         <field name="name">Fields</field>
         <field name="res_model">agri.farm.field</field>
-        <field name="view_mode">tree,form,geoengine</field>
+        <field name="view_mode">tree,form</field>
         <field name="domain">[]</field>
         <field name="context">{'search_default_filter_active': 1}</field>
-        <field name="help" type="html">
+        <field name="help"
+            type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a field
             </p>
         </field>
     </record>
 
-    <record id="agri_farm_parcel_action" model="ir.actions.act_window">
+    <record id="agri_farm_parcel_action"
+        model="ir.actions.act_window">
         <field name="name">Parcels</field>
         <field name="res_model">agri.farm.parcel</field>
-        <field name="view_mode">tree,form,geoengine</field>
+        <field name="view_mode">tree,form</field>
         <field name="domain">[]</field>
         <field name="context">{}</field>
-        <field name="help" type="html">
+        <field name="help"
+            type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a land parcel
             </p>
@@ -823,12 +949,28 @@
 
     <!-- menu items -->
 
-    <menuitem id="agri_farm_menu" name="Farms" parent="agri.agri_menu_root" sequence="5" groups="agri.agri_group_user" />
+    <menuitem id="agri_farm_menu"
+        name="Farms"
+        parent="agri.agri_menu_root"
+        sequence="5"
+        groups="agri.agri_group_user" />
 
-    <menuitem id="agri_farm_action_menu" name="Farms" parent="agri_farm_menu" sequence="2" action="agri_farm_action" />
+    <menuitem id="agri_farm_action_menu"
+        name="Farms"
+        parent="agri_farm_menu"
+        sequence="2"
+        action="agri_farm_action" />
 
-    <menuitem id="agri_farm_field_action_menu" name="Fields" parent="agri_farm_menu" sequence="6" action="agri_farm_field_action" />
+    <menuitem id="agri_farm_field_action_menu"
+        name="Fields"
+        parent="agri_farm_menu"
+        sequence="6"
+        action="agri_farm_field_action" />
 
-    <menuitem id="agri_farm_parcel_action_menu" name="Parcels" parent="agri_farm_menu" sequence="10" action="agri_farm_parcel_action" />
+    <menuitem id="agri_farm_parcel_action_menu"
+        name="Parcels"
+        parent="agri_farm_menu"
+        sequence="10"
+        action="agri_farm_parcel_action" />
 
 </odoo>

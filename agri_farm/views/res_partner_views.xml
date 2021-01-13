@@ -1,49 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="view_partner_farm_action" model="ir.actions.act_window">
+    <record id="view_partner_farm_action"
+        model="ir.actions.act_window">
         <field name="name">Farms</field>
         <field name="res_model">agri.farm</field>
-        <field name="view_mode">tree,form,geoengine</field>
+        <field name="view_mode">tree,form</field>
         <field name="domain">[('partner_id', '=', active_id)]</field>
         <field name="context">{'search_default_filter_active': 1}</field>
-        <field name="help" type="html">
+        <field name="help"
+            type="html">
             <p class="o_view_nocontent_smiling_face">
                 Add a farm
             </p>
         </field>
     </record>
 
-    <record id="view_partner_form" model="ir.ui.view" >
+    <record id="view_partner_form"
+        model="ir.ui.view">
         <field name="name">view.partner.form.inherit.agri</field>
         <field name="model">res.partner</field>
-        <field name="inherit_id" ref="base.view_partner_form" />
-        <field name="arch" type="xml">
-            <div name="button_box" position="inside">
-                <field name="farm_version_id" invisible="1" />
+        <field name="inherit_id"
+            ref="base.view_partner_form" />
+        <field name="arch"
+            type="xml">
+            <div name="button_box"
+                position="inside">
+                <field name="farm_version_id"
+                    invisible="1" />
                 <button name="%(agri_farm.view_partner_farm_action)d"
-                        context="{'search_default_partner_id': active_id,
+                    context="{'search_default_partner_id': active_id,
                                   'default_partner_id': active_id,
                                   'default_farm_version_id': farm_version_id}"
-                        type="action"
-                        class="oe_stat_button"
-                        icon="fa-tractor">
+                    type="action"
+                    class="oe_stat_button"
+                    icon="fa-tractor">
                     <field name="farm_count"
-                           widget="statinfo"
-                           string="Farms" />
+                        widget="statinfo"
+                        string="Farms" />
                 </button>
             </div>
         </field>
     </record>
 
-    <record id="view_res_partner_filter" model="ir.ui.view">
+    <record id="view_res_partner_filter"
+        model="ir.ui.view">
         <field name="name">view.partner.filter.inherit.agri</field>
         <field name="model">res.partner</field>
-        <field name="inherit_id" ref="base.view_res_partner_filter" />
+        <field name="inherit_id"
+            ref="base.view_res_partner_filter" />
         <field name="priority">20</field>
-        <field name="arch" type="xml">
-            <field name="category_id" position="after">
-                <field name="farm_version_id" string="Farm"
+        <field name="arch"
+            type="xml">
+            <field name="category_id"
+                position="after">
+                <field name="farm_version_id"
+                    string="Farm"
                     filter_domain="[('farm_version_id.farm_ids', 'ilike', self)]" />
             </field>
         </field>

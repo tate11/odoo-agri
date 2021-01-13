@@ -28,10 +28,6 @@ class Farm(models.Model):
         required=True,
         tracking=True)
     area = fields.Float('Area', digits='Hectare', tracking=True)
-    boundary = fields.GeoMultiPolygon('Boundary', srid=4326, gist_index=True)
-    has_boundary = fields.Boolean('Has Boundary',
-                                  compute='_compute_has_boundary',
-                                  default=False)
     farm_field_ids = fields.One2many(comodel_name='agri.farm.field',
                                      inverse_name='farm_id',
                                      string='Fields',
@@ -45,11 +41,6 @@ class Farm(models.Model):
                                       ondelete='cascade',
                                       required=True,
                                       check_company=True)
-
-    @api.onchange('boundary')
-    def _compute_has_boundary(self):
-        for farm in self:
-            farm.has_boundary = True if farm.boundary else False
 
     @api.constrains('name')
     def _check_name(self):
@@ -106,10 +97,6 @@ class FarmField(models.Model):
     name = fields.Char('Name', required=True, tracking=True)
     area = fields.Float('Area', digits='Hectare', tracking=True)
     area_uom_id = fields.Many2one(related='farm_id.area_uom_id', store=True)
-    boundary = fields.GeoMultiPolygon('Boundary', srid=4326, gist_index=True)
-    has_boundary = fields.Boolean('Has Boundary',
-                                  compute='_compute_has_boundary',
-                                  default=False)
     farm_id = fields.Many2one('agri.farm',
                               'Farm',
                               ondelete='cascade',
@@ -144,11 +131,6 @@ class FarmField(models.Model):
     crop_count = fields.Integer(string='Crop Count',
                                 compute='_compute_crops',
                                 store=True)
-
-    @api.onchange('boundary')
-    def _compute_has_boundary(self):
-        for field in self:
-            field.has_boundary = True if field.boundary else False
 
     @api.depends('crop_ids')
     def _compute_crops(self):
@@ -412,11 +394,6 @@ class FarmFieldCropProblem(models.Model):
                         states={'draft': [('readonly', False)]},
                         readonly=True)
     area_uom_id = fields.Many2one(related='farm_id.area_uom_id', store=True)
-    centroid = fields.GeoPoint('Centroid',
-                               srid=4326,
-                               gist_index=True,
-                               states={'draft': [('readonly', False)]},
-                               readonly=True)
     type = fields.Selection(selection=[('disease', 'Disease'),
                                        ('fading', 'Fading'),
                                        ('uneven', 'Uneven'),
@@ -637,21 +614,12 @@ class FarmParcel(models.Model):
                                  tracking=True)
     area = fields.Float('Area', digits='Hectare', tracking=True)
     area_uom_id = fields.Many2one(related='farm_id.area_uom_id', store=True)
-    boundary = fields.GeoMultiPolygon('Boundary', srid=4326, gist_index=True)
-    has_boundary = fields.Boolean('Has Boundary',
-                                  compute='_compute_has_boundary',
-                                  default=False)
     farm_version_id = fields.Many2one(related='farm_id.farm_version_id',
                                       readonly=True)
     land_cover_ids = fields.One2many(comodel_name='agri.land.cover',
                                      inverse_name='farm_parcel_id',
                                      string='Land Cover',
                                      copy=True)
-
-    @api.onchange('boundary')
-    def _compute_has_boundary(self):
-        for land in self:
-            land.has_boundary = True if land.boundary else False
 
     @api.constrains('code')
     def _check_code(self):

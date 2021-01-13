@@ -20,7 +20,7 @@
     "AGPL-3",
     "description":
     "Agriculture module to add Farm management",
-    "depends": ['base', 'base_geoengine', 'mail', 'agri'],
+    "depends": ['base', 'mail', 'agri'],
     "data": [
         'security/ir.model.access.csv',
         'data/res_partner_data.xml',
