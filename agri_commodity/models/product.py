@@ -40,6 +40,8 @@ class ProductTemplate(models.Model):
         '# of Grading Where is Used',
         compute='_compute_used_in_grading_count',
         compute_sudo=False)
+    adjustment_ids = fields.One2many('agri.adjustment', 'product_tmpl_id',
+                                     'Adjustments')
 
     def _compute_grading_count(self):
         for product in self:
@@ -55,8 +57,10 @@ class ProductTemplate(models.Model):
                      template.product_variant_ids.ids)
                 ])
 
-    @api.depends('default_grading_moisture_loss_perc', 'default_grading_processing_loss_perc',
-                 'default_grading_grading_loss_perc', 'default_grading_id', 'default_grading_line_ids')
+    @api.depends('default_grading_moisture_loss_perc',
+                 'default_grading_processing_loss_perc',
+                 'default_grading_grading_loss_perc', 'default_grading_id',
+                 'default_grading_line_ids')
     @api.onchange('default_grading_moisture_loss_perc',
                   'default_grading_processing_loss_perc',
                   'default_grading_grading_loss_perc')

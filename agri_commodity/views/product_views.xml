@@ -104,6 +104,20 @@
                                     <field name="product_uom_id" groups="uom.group_uom" />
                                 </tree>
                             </field>
+                            <separator string="Deductions &amp; Incentives" />
+                            <field name="adjustment_ids" nolabel="1" colspan="2" widget="one2many"
+                                   context="{'default_product_tmpl_id': id}">
+                                <tree string="Adjustments">
+                                    <field name="name" />
+                                    <field name="adjustment_type" />
+                                    <field name="model_name" />
+                                    <field name="partner_id" />
+                                    <field name="company_id" invisible="1" />
+                                    <field name="product_tmpl_id" invisible="1" />
+                                    <field name="start_date" />
+                                    <field name="end_date" />
+                                </tree>
+                            </field>
                         </group>
                     </page>
                 </xpath>
