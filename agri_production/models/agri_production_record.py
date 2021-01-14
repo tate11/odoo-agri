@@ -33,8 +33,7 @@ class ProductionRecord(models.Model):
     farm_field_id = fields.Many2one(
         'agri.farm.field',
         'Field',
-        domain=
-        "[('active', '=', True), ('farm_id.active', '=', True), ('farm_id.partner_id', '=', partner_id)]",
+        domain="[('active', '=', True), ('farm_id.active', '=', True), ('farm_id.partner_id', '=', partner_id)]",
         ondelete='cascade',
         required=True)
     irrigation_type_id = fields.Many2one(
@@ -57,7 +56,7 @@ class ProductionRecord(models.Model):
     delivered_uom_id = fields.Many2one(
         'uom.uom',
         'Delivered Measure',
-        domain="[('measure_type', '=', 'weight')]")
+        domain="[('category_id.name', '=', 'Weight')]")
     delivered_uom_qty = fields.Float('Delivered Quantity',
                                      digits='Stock Weight')
     delivered_t_ha = fields.Float('Delivered t/Ha',
@@ -85,9 +84,9 @@ class ProductionRecord(models.Model):
             precision = self.env['decimal.precision'].precision_get(
                 'Tons per Hectare')
             for record in self:
-                if (record.delivered_uom_id and record.planted_ha and
-                        not float_is_zero(record.planted_ha,
-                                          precision_rounding=ha_uom.rounding)):
+                if (record.delivered_uom_id and record.planted_ha
+                        and not float_is_zero(record.planted_ha,
+                                              precision_rounding=ha_uom.rounding)):
                     delivered_tons = record.delivered_uom_id._compute_quantity(
                         record.delivered_uom_qty, ton_uom, round=False)
                     record.delivered_t_ha = delivered_tons / record.planted_ha
@@ -138,8 +137,8 @@ class ProductionRecord(models.Model):
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
         if (self.partner_id and self.farm_field_id
-                and self.farm_field_id.farm_id.partner_id.id !=
-                self.partner_id.id):
+                and self.farm_field_id.farm_id.partner_id.id
+                != self.partner_id.id):
             self.farm_field_id = None
 
     @api.onchange('production_plan_id')

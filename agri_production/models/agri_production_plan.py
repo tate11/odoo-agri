@@ -92,8 +92,7 @@ class ProductionPlan(models.Model):
     production_uom_id = fields.Many2one(
         'uom.uom',
         'Production Unit',
-        domain=
-        "[('category_id.measure_type', 'in', ['weight', 'lsu'])]",
+        domain="[('category_id.name', 'in', ['Weight', 'LSU'])]",
         default=lambda self: self.env.ref('uom.product_uom_ton'),
         states={'draft': [('readonly', False)]},
         readonly=True,
@@ -148,8 +147,7 @@ class ProductionPlan(models.Model):
     consumption_uom_id = fields.Many2one(
         'uom.uom',
         'Consumption Unit',
-        domain=
-        "[('category_id', 'in', ['agri_category_area', 'agri_category_lsu'])]",
+        domain="[('category_id', 'in', ['agri_category_area', 'agri_category_lsu'])]",
         default=lambda self: self.env.ref('agri.agri_uom_ha'),
         states={'draft': [('readonly', False)]},
         readonly=True,
@@ -219,8 +217,8 @@ class ProductionPlan(models.Model):
                 ['crop_establishment', 'crop_input']).sorted(
                     lambda line: line.date_range_id.date_start)
             harvest_lines = plan.line_ids.filtered(
-                lambda line: line.product_category_id.cost_type ==
-                'crop_harvest').sorted(
+                lambda line: line.product_category_id.cost_type
+                == 'crop_harvest').sorted(
                     lambda line: line.date_range_id.date_start)
             sale_lines = plan.line_ids.filtered(
                 lambda line: line.product_category_id.cost_type in
@@ -433,8 +431,8 @@ class ProductionPlanLine(models.Model):
         self.ensure_one()
         for line in self:
             if line.product_id and line.product_uom_id:
-                if (line.grading_id and line.grading_id.product_tmpl_id.id !=
-                        line.product_id.id) or line.application_type not in (
+                if (line.grading_id and line.grading_id.product_tmpl_id.id
+                        != line.product_id.id) or line.application_type not in (
                             'sum', 'per_consumption_unit'):
                     line_data = line.copy_data({'grading_id': False})
                     line.grading_id.unlink()
@@ -505,8 +503,8 @@ class ProductionPlanLine(models.Model):
             period_gross_production_value = line.production_plan_id.gross_production_value
             period_total_costs = line.production_plan_id.total_costs
             # Adjust application rate value if it is a percentage
-            application_rate = (line.application_rate /
-                                100.0 if line.application_rate_type
+            application_rate = (line.application_rate
+                                / 100.0 if line.application_rate_type
                                 == 'percentage' else line.application_rate)
             line_production = line.quantity * line.application_rate
             line_value = line.price * line_production

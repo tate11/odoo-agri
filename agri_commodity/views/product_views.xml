@@ -3,14 +3,16 @@
     <data>
         <!-- Product Template -->
 
-        <record id="product_template_action" model="ir.actions.act_window">
+        <record id="product_template_action"
+            model="ir.actions.act_window">
             <field name="name">Agri Commodities</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.template</field>
             <field name="view_mode">tree,form,kanban</field>
             <field name="domain">[('is_agri_commodity','=', True)]</field>
             <field name="context">{'default_is_commodity': True, 'default_type': 'commodity'}</field>
-            <field name="help" type="html">
+            <field name="help"
+                type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Create a new commodity
                 </p>
@@ -18,90 +20,142 @@
         </record>
 
 
-        <record id="product_template_search_view" model="ir.ui.view">
+        <record id="product_template_search_view"
+            model="ir.ui.view">
             <field name="name">product.template.search.view.inherit.agri.commodity</field>
             <field name="model">product.template</field>
             <field name="mode">primary</field>
-            <field name="inherit_id" ref="product.product_template_search_view" />
-            <field name="arch" type="xml">
-                <xpath expr="//filter[@name='consumable']" position="after">
-                    <separator/>
-                    <filter string="Agri Commodity Products" name="graded_products"
-                            domain="[('is_agri_commodity', '!=', False)]" />
-                    <filter string="Graded Products" name="components" domain="[('grading_line_ids', '!=', False)]" />
+            <field name="inherit_id"
+                ref="product.product_template_search_view" />
+            <field name="arch"
+                type="xml">
+                <xpath expr="//filter[@name='consumable']"
+                    position="after">
+                    <separator />
+                    <filter string="Agri Commodity Products"
+                        name="graded_products"
+                        domain="[('is_agri_commodity', '!=', False)]" />
+                    <filter string="Graded Products"
+                        name="components"
+                        domain="[('grading_line_ids', '!=', False)]" />
                 </xpath>
             </field>
         </record>
 
-        <record id="product_search_form_view" model="ir.ui.view">
+        <record id="product_search_form_view"
+            model="ir.ui.view">
             <field name="name">product.search.form.view.inherit.agri.commodity</field>
             <field name="model">product.product</field>
             <field name="mode">primary</field>
-            <field name="inherit_id" ref="product.product_search_form_view" />
-            <field name="arch" type="xml">
-                <xpath expr="//filter[@name='consumable']" position="after">
-                    <separator/>
-                    <filter string="Commodity Products" name="manufactured_products"
-                            domain="[('grading_ids', '!=', False)]" />
-                    <filter string="Grading Components" name="components" domain="[('grading_line_ids', '!=', False)]" />
+            <field name="inherit_id"
+                ref="product.product_search_form_view" />
+            <field name="arch"
+                type="xml">
+                <xpath expr="//filter[@name='consumable']"
+                    position="after">
+                    <separator />
+                    <filter string="Commodity Products"
+                        name="manufactured_products"
+                        domain="[('grading_ids', '!=', False)]" />
+                    <filter string="Grading Components"
+                        name="components"
+                        domain="[('grading_line_ids', '!=', False)]" />
                 </xpath>
             </field>
         </record>
 
-        <record id="product_template_form_view" model="ir.ui.view">
+        <record id="product_template_form_view"
+            model="ir.ui.view">
             <field name="name">product.template.common.form.inherit.agri.commodity</field>
             <field name="model">product.template</field>
-            <field name="inherit_id" ref="product.product_template_form_view" />
-            <field name="arch" type="xml">
-                <xpath expr="//div[hasclass('oe_title')]/div[@name='options']" position="inside">
+            <field name="inherit_id"
+                ref="product.product_template_form_view" />
+            <field name="arch"
+                type="xml">
+                <xpath expr="//div[hasclass('oe_title')]/div[@name='options']"
+                    position="inside">
                     <div>
                         <field name="is_agri_commodity" />
                         <label for="is_agri_commodity" />
                     </div>
                 </xpath>
-                <xpath expr="//page[@name='general_information']" position="after">
-                    <page string="Grading" name="grading" attrs="{'invisible': [('is_agri_commodity', '=', False)]}">
+                <xpath expr="//page[@name='general_information']"
+                    position="after">
+                    <page string="Grading"
+                        name="grading"
+                        attrs="{'invisible': [('is_agri_commodity', '=', False)]}">
                         <group>
                             <group>
-                                <field name="default_grading_id" invisible="1" />
-                                <field name="default_grading_currency_id" invisible="1" />
-                                <field name="default_grading_gross_product_qty" invisible="1" />
+                                <field name="default_grading_id"
+                                    invisible="1" />
+                                <field name="default_grading_currency_id"
+                                    invisible="1" />
+                                <field name="default_grading_gross_product_qty"
+                                    invisible="1" />
                                 <field name="default_grading_moisture_loss_perc" />
-                                <field name="default_grading_dry_product_qty" invisible="1" />
+                                <field name="default_grading_dry_product_qty"
+                                    invisible="1" />
                                 <field name="default_grading_processing_loss_perc" />
                                 <field name="default_grading_grading_loss_perc" />
-                                <field name="default_grading_net_product_qty" invisible="1" />
+                                <field name="default_grading_net_product_qty"
+                                    invisible="1" />
                             </group>
                         </group>
                         <group>
-                            <field name="default_grading_line_ids" nolabel="1" colspan="2" widget="one2many"
-                                   context="{'default_grading_id': default_grading_id, 'default_grading_product_tmpl_id': id, 'default_grading_gross_product_qty': 1.0, 'default_product_id': False, 'default_company_id': company_id, 'default_currency_id': default_grading_currency_id}">
-                                <tree string="Components" editable="bottom">
-                                    <field name="company_id" invisible="1" />
-                                    <field name="currency_id" invisible="1" />
-                                    <field name="sequence" widget="handle" />
-                                    <field name="product_id" context="{'default_type': 'product'}" />
-                                    <field name="product_tmpl_id" invisible="1" />
+                            <field name="default_grading_line_ids"
+                                nolabel="1"
+                                colspan="2"
+                                widget="one2many"
+                                context="{'default_grading_id': default_grading_id, 'default_grading_product_tmpl_id': id, 'default_grading_gross_product_qty': 1.0, 'default_product_id': False, 'default_company_id': company_id, 'default_currency_id': default_grading_currency_id}">
+                                <tree string="Components"
+                                    editable="bottom">
+                                    <field name="company_id"
+                                        invisible="1" />
+                                    <field name="currency_id"
+                                        invisible="1" />
+                                    <field name="sequence"
+                                        widget="handle" />
+                                    <field name="product_id"
+                                        context="{'default_type': 'product'}" />
+                                    <field name="product_tmpl_id"
+                                        invisible="1" />
                                     <field name="unit_price" />
-                                    <field name="product_uom_category_id" invisible="1" />
-                                    <field name="grading_gross_product_qty" invisible="1" />
-                                    <field name="grading_product_tmpl_id" invisible="1" />
-                                    <field name="grading_product_tmpl_categ_id" invisible="1" />
-                                    <field name="possible_grading_product_template_attribute_value_ids" invisible="1" />
-                                    <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="uom.group_uom" />
-                                    <field name="percent" sum="Percent" />
-                                    <field name="product_qty" sum="Quantity" />
-                                    <field name="price" sum="Price" />
+                                    <field name="product_uom_category_id"
+                                        invisible="1" />
+                                    <field name="grading_gross_product_qty"
+                                        invisible="1" />
+                                    <field name="grading_product_tmpl_id"
+                                        invisible="1" />
+                                    <field name="grading_product_tmpl_categ_id"
+                                        invisible="1" />
+                                    <field name="possible_grading_product_template_attribute_value_ids"
+                                        invisible="1" />
+                                    <field name="product_uom_id"
+                                        options="{'no_open':True,'no_create':True}"
+                                        groups="uom.group_uom" />
+                                    <field name="percent"
+                                        sum="Percent" />
+                                    <field name="product_qty"
+                                        sum="Quantity" />
+                                    <field name="price"
+                                        sum="Price" />
                                 </tree>
                             </field>
                             <separator string="By-products" />
-                            <field name="default_grading_byproduct_ids" nolabel="1" colspan="2" widget="one2many" 
-                                   context="{'default_grading_id': default_grading_id, 'default_company_id': company_id}">
-                                <tree string="By-products" editable="top">
-                                    <field name="company_id" invisible="1" />
-                                    <field name="product_id" context="{'default_type': 'product'}" />
+                            <field name="default_grading_byproduct_ids"
+                                nolabel="1"
+                                colspan="2"
+                                widget="one2many"
+                                context="{'default_grading_id': default_grading_id, 'default_company_id': company_id}">
+                                <tree string="By-products"
+                                    editable="top">
+                                    <field name="company_id"
+                                        invisible="1" />
+                                    <field name="product_id"
+                                        context="{'default_type': 'product'}" />
                                     <field name="product_qty" />
-                                    <field name="product_uom_id" groups="uom.group_uom" />
+                                    <field name="product_uom_id"
+                                        groups="uom.group_uom" />
                                 </tree>
                             </field>
                         </group>
@@ -110,72 +164,84 @@
             </field>
         </record>
 
-        <menuitem id="agri_product_menu" name="Products"
-                  parent="agri.agri_menu_root"
-                  sequence="30" />
+        <menuitem id="agri_product_menu"
+            name="Products"
+            parent="agri.agri_menu_root"
+            sequence="30" />
 
-        <menuitem id="agri_commodity_product_template_menu" name="Agri Commodities" action="product_template_action"
-                  parent="agri.agri_menu_root" sequence="10" />
+        <menuitem id="agri_commodity_product_template_menu"
+            name="Agri Commodities"
+            action="product_template_action"
+            parent="agri.agri_menu_root"
+            sequence="10" />
 
         <!--
-                <menuitem id="menu_mrp_product_form"
-                    name="Products"
-                    action="product_template_action"
-                    parent="menu_mrp_bom" sequence="1" />
+                <menuitem id="menu_mrp_product_form" name="Products" action="product_template_action" parent="menu_mrp_bom" sequence="1" />
         -->
 
-        <record id="product_product_action" model="ir.actions.act_window">
+        <record id="product_product_action"
+            model="ir.actions.act_window">
             <field name="name">Product Variants</field>
             <field name="res_model">product.product</field>
-            <field name="search_view_id" ref="agri_commodity.product_search_form_view" />
+            <field name="search_view_id"
+                ref="agri_commodity.product_search_form_view" />
             <field name="view_mode">kanban,tree,form</field>
         </record>
 
         <!--
-                <menuitem id="product_variant_mrp" name="Product Variants"
-                    action="mrp_product_variant_action"
-                    parent="menu_mrp_bom" groups="product.group_product_variant" sequence="2" />
+                <menuitem id="product_variant_mrp" name="Product Variants" action="mrp_product_variant_action" parent="menu_mrp_bom" groups="product.group_product_variant" sequence="2" />
         -->
 
 
-        <record id="product_template_form_view_procurement_button" model="ir.ui.view">
+        <record id="product_template_form_view_procurement_button"
+            model="ir.ui.view">
             <field name="name">product.template.form.view.procurement.button.inherit.agri.commodity</field>
             <field name="model">product.template</field>
-            <field name="inherit_id" ref="stock.product_template_form_view_procurement_button" />
-            <field name="groups_id" eval="[(4, ref('agri.agri_group_user'))]" />
-            <field name="arch" type="xml">
-                <xpath expr="//button[@name='action_open_product_lot']" position="after">
-                    <button class="oe_stat_button" name="%(agri_grading_action_view_product_template)d" type="action"
-                            attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}" icon="fa-weight">
-                        <field string="Gradings" name="grading_count" widget="statinfo" />
+            <field name="inherit_id"
+                ref="stock.product_template_form_view_procurement_button" />
+            <field name="groups_id"
+                eval="[(4, ref('agri.agri_group_user'))]" />
+            <field name="arch"
+                type="xml">
+                <xpath expr="//button[@name='action_open_product_lot']"
+                    position="after">
+                    <button class="oe_stat_button"
+                        name="%(agri_grading_action_view_product_template)d"
+                        type="action"
+                        attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
+                        icon="fa-weight">
+                        <field string="Gradings"
+                            name="grading_count"
+                            widget="statinfo" />
                     </button>
-                    <button class="oe_stat_button" name="action_used_in_grading" type="object"
-                            attrs="{'invisible':['|',('type', 'not in', ['product', 'consu']), ('used_in_grading_count', '=', 0)]}"
-                            icon="fa-level-up">
-                        <field string="Used In" name="used_in_grading_count" widget="statinfo" />
+                    <button class="oe_stat_button"
+                        name="action_used_in_grading"
+                        type="object"
+                        attrs="{'invisible':['|',('type', 'not in', ['product', 'consu']), ('used_in_grading_count', '=', 0)]}"
+                        icon="fa-level-up">
+                        <field string="Used In"
+                            name="used_in_grading_count"
+                            widget="statinfo" />
                     </button>
                 </xpath>
             </field>
         </record>
 
-        <record id="product_form_view_procurement_button" model="ir.ui.view">
+        <!--<record id="product_form_view_procurement_button" model="ir.ui.view">
             <field name="name">product.form.view.procurement.button.inherit.agri.commodity</field>
             <field name="model">product.product</field>
             <field name="inherit_id" ref="stock.product_form_view_procurement_button" />
             <field name="groups_id" eval="[(4, ref('agri.agri_group_user'))]" />
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='action_open_product_lot']" position="after">
-                    <button class="oe_stat_button" name="action_view_bom" type="object"
-                            attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}" icon="fa-flask">
+                    <button class="oe_stat_button" name="action_view_bom" type="object" attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}" icon="fa-flask">
                         <field string="Gradings" name="grading_count" widget="statinfo" />
                     </button>
-                    <button class="oe_stat_button" name="action_used_in_bom" type="object"
-                            attrs="{'invisible':['|',('type', 'not in', ['product', 'consu']), ('used_in_grading_count', '=', 0)]}"
-                            icon="fa-level-up">
+                    <button class="oe_stat_button" name="action_used_in_bom" type="object" attrs="{'invisible':['|',('type', 'not in', ['product', 'consu']), ('used_in_grading_count', '=', 0)]}" icon="fa-level-up">
                         <field string="Used In" name="used_in_grading_count" widget="statinfo" />
                     </button>
                 </xpath>
             </field>
-        </record>
+        </record>-->
     </data>
 </odoo>
