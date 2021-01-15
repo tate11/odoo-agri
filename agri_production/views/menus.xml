@@ -1,18 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <menuitem id="agri_production_menu" name="Production" parent="agri.agri_menu_root" sequence="10" groups="agri.agri_group_user" />
+    <menuitem id="agri_production_menu"
+        name="Production"
+        parent="agri.agri_menu_root"
+        sequence="10"
+        groups="agri.agri_group_user" />
 
-    <menuitem id="agri_production_plan_action_menu" name="Plans" parent="agri_production_menu" sequence="5" action="agri_production_plan_action" />
-    
-    <menuitem id="agri_production_deliveries_action_menu" name="Deliveries" parent="agri_production_menu" sequence="7" action="agri_commodity.agri_delivery_action" />
+    <menuitem id="agri_production_plan_action_menu"
+        name="Plans"
+        parent="agri_production_menu"
+        sequence="5"
+        action="agri_production_plan_action" />
 
-    <menuitem id="agri_production_record_action_menu" name="Records" parent="agri_production_menu" groups="agri.agri_group_manager" sequence="10" action="agri_production_record_action" />
-    
-    <menuitem id="agri_cultivar_action_menu" name="Cultivars" parent="agri.agri_configuration_menu" sequence="6" action="agri_cultivar_action" />
+    <menuitem id="agri_production_deliveries_action_menu"
+        name="Deliveries"
+        parent="agri_production_menu"
+        sequence="7"
+        action="agri_commodity.agri_delivery_action" />
 
-    <menuitem id="agri_season_action_menu" name="Seasons" parent="agri.agri_configuration_menu" sequence="8" action="agri_season_action" />
+    <menuitem id="agri_production_record_action_menu"
+        name="Records"
+        parent="agri_production_menu"
+        groups="agri.agri_group_manager"
+        sequence="10"
+        action="agri_production_record_action" />
 
-    <menuitem id="agrifinance_management_payment_terms_action_menu" name="Payment Terms" parent="agri.agri_configuration_menu" sequence="10" action="account.action_payment_term_form" />
+    <menuitem id="agri_cultivar_action_menu"
+        name="Cultivars"
+        parent="agri.agri_configuration_menu"
+        sequence="6"
+        action="agri_cultivar_action" />
+
+    <menuitem id="agri_season_action_menu"
+        name="Seasons"
+        parent="agri.agri_configuration_menu"
+        sequence="8"
+        action="agri_season_action" />
+
+    <menuitem id="agri_payment_terms_action_menu"
+        name="Payment Terms"
+        parent="agri.agri_configuration_menu"
+        sequence="10"
+        action="account.action_payment_term_form" />
 
 </odoo>
