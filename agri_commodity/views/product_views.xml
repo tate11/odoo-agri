@@ -110,12 +110,12 @@
                                 <tree string="Adjustments">
                                     <field name="name" />
                                     <field name="adjustment_type" />
-                                    <field name="model_name" />
-                                    <field name="partner_id" />
                                     <field name="company_id" invisible="1" />
-                                    <field name="product_tmpl_id" invisible="1" />
-                                    <field name="start_date" />
-                                    <field name="end_date" />
+                                    <field name="model_name" />
+                                    <field name="filter_partner_id" />
+                                    <field name="filter_product_tmpl_id" invisible="1" />
+                                    <field name="filter_start_date" />
+                                    <field name="filter_end_date" />
                                 </tree>
                             </field>
                         </group>

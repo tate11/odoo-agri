@@ -40,7 +40,7 @@ class ProductTemplate(models.Model):
         '# of Grading Where is Used',
         compute='_compute_used_in_grading_count',
         compute_sudo=False)
-    adjustment_ids = fields.One2many('agri.adjustment', 'product_tmpl_id',
+    adjustment_ids = fields.One2many('agri.adjustment', 'filter_product_tmpl_id',
                                      'Adjustments')
 
     def _compute_grading_count(self):

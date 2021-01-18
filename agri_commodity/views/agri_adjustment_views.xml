@@ -201,16 +201,16 @@
                 <field name="name" />
                 <field name="adjustment_type" />
                 <field name="model_name" />
-                <field name="partner_id" />
-                <field name="product_tmpl_id" />
-                <field name="start_date" />
-                <field name="end_date" />
+                <field name="filter_partner_id" />
+                <field name="filter_product_tmpl_id" />
+                <field name="filter_start_date" />
+                <field name="filter_end_date" />
                 <separator />
                 <filter string="Deduction" name="filter_deduction" domain="[('adjustment_type', '=', 'deduction')]" />
                 <filter string="Incentive" name="filter_incentive" domain="[('adjustment_type', '=', 'incentive')]" />
                 <group expand="0" string="Group By">
-                    <filter string="Partner" name="group_partner" context="{'group_by': 'partner_id'}" />
-                    <filter string="Product" name="group_product" context="{'group_by': 'product_tmpl_id'}" />
+                    <filter string="Partner" name="group_partner" context="{'group_by': 'filter_partner_id'}" />
+                    <filter string="Product" name="group_product" context="{'group_by': 'filter_product_tmpl_id'}" />
                 </group>
             </search>
         </field>
@@ -224,12 +224,12 @@
             <tree string="Adjustments">
                 <field name="name" />
                 <field name="adjustment_type" />
-                <field name="model_name" />
-                <field name="partner_id" />
                 <field name="company_id" groups="base.group_multi_company" />
-                <field name="product_tmpl_id" />
-                <field name="start_date" />
-                <field name="end_date" />
+                <field name="model_name" />
+                <field name="filter_partner_id" />
+                <field name="filter_product_tmpl_id" />
+                <field name="filter_start_date" />
+                <field name="filter_end_date" />
             </tree>
         </field>
     </record>
@@ -248,15 +248,22 @@
                     </div>
                     <group>
                         <group>
-                            <field name="model_id" />
                             <field name="adjustment_type" />
-                            <field name="partner_id" />
-                            <field name="product_tmpl_id" />
-                        </group>
-                        <group>
+                            <field name="model_id" />
                             <field name="company_id" groups="base.group_multi_company" />
-                            <field name="start_date" />
-                            <field name="end_date" />
+                            <field name="product_id" />
+                       </group>
+                        <group>
+                            <field name="filter_partner_id" />
+                            <field name="filter_product_tmpl_id" />
+                            <label for="filter_start_date" string="Filtered Date"/>
+                            <div class="o_row">
+                                <field name="filter_start_date"/>
+                                <span class="oe_edit_only"> to </span>
+                                <span class="oe_read_only" attrs="{'invisible': [('filter_end_date', '=', False)]}"> to </span>
+                                <field name="filter_end_date"/>
+                            </div>
+
                         </group>
                     </group>
                     <notebook>

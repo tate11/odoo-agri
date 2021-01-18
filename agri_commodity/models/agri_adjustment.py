@@ -12,27 +12,30 @@ class Adjustment(models.Model):
     name = fields.Char(string='Name', required=True)
     adjustment_type = fields.Selection(selection=[('deduction', 'Deduction'),
                                                   ('incentive', 'Incentive')],
-                                       string='Adjustment Type',
+                                       string='Type',
                                        required=True)
+    company_id = fields.Many2one('res.company',
+                                 'Company',
+                                 index=True,
+                                 default=lambda self: self.env.company)
     model_id = fields.Many2one('ir.model',
-                               string='Model',
+                               string='On Model',
                                required=True,
                                ondelete='cascade')
     model_name = fields.Char('Model Name',
                              related='model_id.model',
                              store=True)
-    partner_id = fields.Many2one('res.partner',
-                                 string='Partner',
+    product_id = fields.Many2one('product.product',
+                                 string='Adjustment Product',
                                  ondelete='cascade')
-    company_id = fields.Many2one('res.company',
-                                 'Company',
-                                 index=True,
-                                 default=lambda self: self.env.company)
-    product_tmpl_id = fields.Many2one('product.template',
-                                      string='Product',
-                                      ondelete='cascade')
-    start_date = fields.Date('Start Date')
-    end_date = fields.Date('End Date')
+    filter_partner_id = fields.Many2one('res.partner',
+                                        string='Filtered Partner',
+                                        ondelete='cascade')
+    filter_product_tmpl_id = fields.Many2one('product.template',
+                                             string='Filtered Product',
+                                             ondelete='cascade')
+    filter_start_date = fields.Date('Filtered Start Date')
+    filter_end_date = fields.Date('Filtered End Date')
     condition_ids = fields.One2many(comodel_name='agri.adjustment.condition',
                                     inverse_name='adjustment_id',
                                     string='Adjustment Conditions',
@@ -299,11 +302,19 @@ class AdjustmentModifier(models.Model):
                                            string='Arithmetic Operator',
                                            required=True)
     value_source = fields.Selection(selection=[('variable', 'Variable'),
-                                               ('model', 'From Model')],
+                                               ('model', 'From Model'),
+                                               ('product', 'From Product')],
                                     string='Value Source',
                                     default='variable',
                                     required=True)
     value = fields.Float('Variable', digits=(3, 2))
+
+    @api.constrains('value_source')
+    def _check_value_source(self):
+        for modifier in self:
+            if modifier.value_source == 'product' and not modifier.adjustment_id.product_id:
+                raise ValidationError(
+                    _('Adjustment Product must be set.'))
 
     @api.depends('value_source')
     @api.onchange('value_source')
@@ -351,6 +362,8 @@ class AdjustmentModifier(models.Model):
                 model_value = eval(
                     _('math.%s(%s)') % (self.math_operator, model_value))
             return model_value
+        elif self.value_source == 'product':
+            return self.adjustment_id.product_id.list_price
         return self.value
 
     @api.model

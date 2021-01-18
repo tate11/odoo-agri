@@ -279,21 +279,21 @@ class Delivery(models.Model):
                 ('model_id', '=', model_id),
                 # Check partner
                 '|',
-                ('partner_id', '=', False),
-                ('partner_id', '=', delivery.destination_partner_id.id),
+                ('filter_partner_id', '=', False),
+                ('filter_partner_id', '=', delivery.destination_partner_id.id),
                 # Check product
                 '|',
-                ('product_tmpl_id', '=', False),
-                ('product_tmpl_id', '=',
+                ('filter_product_tmpl_id', '=', False),
+                ('filter_product_tmpl_id', '=',
                  delivery.product_id.product_tmpl_id.id),
                 # Check start date
                 '|',
-                ('start_date', '=', False),
-                ('start_date', '<=', delivery.delivery_date),
+                ('filter_start_date', '=', False),
+                ('filter_start_date', '<=', delivery.delivery_date),
                 # Check end date
                 '|',
-                ('end_date', '=', False),
-                ('end_date', '>=', delivery.delivery_date)
+                ('filter_end_date', '=', False),
+                ('filter_end_date', '>=', delivery.delivery_date)
             ])
             matched_adjustments = found_adjustments.filtered(
                 lambda adjustment: adjustment._eval_conditions(delivery))
