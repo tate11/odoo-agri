@@ -21,13 +21,18 @@ class ProductCategory(models.Model):
             ('overhead', 'Overhead'),
         ],
         string='Cost Type',
-        default='crop_sale',
+        default=False,
     )
     uom_id = fields.Many2one('uom.uom',
                              'Unit of Measure',
                              help='Unit of measure used for allocating costs.')
     sale_ok = fields.Boolean('Can be Sold', default=False)
     purchase_ok = fields.Boolean('Can be Purchased', default=False)
+
+    @api.constrains('cost_type')
+    def _check_cost_type(self):
+        if self.is_agri and not self.cost_type:
+            raise ValidationError(_('Cost Type must be set agricultural product categories'))
 
     @api.constrains('uom_id')
     def _check_uom_id(self):

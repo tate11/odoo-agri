@@ -51,6 +51,14 @@ class ProductionPlan(models.Model):
                                        states={'draft': [('readonly', False)]},
                                        readonly=True,
                                        required=True)
+    product_id = fields.Many2one(
+        'product.product',
+        string='Product',
+        domain=
+        "[('is_agri_commodity', '=', True), ('sale_ok', '=', True)]",
+        states={'draft': [('readonly', False)]},
+        readonly=True,
+        required=True)
     farm_version_id = fields.Many2one(
         'agri.farm.version',
         'Farm Version',
@@ -92,8 +100,7 @@ class ProductionPlan(models.Model):
     production_uom_id = fields.Many2one(
         'uom.uom',
         'Production Unit',
-        domain=
-        "[('category_id.measure_type', 'in', ['weight', 'lsu'])]",
+        domain="[('category_id.measure_type', 'in', ['weight', 'lsu'])]",
         default=lambda self: self.env.ref('uom.product_uom_ton'),
         states={'draft': [('readonly', False)]},
         readonly=True,
@@ -170,6 +177,18 @@ class ProductionPlan(models.Model):
     def _onchange_partner_id(self):
         for plan in self:
             plan.farm_version_id = plan.partner_id.farm_version_id
+
+    @api.depends('product_id')
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        for plan in self:
+            if plan.product_id:
+                plan.enterprise_type = (
+                    plan.product_id.categ_id.cost_type.replace('_sale', '')
+                    if plan.product_id.categ_id
+                    and plan.product_id.categ_id.cost_type else
+                    plan.enterprise_type)
+                plan.production_uom_id = plan.product_id.uom_id or plan.production_uom_id
 
     @api.onchange('farm_field_ids')
     def _onchange_farm_field_ids(self):
@@ -443,9 +462,13 @@ class ProductionPlanLine(models.Model):
                         and line.application_type
                         in ('sum', 'per_consumption_unit')):
                     vals = {
-                        'date': line.date_range_id.date_start if line.date_range_id else None,
-                        'gross_product_qty': line.quantity,
-                        'product_uom_id': line.product_uom_id.id
+                        'date':
+                        line.date_range_id.date_start
+                        if line.date_range_id else None,
+                        'gross_product_qty':
+                        line.quantity,
+                        'product_uom_id':
+                        line.product_uom_id.id
                     }
                     if line.product_id.default_grading_id:
                         line.grading_id = line.product_id.default_grading_id.copy(
@@ -489,10 +512,12 @@ class ProductionPlanLine(models.Model):
                                 and not line.product_category_id.sale_ok
                                 ) if line.product_category_id else False
 
-    @api.onchange('price', 'quantity', 'date_range_id', 'application_type', 'application_rate',
-                  'application_rate_type', 'grading_id', 'grading_id.price')
-    @api.depends('price', 'quantity', 'date_range_id', 'application_rate', 'grading_id',
-                 'grading_id.price', 'production_plan_id.total_land_area',
+    @api.onchange('price', 'quantity', 'date_range_id', 'application_type',
+                  'application_rate', 'application_rate_type', 'grading_id',
+                  'grading_id.price')
+    @api.depends('price', 'quantity', 'date_range_id', 'application_rate',
+                 'grading_id', 'grading_id.price',
+                 'production_plan_id.total_land_area',
                  'production_plan_id.total_production',
                  'production_plan_id.gross_production_value')
     def _compute_subtotal(self):
@@ -535,8 +560,7 @@ class ProductionPlanLine(models.Model):
                 for grading_line in line.grading_line_ids:
                     product_qty = line.grading_id.net_product_qty * grading_line.percent / 100.0
                     unit_price = grading_line._calc_unit_price(
-                        product_qty=product_qty,
-                        date=line.grading_id.date)
+                        product_qty=product_qty, date=line.grading_id.date)
                     price = unit_price * product_qty
                     line_commands += [(1, grading_line.id, {
                         'product_qty': product_qty,
